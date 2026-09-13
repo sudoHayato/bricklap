@@ -44,6 +44,14 @@ export function nextSport(current: Sport): Sport {
 export type SessionEvent =
   | { type: "started"; at: number; sport: Sport }
   | { type: "sport_changed"; at: number; sport: Sport }
+  /**
+   * "Marca": closes the block that just ended and opens the next one, inside
+   * the same segment and without changing sport (Fase 4). It is what makes a
+   * gym circuit legible — five sets of the same exercise are five blocks of
+   * one strength segment, not five segments — and it is the only event the
+   * athlete fires repeatedly during a session.
+   */
+  | { type: "marked"; at: number }
   | { type: "stopped"; at: number }
   | { type: "recovered"; at: number };
 
@@ -94,6 +102,22 @@ export type Segment = {
   endAt: number | null;
   sampleStart: number;
   sampleEnd: number;
+};
+
+/**
+ * A stretch of one segment between two "Marca" events — the unit the athlete
+ * actually trains in, and what the summary lists. Every segment holds at
+ * least one block: with no marks at all, the block and the segment are the
+ * same stretch. `endAt` is null only for the one block still open.
+ */
+export type Block = {
+  /** Position in the session, counting every block of every segment. */
+  index: number;
+  /** The segment this block belongs to; its sport is the segment's sport. */
+  segmentIndex: number;
+  sport: Sport;
+  startAt: number;
+  endAt: number | null;
 };
 
 export type SegmentMetrics = {

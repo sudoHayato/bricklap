@@ -1,6 +1,7 @@
 import {
   appendSample,
   applyChange,
+  applyMark,
   applyRecovered,
   applyStop,
   createLiveSession,
@@ -42,6 +43,8 @@ export interface SessionStore {
   hydrate(at?: number, origin?: RecoveryOrigin): Session | null;
   start(sport: Sport, at?: number): string;
   changeSport(sport: Sport, at?: number): void;
+  /** "Marca": close the open block and start the next, same sport (Fase 4). */
+  mark(at?: number): void;
   stop(at?: number): string | null;
   pushSample(sample: Sample): void;
   discardLive(at?: number): void;
@@ -50,6 +53,17 @@ export interface SessionStore {
   summaries(): SessionSummary[];
   /** Write buffered samples now. Returns how many rows went to disk. */
   flush(): number;
+  /**
+   * Erase one session for good: its events and its samples, by id. The one
+   * DELETE in the adapter (ADR 0006, decided in session 03 for Fase 4) —
+   * the athlete's right to erasure is an explicit operation, not a flag, and
+   * it has nothing to preserve. Returns the rows removed, or null when no
+   * session has that id. Deleting the live session also ends it in memory.
+   */
+  deleteSession(id: string): { events: number; samples: number } | null;
+  /** A stored preference, or null. Preferences are metadata, not session data. */
+  getSetting(key: string): string | null;
+  setSetting(key: string, value: string): void;
 }
 
 export type SessionSummary = {
@@ -97,6 +111,7 @@ export class SqliteSessionStore implements SessionStore {
   private readonly onTiming: ((t: WriteTiming) => void) | undefined;
 
   private liveSession: Session | null = null;
+  private migrated = false;
   private pending: { sessionId: string; sample: Sample }[] = [];
   private flushTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -110,6 +125,7 @@ export class SqliteSessionStore implements SessionStore {
 
   hydrate(at = this.now(), origin: RecoveryOrigin = "user"): Session | null {
     migrate(this.db);
+    this.migrated = true;
     this.flush();
     const live = this.loadLive();
     if (!live) {
@@ -149,6 +165,22 @@ export class SqliteSessionStore implements SessionStore {
     if (!live) return;
     if (currentSport(live.events) === sport) return;
     const next = applyChange(live, sport, at);
+    if (next === live) return;
+    this.writeEvent(next.id, next.events[next.events.length - 1]!, false);
+    this.liveSession = next;
+  }
+
+  /**
+   * "Marca". Same write path as a CHANGE — pending samples first, then the
+   * event, one transaction, on disk before the screen reacts — because it is
+   * the same kind of boundary: what changes is the block, not the sport.
+   * A mark the engine refuses (nothing open, or no time since the last one)
+   * writes nothing.
+   */
+  mark(at = this.now()): void {
+    const live = this.liveSession;
+    if (!live) return;
+    const next = applyMark(live, at);
     if (next === live) return;
     this.writeEvent(next.id, next.events[next.events.length - 1]!, false);
     this.liveSession = next;
@@ -216,6 +248,32 @@ export class SqliteSessionStore implements SessionStore {
     }));
   }
 
+  deleteSession(id: string): { events: number; samples: number } | null {
+    migrate(this.db);
+    const counted = this.db.getAllSync<{ n: number }>("SELECT COUNT(*) AS n FROM events WHERE session_id = ?", [id]);
+    if ((counted[0]?.n ?? 0) === 0) return null;
+    const samples = this.db.getAllSync<{ n: number }>("SELECT COUNT(*) AS n FROM samples WHERE session_id = ?", [id])[0]?.n ?? 0;
+    // Samples still in memory for this session would be written back by the
+    // next flush and resurrect it as an orphan, so they go first.
+    this.pending = this.pending.filter((p) => p.sessionId !== id);
+    this.db.withTransactionSync(() => {
+      this.db.runSync("DELETE FROM samples WHERE session_id = ?", [id]);
+      this.db.runSync("DELETE FROM events WHERE session_id = ?", [id]);
+    });
+    if (this.liveSession?.id === id) this.liveSession = null;
+    return { events: counted[0]!.n, samples };
+  }
+
+  getSetting(key: string): string | null {
+    this.ensureMigrated();
+    return this.db.getAllSync<{ value: string }>("SELECT value FROM settings WHERE key = ?", [key])[0]?.value ?? null;
+  }
+
+  setSetting(key: string, value: string): void {
+    this.ensureMigrated();
+    this.db.runSync("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", [key, value]);
+  }
+
   /** Full replay of everything on disk. The recovery test compares against this. */
   loadAll(): StoredSession[] {
     const events = this.db.getAllSync<EventRow>(`${SELECT_EVENTS} ORDER BY seq`, []);
@@ -224,6 +282,17 @@ export class SqliteSessionStore implements SessionStore {
   }
 
   // -- internals -----------------------------------------------------------
+
+  /**
+   * The theme is read before the first frame, which may be before `hydrate`
+   * has run on a fresh install. Migrating is idempotent and cheap, but not
+   * free, so it happens once per store.
+   */
+  private ensureMigrated(): void {
+    if (this.migrated) return;
+    migrate(this.db);
+    this.migrated = true;
+  }
 
   private loadLive(): Session | null {
     // Events are few; replay them all, then fetch samples for the live one only.

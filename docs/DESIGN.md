@@ -108,7 +108,12 @@ A identidade não estava na fonte: está na fiada, nos ícones, no acento e na e
 
 Medido, não suposto: a Archivo Expanded serve mesmo números tabulares — `00:00`, `11:11` e `88:88` medem os mesmos **291,66 px** a 84/800; sem `tnum` seriam 293,00 e 265,11, e o cronómetro saltaria a cada segundo. É também **6 % mais estreita** do que a Anybody (308,80 px), o que dá folga ao cronómetro num ecrã de 390 px.
 
-Implementação na app: descarregar as instâncias estáticas `Archivo Expanded` nos pesos 600/700/800/900 (`wdth` 125); não depender do eixo variável em React Native. O Google Fonts serve as quatro faces a `stretch 125%` — verificado com `document.fonts.check`.
+Implementação na app (feita na sessão 14): as instâncias estáticas estão **embebidas no APK** (`apps/mobile/assets/fontes/`, declaradas no plugin `expo-font` do `app.json`) — sem CDN e sem rede, para o ecrã de gravação nunca esperar por uma fonte a meio de um treino. São **oito ficheiros, 1,9 MB**: Inter 400/500/600/700/800 e Archivo Expanded 600/700/800. O peso 900 da Archivo **não entra** porque nenhum papel da escala abaixo o usa — o maior é 800.
+
+Duas regras que só existem por causa do Android, e que o protótipo não tinha de respeitar:
+
+- **O peso escolhe a FAMÍLIA, nunca o `fontWeight`.** Cada peso é um ficheiro e a família é o nome do ficheiro; um `fontWeight` sobre uma fonte embebida é ignorado ou sintetizado a feio. Em `apps/mobile/ui/tipografia.ts` isso está fechado em `texto(tamanho, peso, cor)` e `numero(tamanho, peso, cor)`, e nenhum ecrã escreve `fontFamily` à mão.
+- **A instância tem de ser a expandida**, e verifica-se: as três faces da Archivo trazem `usWidthClass = 7` (Expanded) na tabela OS/2. A largura normal é a 5, e serviria sem dar erro nenhum — só com o cronómetro mais estreito do que o desenho.
 
 Escala (px), a mesma nos dois temas:
 
@@ -159,6 +164,7 @@ Não usar ícone para: o nome de um exercício de força (o nome é o nome), o e
 - **Rótulo alinhado à esquerda**, 29/800 com 26 px de recuo: o polegar direito cai no terço direito do botão, e a palavra nunca fica debaixo do dedo.
 - **Alvo**: 110 px de altura por toda a largura, quase o dobro do mínimo de 56.
 - Parar mantém o gesto de 0,8 s com a barra em acento a 16 %; Mudar e Parar mantêm-se como estão.
+- **Na app, o Marca dispara ao fim do premir e não ao toque** (sessão 14). No protótipo o toque marca e o premir marca **e abre a ficha**; a ficha é a Fase 4.5 e ainda não existe, e até existir um toque e um premir fariam exatamente o mesmo. A escolha foi pelo custo do erro: uma marca **não se desfaz** nesta versão, e um toque acidental no telemóvel pousado no banco partia um bloco em dois sem ninguém dar por isso. Um premir que não chega ao fim não faz nada e **vê-se**, porque o anel recua — e é assim que o botão se explica à primeira tentativa. Quando a ficha entrar, o toque volta a ser marca simples e o anel mantém o significado que já tem.
 
 **"A seguir".** Linha própria **acima** do botão, dentro de `.acoes`: rótulo `A SEGUIR` em maiúsculas a 11/700 em `tinta3`, e o nome do bloco seguinte a 17/800 em `tinta`, truncado com reticências. Não é um cartão e não leva acento — o ecrã só tem um bloco de acento e é o Marca. Quando não há bloco seguinte (HIIT, sessão sem modelo) a linha não se desenha: não se põe lá um traço à espera de texto.
 
@@ -220,6 +226,26 @@ Nenhum ecrã do Bricklap pode ser confundido de relance com outra app de treino,
 - **Uma só coisa grande por ecrã**, e é sempre um número: o cronómetro na gravação, o total no resumo.
 - **Cor de desporto em fio**, nunca em bloco: é o que impede o resumo de virar um mosaico colorido.
 
-## 9. O que este documento ainda não cobre
+## 9. Onde isto vive na app
+
+Escrito na sessão 14, quando o sistema saiu do protótipo para `apps/mobile`. O protótipo continua a ser a referência visual; o código abaixo é a sua tradução, e é ele que o atleta usa.
+
+| Parte deste documento | Ficheiro |
+|---|---|
+| §1 tema, §2 cor, §4 espaçamento e raios | `apps/mobile/ui/tokens.ts` |
+| §1 regra "o tema decide-se por ecrã" | `apps/mobile/ui/tema.ts` (`usarTema`) |
+| §3 tipografia | `apps/mobile/ui/tipografia.ts` |
+| §5 ícones | `apps/mobile/ui/icones.tsx` |
+| §6 componentes | `apps/mobile/ui/componentes.tsx` e `ui/estrutura.tsx` |
+| §6 botão Marca | `apps/mobile/ui/marca.tsx` |
+| §7 a fiada | `apps/mobile/ui/fiada.tsx` |
+| Os ecrãs | `apps/mobile/ecras.tsx` |
+
+Duas notas sobre a tradução, porque nenhuma é óbvia:
+
+- **A fiada é SVG** (`react-native-svg`), e não uma fila de `View`s: precisa de um degradé com paradas em percentagem para as cores passarem umas para as outras, e é isso que a faz ler como uma barra e não como uma grelha. O vinco é um retângulo de 1 px por cima do degradé, nas mesmas juntas que o protótipo calcula.
+- **Não há `color-mix` em React Native**, por isso os 84 % da fiada são os hexes já calculados da tabela do §7. É a razão de essa tabela existir.
+
+## 10. O que este documento ainda não cobre
 
 Fica para os briefs seguintes da Fase 4: ecrã de detalhe de um bloco, mapa de uma sessão de rua, gráficos (ritmo ao longo do tempo), estados de erro e de permissões, vazios de primeira utilização, animação de transição entre ecrãs, e o tratamento no relógio (Fase 5).

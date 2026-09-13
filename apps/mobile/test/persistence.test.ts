@@ -3,6 +3,7 @@ import {
   applyChange,
   applyRecovered,
   applyStop,
+  blocksFromEvents,
   createLiveSession,
   isLive,
   segmentMetrics,
@@ -130,8 +131,8 @@ describe("replaySessions", () => {
 });
 
 describe("migration v2 — accuracy next to the sample (ADR 0009)", () => {
-  it("is the current version and adds a nullable accuracy column to samples", () => {
-    expect(SCHEMA_VERSION).toBe(2);
+  it("adds a nullable accuracy column to samples", () => {
+    expect(MIGRATIONS.map((m) => m.version)).toContain(2);
     const db = openNodeDb();
     migrate(db);
     const cols = db.raw.prepare("PRAGMA table_info(samples)").all() as { name: string; type: string; notnull: number }[];
@@ -160,8 +161,8 @@ describe("migration v2 — accuracy next to the sample (ADR 0009)", () => {
       "gps",
     ]);
 
-    expect(migrate(db)).toEqual({ from: 1, to: 2 });
-    expect(readSchemaVersion(db)).toBe(2);
+    expect(migrate(db)).toEqual({ from: 1, to: SCHEMA_VERSION });
+    expect(readSchemaVersion(db)).toBe(SCHEMA_VERSION);
     const rows = db.raw.prepare("SELECT seq, t, speed_mps, source, accuracy FROM samples ORDER BY seq").all();
     expect(rows).toEqual([
       { seq: 1, t: T0, speed_mps: 1.4, source: "gps", accuracy: null },
@@ -483,5 +484,184 @@ describe("SqliteSessionStore", () => {
     expect(list.map((s) => s.session.status)).toEqual(["stopped", "live"]);
     expect(list.map((s) => s.sampleCount)).toEqual([0, 1]);
     expect(list.every((s) => s.session.samples.length === 0)).toBe(true);
+  });
+});
+
+describe("migration v3 — as preferências do atleta (Fase 4)", () => {
+  it("is the current version and adds a settings table that is not session data", () => {
+    expect(SCHEMA_VERSION).toBe(3);
+    const db = openNodeDb();
+    migrate(db);
+    const cols = db.raw.prepare("PRAGMA table_info(settings)").all() as { name: string; pk: number; notnull: number }[];
+    expect(cols.map((c) => c.name)).toEqual(["key", "value"]);
+    expect(cols.find((c) => c.name === "key")).toMatchObject({ pk: 1 });
+    expect(cols.find((c) => c.name === "value")).toMatchObject({ notnull: 1 });
+  });
+
+  it("upgrades a v2 database without touching a single row of events or samples", () => {
+    const db = openNodeDb();
+    expect(migrate(db, MIGRATIONS.slice(0, 2))).toEqual({ from: 0, to: 2 });
+    // Rows written by hand: opening the store would migrate the database to
+    // the current version before this test got to do it itself.
+    const id = "gym-1";
+    db.runSync("INSERT INTO events (session_id, type, at, sport) VALUES (?, ?, ?, ?)", [id, "started", T0, "strength"]);
+    db.runSync("INSERT INTO events (session_id, type, at, sport) VALUES (?, ?, ?, ?)", [id, "marked", T0 + 30_000, null]);
+    db.runSync("INSERT INTO events (session_id, type, at, sport) VALUES (?, ?, ?, ?)", [id, "stopped", T0 + 60_000, null]);
+    db.runSync("INSERT INTO samples (session_id, t, lat, lng, speed_mps, source, accuracy) VALUES (?, ?, ?, ?, ?, ?, ?)", [
+      id,
+      T0,
+      38.7,
+      -9.1,
+      0,
+      "gps",
+      4,
+    ]);
+    const antes = db.raw.prepare("SELECT * FROM events ORDER BY seq").all();
+    const antesS = db.raw.prepare("SELECT * FROM samples ORDER BY seq").all();
+
+    expect(migrate(db)).toEqual({ from: 2, to: 3 });
+    expect(db.raw.prepare("SELECT * FROM events ORDER BY seq").all()).toEqual(antes);
+    expect(db.raw.prepare("SELECT * FROM samples ORDER BY seq").all()).toEqual(antesS);
+    expect(new SqliteSessionStore(db).byId(id)!.events).toHaveLength(3);
+  });
+
+  it("stores a preference, reads it back, and overwrites it in place", () => {
+    const db = openNodeDb();
+    const store = new SqliteSessionStore(db);
+    // Read before any hydrate: the theme is needed before the first frame.
+    expect(store.getSetting("tema")).toBeNull();
+    store.setSetting("tema", "hibrido");
+    expect(store.getSetting("tema")).toBe("hibrido");
+    store.setSetting("tema", "escuro");
+    expect(store.getSetting("tema")).toBe("escuro");
+    expect(countRows(db, "settings")).toBe(1);
+  });
+});
+
+describe("Marca — o evento que fecha um bloco (Fase 4)", () => {
+  function fresh() {
+    const db = openNodeDb();
+    return { db, store: new SqliteSessionStore(db, { flushIntervalMs: 0, now: () => T0 }) };
+  }
+
+  it("writes one 'marked' row, with no sport, and replays as a block boundary", () => {
+    const { db, store } = fresh();
+    store.hydrate(T0);
+    const id = store.start("strength", T0);
+    store.mark(T0 + 60_000);
+    store.mark(T0 + 150_000);
+    store.stop(T0 + 200_000);
+
+    const rows = db.raw.prepare("SELECT type, at, sport FROM events ORDER BY seq").all();
+    expect(rows).toEqual([
+      { type: "started", at: T0, sport: "strength" },
+      { type: "marked", at: T0 + 60_000, sport: null },
+      { type: "marked", at: T0 + 150_000, sport: null },
+      { type: "stopped", at: T0 + 200_000, sport: null },
+    ]);
+
+    const stored = store.byId(id)!;
+    expect(blocksFromEvents(stored.events)).toHaveLength(3);
+    // The segment list is what it was before this event existed.
+    expect(segmentsFromEvents(stored.events)).toHaveLength(1);
+  });
+
+  it("a mark flushes the pending samples first, so the boundary sample lands before it", () => {
+    const db = openNodeDb();
+    const store = new SqliteSessionStore(db, { flushIntervalMs: 60_000, now: () => T0 });
+    store.hydrate(T0);
+    store.start("run", T0);
+    store.pushSample(sample(T0 + 1_000, 1));
+    expect(countRows(db, "samples")).toBe(0);
+    store.mark(T0 + 2_000);
+    expect(countRows(db, "samples")).toBe(1);
+  });
+
+  it("writes nothing when there is nothing to close", () => {
+    const { db, store } = fresh();
+    store.hydrate(T0);
+    store.mark(T0);
+    expect(countRows(db, "events")).toBe(0);
+    store.start("strength", T0);
+    // Same instant as the block's start, and then earlier: a zero-length block.
+    store.mark(T0);
+    store.mark(T0 - 1);
+    expect(countRows(db, "events")).toBe(1);
+    store.stop(T0 + 1_000);
+    store.mark(T0 + 2_000);
+    expect(countRows(db, "events")).toBe(2);
+  });
+
+  it("a marked session survives a hydrate exactly as it was written", () => {
+    const { db, store } = fresh();
+    store.hydrate(T0);
+    store.start("rowing_indoor", T0);
+    store.mark(T0 + 30_000);
+    const live = store.live()!;
+    const outro = new SqliteSessionStore(db, { flushIntervalMs: 0, now: () => T0 + 40_000 });
+    const recuperada = outro.hydrate(T0 + 40_000)!;
+    expect(recuperada.events.slice(0, 2)).toEqual(live.events);
+    expect(recuperada.events.at(-1)).toEqual({ type: "recovered", at: T0 + 40_000 });
+  });
+});
+
+describe("deleteSession — o apagar a pedido do atleta (RGPD, ADR 0006)", () => {
+  function fresh() {
+    const db = openNodeDb();
+    return { db, store: new SqliteSessionStore(db, { flushIntervalMs: 0, now: () => T0 }) };
+  }
+
+  it("removes the events and the samples of that session, and only those", () => {
+    const { db, store } = fresh();
+    store.hydrate(T0);
+    const a = store.start("run", T0);
+    store.pushSample(sample(T0, 0));
+    store.pushSample(sample(T0 + 1_000, 1));
+    store.stop(T0 + 2_000);
+    const b = store.start("strength", T0 + 3_000);
+    store.stop(T0 + 4_000);
+
+    expect(store.deleteSession(a)).toEqual({ events: 2, samples: 2 });
+    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "samples")).toBe(0);
+    expect(store.byId(a)).toBeUndefined();
+    expect(store.byId(b)).toBeDefined();
+    expect(store.summaries().map((s) => s.session.id)).toEqual([b]);
+  });
+
+  it("an unknown id deletes nothing and says so", () => {
+    const { db, store } = fresh();
+    store.hydrate(T0);
+    store.start("run", T0);
+    store.stop(T0 + 1_000);
+    expect(store.deleteSession("nope")).toBeNull();
+    expect(countRows(db, "events")).toBe(2);
+  });
+
+  it("deleting the live session ends it in memory and drops its buffered samples", () => {
+    const db = openNodeDb();
+    const store = new SqliteSessionStore(db, { flushIntervalMs: 60_000, now: () => T0 });
+    store.hydrate(T0);
+    const id = store.start("run", T0);
+    store.pushSample(sample(T0 + 1_000, 1));
+    expect(store.deleteSession(id)).toEqual({ events: 1, samples: 0 });
+    expect(store.live()).toBeNull();
+    // The buffered sample must not come back and recreate an orphan session.
+    expect(store.flush()).toBe(0);
+    expect(countRows(db, "samples")).toBe(0);
+    expect(store.hydrate(T0 + 2_000)).toBeNull();
+  });
+
+  it("is a real DELETE, not a flag: a discarded session is a different thing", () => {
+    const { db, store } = fresh();
+    store.hydrate(T0);
+    store.start("run", T0);
+    store.discardLive(T0 + 1_000);
+    // Discard keeps the rows and marks them.
+    expect(countRows(db, "events")).toBe(2);
+    expect(store.summaries()[0]!.discarded).toBe(true);
+    const id = store.summaries()[0]!.session.id;
+    store.deleteSession(id);
+    expect(countRows(db, "events")).toBe(0);
   });
 });

@@ -50,6 +50,8 @@ export function eventFromRow(row: EventRow): SessionEvent {
       return { type: "started", at: row.at, sport: asSport(row.sport, row.seq) };
     case "sport_changed":
       return { type: "sport_changed", at: row.at, sport: asSport(row.sport, row.seq) };
+    case "marked":
+      return { type: "marked", at: row.at };
     case "stopped":
       return { type: "stopped", at: row.at };
     case "recovered":

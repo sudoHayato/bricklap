@@ -68,19 +68,20 @@ Fora daqui, e de propósito: **feed social e desafios entre atletas** estão **a
 ## P1 — i18n (sessão 02)
 
 - [ ] **Sistema de unidades imperial**: `UnitSystem` já declara `"imperial"`; `formatDistanceForUnit`/`formatSpeedForUnit`/`formatPaceForUnit` lançam em vez de o implementar. Implementar quando houver pedido real (milhas, pés, mph).
-- [ ] **Ecrã de definições** para escolher língua e sistema de unidades à mão — hoje é só deteção automática do dispositivo, uma vez, no arranque (sem troca em runtime).
+- [ ] **Língua e unidades no ecrã de definições.** O ecrã existe desde a sessão 14, mas só com o **tema** (quatro presets, guardados na tabela `settings`). A língua e as unidades continuam a ser deteção automática do dispositivo, uma vez, no arranque, sem troca em runtime.
 - [ ] **Dicionário `pt-BR` próprio, se o Brasil vier a ser mercado.** O fundador aprovou que, por agora, `pt-BR` (e qualquer variante de português não listada) caia em `pt-PT` — é melhor do que inglês. Se o Brasil passar a ser mercado, merece dicionário próprio: vocabulário (ecrã/tela, telemóvel/celular, ficheiro/arquivo) e ortografia divergem o suficiente para soar estrangeiro.
 - [ ] Textos legais: quando a app nativa tiver as suas próprias páginas legais (Fase 4), decidir se continuam só pt-PT/UE ou se passam a ter tradução — hoje a decisão do fundador foi mantê-los fora do i18n.
 - [ ] `apps/web-lab/src/lib/i18n.ts` e `apps/mobile/i18n.ts` calculam o locale uma vez, no arranque do módulo — não reagem a uma mudança de língua do sistema operativo enquanto a app está aberta (aceitável sem ecrã de definições).
 
 ## P2 — Qualidade e dívida
 
+- [ ] **Por explicar (sessão 14): o estado da permissão de localização preenchido numa sessão de ginásio.** No release da sessão 14, um treino de força mostrou o aviso "a localização está desligada" — as duas chamadas que preenchem esse estado estão guardadas por `sportHasGps`, e a instrumentação no build de desenvolvimento confirmou que nenhuma corre num desporto sem GPS (`start(strength) hasGps=false`, sem pedido de localização). **O sintoma está fechado** pela guarda `avisosDe(precisaGps)`, que impede o aviso de aparecer num treino de ginásio seja qual for o estado; **a origem não foi identificada** e o gatilho não se reproduziu. Ver o relatório da sessão 14 §4.6. Só vale a pena voltar aqui se reaparecer.
 - [ ] Motor: `Segment.sampleStart`/`sampleEnd` duplicam `startAt`/`endAt` — simplificar ou dar-lhes significado (índices de amostras).
 - [ ] Motor: `newId()` usa `Math.random`; considerar `crypto.randomUUID` quando disponível nas duas plataformas.
 - [ ] Lab: decidir ESLint/Prettier (hoje só `.prettierrc` como convenção de editor) e um smoke test e2e.
 - [ ] Lab: `apps/mobile/.gitignore` ainda lista `/ios` e `web-build/` (inofensivo; limpar quando se mexer no ficheiro).
-- [ ] Mobile: insets calculados à mão (`StatusBar.currentHeight` em cima, 64 dp em baixo); substituir por `react-native-safe-area-context` quando houver mais ecrãs.
-- [ ] Mobile: "Nova sessão" fica desativado 700 ms depois de Parar para um toque duplo não apagar a sessão; substituir por confirmação quando houver persistência.
+- [ ] Mobile: insets calculados à mão (`StatusBar.currentHeight + 8` em cima, `48 + 8` dp em baixo, em `ui/estrutura.tsx`); substituir por `react-native-safe-area-context` — com seis ecrãs e separadores de fundo, o "quando houver mais ecrãs" já chegou.
+- [x] ~~Mobile: "Nova sessão" fica desativado 700 ms depois de Parar para um toque duplo não apagar a sessão.~~ **Resolvido na sessão 14 por outra via**: Parar passou a exigir um premir de 0,8 s com a barra a encher, e um toque já não termina a gravação — o atraso artificial deixou de fazer falta e saiu.
 - [ ] Badge de cobertura e relatório HTML publicado (opcional).
 - [ ] `testID` não mapeia para `resource-id` no `uiautomator dump` desta app (RN 0.86, Android) — confirmado na sessão 03 (`docs/reports/2026-09-10-sessao-03.md` §5.1). Revisitar só se a app vier a precisar de Detox/Appium a sério.
 - [ ] Cobrir CHANGE no teste de dispositivo Android: hoje impossível por `uiautomator` (ver `docs/reports/2026-09-10-sessao-03.md` §5.2 — o ecrã ao vivo nunca fica "idle"). Se algum dia for preciso, a via é um *broadcast receiver* de depuração que dispare a troca de desporto diretamente na app, sem tocar no ecrã — não `uiautomator`.

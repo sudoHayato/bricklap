@@ -1,4 +1,4 @@
-# Protótipo clicável — nove ecrãs (Fase 4, sessões 10 a 13c)
+# Protótipo clicável — nove ecrãs (Fase 4, sessões 10 a 14)
 
 Ecrãs para o fundador **reagir**. Não é código de produto: não toca em `apps/mobile` nem no motor. Um ficheiro só, sem dependências: [`bricklap.html`](bricklap.html). Duplo clique abre no browser, a partir do disco (precisa de internet para as duas fontes; sem ela cai para a fonte do sistema e o desenho mantém-se).
 
@@ -10,6 +10,7 @@ Ecrãs para o fundador **reagir**. Não é código de produto: não toca em `app
 | 13a | Dois acertos do fundador depois de ver as capturas: a **fiada** passou de segmentos duros a barra contínua e suave, e os **números** passaram para Archivo Expanded. Comparativas em [fiada.html](fiada.html). |
 | 13b | Três correções: **fora as barras de cor** na lateral dos cartões, a **fiada** mais discreta, e o cartão **"por preencher"** redesenhado. |
 | 13c | A fiada da 13b tinha ficado ilegível e foi **revertida e corrigida com números**; a última cor decorativa saiu da legenda; o **botão Marca** redesenhado. |
+| 14 | **O protótipo saiu do papel**: o sistema visual foi aplicado a `apps/mobile` — tokens, tipografia embebida no APK, ícones originais, e os ecrãs de início, gravação, resumo e histórico. A partir daqui este ficheiro é **referência de desenho**, e o que o atleta usa é a app. Onde cada parte do [DESIGN.md](../DESIGN.md) vive no código está na secção 9 desse documento. |
 
 O ficheiro `blocos.html` da sessão 10 foi substituído por este; o fluxo é o mesmo.
 

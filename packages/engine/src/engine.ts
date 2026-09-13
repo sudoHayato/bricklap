@@ -1,6 +1,7 @@
 import {
   SIM_SPEED_MPS,
   sportHasGps,
+  type Block,
   type Sample,
   type Segment,
   type SegmentMetrics,
@@ -96,6 +97,54 @@ export function segmentsFromEvents(events: SessionEvent[]): Segment[] {
   }
 
   return segments;
+}
+
+/**
+ * Blocks derived from the event log (Fase 4). A block runs from the event
+ * that opened it — `started`, `sport_changed` or `marked` — to the next of
+ * those, or to `stopped`. So a "Marca" splits the segment it lands in
+ * without touching the segment list: `segmentsFromEvents` and every metric
+ * built on it read exactly as they did before this event existed.
+ *
+ * Every segment owns at least one block, and the blocks of a segment tile it
+ * end to end with no gaps and no overlap — which is what makes the block
+ * durations of a segment add up to the segment's own, and their distances to
+ * its distance.
+ */
+export function blocksFromEvents(events: SessionEvent[]): Block[] {
+  const blocks: Block[] = [];
+  let current: Block | null = null;
+  let segmentIndex = -1;
+
+  for (const event of events) {
+    if (event.type === "started") {
+      segmentIndex = 0;
+      current = { index: 0, segmentIndex, sport: event.sport, startAt: event.at, endAt: null };
+      blocks.push(current);
+    } else if (event.type === "sport_changed" && current) {
+      current.endAt = event.at;
+      segmentIndex++;
+      current = { index: blocks.length, segmentIndex, sport: event.sport, startAt: event.at, endAt: null };
+      blocks.push(current);
+    } else if (event.type === "marked" && current) {
+      // Same segment and same sport: only the block boundary moves. The
+      // annotation is needed: without it the inference is circular, because
+      // the object this feeds is assigned back to `current`.
+      const sport: Sport = current.sport;
+      current.endAt = event.at;
+      current = { index: blocks.length, segmentIndex, sport, startAt: event.at, endAt: null };
+      blocks.push(current);
+    } else if (event.type === "stopped" && current) {
+      current.endAt = event.at;
+    }
+  }
+
+  return blocks;
+}
+
+/** The blocks that belong to one segment, in order. */
+export function blocksOfSegment(events: SessionEvent[], segmentIndex: number): Block[] {
+  return blocksFromEvents(events).filter((b) => b.segmentIndex === segmentIndex);
 }
 
 export function currentSport(events: SessionEvent[]): Sport | null {
@@ -373,6 +422,25 @@ export function segmentMetrics(session: Session, segment: Segment, at = nowMs())
   return { durationMs, distanceM, avgSpeedMps };
 }
 
+/**
+ * Metrics of one block, with the same rules as a segment's: a block of a
+ * sport without GPS is time only, and a block of a GPS sport reads its
+ * distance off the same accuracy-gated track its segment uses — so the
+ * blocks of a segment still add up to the segment.
+ */
+export function blockMetrics(session: Session, block: Block, at = nowMs()): SegmentMetrics {
+  const end = block.endAt ?? (isLive(session) ? at : sessionBounds(session).end);
+  const durationMs = Math.max(0, end - block.startAt);
+  if (!sportHasGps(block.sport)) return { durationMs, distanceM: 0, avgSpeedMps: 0 };
+  const segment = segmentsFromEvents(session.events)[block.segmentIndex];
+  // A block built by hand, pointing at no segment of these events: no track
+  // to read, so time only rather than a distance borrowed from elsewhere.
+  if (!segment) return { durationMs, distanceM: 0, avgSpeedMps: 0 };
+  const distanceM = distanceMeters(samplesBetween(segmentPool(session, segment), block.startAt, end));
+  const avgSpeedMps = durationMs > 0 ? distanceM / (durationMs / 1000) : 0;
+  return { durationMs, distanceM, avgSpeedMps };
+}
+
 export function formatDuration(ms: number) {
   const total = Math.max(0, Math.floor(ms / 1000));
   const h = Math.floor(total / 3600);
@@ -438,6 +506,27 @@ export function applyChange(session: Session, sport: Sport, at = nowMs()): Sessi
   return {
     ...session,
     events: [...session.events, { type: "sport_changed", at, sport }],
+  };
+}
+
+/**
+ * "Marca": close the open block and start the next, in the same segment and
+ * the same sport. Ignored when nothing is open — a stopped session, or one
+ * with no `started` yet.
+ *
+ * A mark at or before the start of the open block is ignored too: there is
+ * no block to close, and a zero-length block would be a troço of the fiada
+ * standing for nothing. It is the real guard against the double fire of a
+ * button pressed with a shaking hand, and it costs nothing when the marks
+ * are seconds apart, which is every real one.
+ */
+export function applyMark(session: Session, at = nowMs()): Session {
+  if (!isLive(session)) return session;
+  const open = blocksFromEvents(session.events).at(-1);
+  if (!open || at <= open.startAt) return session;
+  return {
+    ...session,
+    events: [...session.events, { type: "marked", at }],
   };
 }
 

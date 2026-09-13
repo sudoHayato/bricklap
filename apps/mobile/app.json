@@ -6,7 +6,9 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "android": {
       "package": "com.bricklap.app",
       "adaptiveIcon": {
@@ -29,6 +31,21 @@
         {
           "isAndroidBackgroundLocationEnabled": false,
           "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fontes/Inter-Regular.ttf",
+            "./assets/fontes/Inter-Medium.ttf",
+            "./assets/fontes/Inter-SemiBold.ttf",
+            "./assets/fontes/Inter-Bold.ttf",
+            "./assets/fontes/Inter-ExtraBold.ttf",
+            "./assets/fontes/ArchivoExpanded-SemiBold.ttf",
+            "./assets/fontes/ArchivoExpanded-Bold.ttf",
+            "./assets/fontes/ArchivoExpanded-ExtraBold.ttf"
+          ]
         }
       ]
     ]

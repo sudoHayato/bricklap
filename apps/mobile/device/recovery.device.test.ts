@@ -13,7 +13,9 @@
  *
  * Driving the UI (helpers/phone.ts): every screen the test touches (idle,
  * resume, history) is read with `uiautomator dump` and its buttons tapped by
- * their accessible label — never by pixel colour or screen geometry. All
+ * their accessible label — never by pixel colour or screen geometry. Since
+ * Fase 4 the idle screen has no "Iniciar" button: tapping the sport's own
+ * tile starts the session, so "Corrida" is both the anchor and the start. All
  * buttons and sport chips carry `testID` + `accessibilityLabel` (App.tsx).
  * The background recording (real GPS, process killed mid-session) has its
  * own test, background.device.test.ts, on a debuggable release build.
@@ -38,7 +40,6 @@ import {
   grantNotifications,
   hasDevice,
   releaseScreen,
-  scrollToAndTap,
   shell,
   sleep,
   tapText,
@@ -123,7 +124,7 @@ describe("recovery on the device", () => {
       // A previous run (or a manual session) left something live: discard it
       // through the UI, which is the only way this adapter ever closes one.
       await tapText("Descartar");
-      await waitForText("Iniciar");
+      await waitForText("Corrida");
       forceStop();
       r = await launch();
     }
@@ -132,7 +133,8 @@ describe("recovery on the device", () => {
     // and must pass indoors. A resumed session keeps the source of its last
     // sample, so the switch survives every kill below.
     await tapText("Simulado");
-    await tapText("Iniciar");
+    // Um toque e começa (Fase 4): o tijolo do desporto é o Iniciar.
+    await tapText("Corrida");
     // Two flush intervals plus slack: at least one batch has certainly landed.
     await sleep(DEFAULT_FLUSH_INTERVAL_MS * 2 + 1_500);
     beforeKill = pullAndReplay("before-kill");
@@ -207,7 +209,7 @@ describe("recovery on the device", () => {
     expect(r.liveId).toBe(sessionId);
     expect(r.samples).toBe(after.session.samples.length);
     await tapText("Descartar");
-    await waitForText("Iniciar");
+    await waitForText("Corrida");
     const final = pullAndReplay("after-discard").find((s) => s.session.id === sessionId)!;
     expect(final.discarded).toBe(true);
     expect(final.session.status).toBe("stopped");
@@ -223,14 +225,20 @@ describe("recovery on the device", () => {
 
   it("lists the discarded session in the history and comes back clean after a restart", async () => {
     await tapText("Histórico");
-    // Read the rows before scrolling: the newest session is at the top, and
-    // "Voltar" is at the bottom, past however many sessions the phone holds.
-    const nodes = (await waitForText("HISTÓRICO"), dumpUi());
+    // "Histórico" is also the tab label, so it proves nothing about which
+    // screen is up, and "Descartada" is not a node of its own: since Fase 4
+    // it sits inside the card's meta line ("1 bloco · Descartada"), which an
+    // exact match never finds. Anchor on "Apagar", which only the history
+    // cards have, and keep the substring assertion below. The newest session
+    // is at the top and the tabs are outside the scroll view, so nothing
+    // needs scrolling.
+    await waitForText("Apagar");
+    const nodes = dumpUi();
     expect(nodes.some((n) => n.text.includes("Descartada"))).toBe(true);
-    await scrollToAndTap("Voltar");
+    await tapText("Início");
     forceStop();
     const r = await launch();
     expect(r.liveId).toBeNull();
-    await waitForText("Iniciar");
+    await waitForText("Corrida");
   }, 60_000);
 });

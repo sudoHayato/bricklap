@@ -32,6 +32,11 @@ export type Dictionary = {
     watch: string;
     close: string;
     continue: string;
+    /** "Marca": fecha um bloco sem mudar de desporto (Fase 4). */
+    mark: string;
+    delete: string;
+    keep: string;
+    settings: string;
   };
   sport: Record<Sport, { label: string; live: string }>;
   footer: {
@@ -141,6 +146,45 @@ export type Dictionary = {
     notificationsCopy: string;
     notificationsButton: string;
     notificationsWarning: string;
+    /**
+     * Fase 4 — o sistema visual de docs/DESIGN.md na app. Blocos e marcas
+     * (o evento Marca), o ecrã de definições com o seletor de tema, e o
+     * apagar de uma sessão do histórico (DELETE real, ADR 0006).
+     */
+    startTitle: string;
+    startSubtitle: string;
+    gymGroup: string;
+    streetGroup: string;
+    tabHome: string;
+    tabHistory: string;
+    blocksOne: string;
+    blocksOther: string;
+    marksOne: string;
+    marksOther: string;
+    sessionsOne: string;
+    sessionsOther: string;
+    since: string;
+    blocksSection: string;
+    currentBlock: string;
+    lap: string;
+    deleteAsk: string;
+    deleteDone: string;
+    themeTitle: string;
+    themeLight: string;
+    themeLightCopy: string;
+    themeDark: string;
+    themeDarkCopy: string;
+    themeHybrid: string;
+    themeHybridCopy: string;
+    themeSystem: string;
+    themeSystemCopy: string;
+    themeDefault: string;
+    themeNote: string;
+    unitsTitle: string;
+    unitsMetric: string;
+    unitsMetricDetail: string;
+    aboutTitle: string;
+    aboutCopy: string;
   };
   meta: {
     title: string;

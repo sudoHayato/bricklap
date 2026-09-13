@@ -16,9 +16,14 @@ import type { SqlDb } from "./sql";
  *   text, and so the tiny events table is never scanned past thousands of
  *   fixes. Since v2 each row also carries the fix's reported accuracy.
  *
- * There is no UPDATE and no DELETE anywhere in the adapter: state is always
- * a replay of these rows (see replay.ts), exactly as the engine derives
- * segments from events.
+ * Neither table is ever UPDATEd: state is always a replay of these rows (see
+ * replay.ts), exactly as the engine derives segments from events. The one
+ * DELETE in the adapter is `deleteSession` — the athlete asking for a
+ * session to be erased (RGPD, ADR 0006), an explicit operation outside the
+ * recording path, never a step of it.
+ *
+ * A third table, `settings` (v3), holds preferences. It is metadata like
+ * `schema_version`, not session data, and it is rewritten in place.
  */
 export type Migration = { version: number; up: (db: SqlDb) => void };
 
@@ -57,6 +62,23 @@ export const MIGRATIONS: readonly Migration[] = [
     version: 2,
     up: (db) => {
       db.execSync("ALTER TABLE samples ADD COLUMN accuracy REAL");
+    },
+  },
+  {
+    // v3 (Fase 4): the athlete's own preferences — today only the theme.
+    // Metadata, like `schema_version`, and not session data: it is the one
+    // table the adapter rewrites in place (INSERT OR REPLACE), which is why
+    // it lives apart from `events` and `samples` instead of as a column on
+    // either. Nothing here derives from an event, and losing it costs a
+    // preference, never a workout.
+    version: 3,
+    up: (db) => {
+      db.execSync(`
+        CREATE TABLE settings (
+          key   TEXT PRIMARY KEY,
+          value TEXT NOT NULL
+        );
+      `);
     },
   },
 ];
