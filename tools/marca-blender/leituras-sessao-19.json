@@ -1,0 +1,13 @@
+{
+  "nota": "As leituras humanas da sessão 19. O gerar.sh --sessao 19 junta-as às medidas: uma variante só é aprovada com os píxeis a 24 px, o recorte, uma forma, a letra L e nenhuma leitura da lista negra. Os critérios abaixo foram escritos e publicados antes de a folha dos 24 px ser vista; as leituras vêm depois, num commit à parte.",
+  "criterios": {
+    "pixeis_24": "Automático. A 24 px, sobre o creme E sobre o escuro, a duas tonalidades E a uma cor, todas as peças saem separadas com a junta limpa (um píxel com três quartos de fundo à vista); a peça mais fina tem pelo menos 2 px e a junta pelo menos 1,5 px.",
+    "a_forma": "Leitura. Na folha dos 24 px, a 100 %, no creme e sem contexto, tenho de conseguir nomear uma forma do vocabulário do Bricklap: tijolo, tijolos em junta, encaixe, degrau de tijolos, volta. Uma forma geométrica genérica (dois retângulos, três barras, um quadrado aberto) não conta.",
+    "b_letra": "Leitura. A primeira letra que se lê é um L direito: haste à esquerda, pé em baixo a correr para a direita. Um L espelhado, rodado ou de pernas trocadas (⅃, Γ, ⌐) não é L; se a primeira leitura for outro sinal (S, Z, E, C, ⊏, ⊐), é esse. A uma cor tem de se ler a mesma letra. Na dúvida, não é L.",
+    "c_recorte": "Automático. A caixa de 24 é a janela de 72 dp de uma tela de 108 e o círculo é o de 66 dp (raio 11 na grelha). Perde-se uma perna quando um retângulo da construção fica com um quarto ou mais da área fora do círculo.",
+    "d_lista_negra": "Leitura. Chumba se a primeira leitura, ou uma segunda que salte à vista, for: lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras — ou um dos ícones da própria app (início, histórico, definições). Vale o creme e o escuro: se no escuro a leitura passar para a lista, chumba. Na dúvida, chumba.",
+    "replit": "Medida, para a S3 (família Y). Silhueta a uma cor contra a do logótipo do Replit (o favicon público de replit.com, fora do repositório), as duas encaixadas na mesma caixa pela maior dimensão e centradas, a 96 × 96, com a melhor das oito rotações e simetrias. É derivada demais se a sobreposição (interseção sobre união) da semente ou da mediana da família chegar a 0,60. Mede-se também o símbolo atual e as outras três famílias contra o Replit, para a escala."
+  },
+  "familias_eliminadas": {},
+  "leituras": {}
+}
