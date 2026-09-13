@@ -9,5 +9,612 @@
     "replit": "Medida, para a S3 (família Y). Silhueta a uma cor contra a do logótipo do Replit (o favicon público de replit.com, fora do repositório), as duas encaixadas na mesma caixa pela maior dimensão e centradas, a 96 × 96, com a melhor das oito rotações e simetrias. É derivada demais se a sobreposição (interseção sobre união) da semente ou da mediana da família chegar a 0,60. Mede-se também o símbolo atual e as outras três famílias contra o Replit, para a escala."
   },
   "familias_eliminadas": {},
-  "leituras": {}
+  "leituras": {
+    "P1111": {
+      "forma": "um tijolo ao alto e um bloco quase quadrado, em junta",
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P1112": {
+      "forma": "um tijolo ao alto e um bloco quase quadrado, em junta",
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P1113": {
+      "forma": null,
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "cápsulas de ponta redonda, não tijolos"
+    },
+    "P1121": {
+      "forma": "um bloco sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P1122": {
+      "forma": "um bloco sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P1123": {
+      "forma": null,
+      "letra": "L",
+      "lista_negra": null,
+      "nota": "cápsulas de ponta redonda: o L lê-se, o tijolo não"
+    },
+    "P1211": {
+      "forma": "um tijolo ao alto e um bloco quase quadrado, em junta",
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P1212": {
+      "forma": "um tijolo ao alto e um bloco quase quadrado, em junta",
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P1213": {
+      "forma": null,
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "cápsulas de ponta redonda, não tijolos"
+    },
+    "P1221": {
+      "forma": "um bloco sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P1222": {
+      "forma": "um bloco sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P1223": {
+      "forma": null,
+      "letra": "L",
+      "lista_negra": null,
+      "nota": "cápsulas de ponta redonda: o L lê-se, o tijolo não"
+    },
+    "P2111": {
+      "forma": "um tijolo ao alto e um tijolo deitado, em junta",
+      "letra": "I e um traço (l_): lê-se tanto I como L — na dúvida, não é L",
+      "lista_negra": null,
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P2112": {
+      "forma": "um tijolo ao alto e um tijolo deitado, em junta",
+      "letra": "I e um traço (l_): lê-se tanto I como L — na dúvida, não é L",
+      "lista_negra": null,
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P2113": {
+      "forma": null,
+      "letra": "I e um traço (l_): lê-se tanto I como L — na dúvida, não é L",
+      "lista_negra": null,
+      "nota": "cápsulas de ponta redonda, não tijolos"
+    },
+    "P2121": {
+      "forma": "um tijolo ao alto sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P2122": {
+      "forma": "um tijolo ao alto sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P2123": {
+      "forma": null,
+      "letra": "L",
+      "lista_negra": null,
+      "nota": "cápsulas de ponta redonda: o L lê-se, o tijolo não"
+    },
+    "P2211": {
+      "forma": "um tijolo ao alto e um tijolo deitado, em junta",
+      "letra": "I e um traço (l_): lê-se tanto I como L — na dúvida, não é L",
+      "lista_negra": null,
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P2212": {
+      "forma": "um tijolo ao alto e um tijolo deitado, em junta",
+      "letra": "I e um traço (l_): lê-se tanto I como L — na dúvida, não é L",
+      "lista_negra": null,
+      "nota": "a junta ao lado da haste separa o pé como um segundo sinal"
+    },
+    "P2213": {
+      "forma": null,
+      "letra": "I e um traço (l_): lê-se tanto I como L — na dúvida, não é L",
+      "lista_negra": null,
+      "nota": "cápsulas de ponta redonda, não tijolos"
+    },
+    "P2221": {
+      "forma": "um tijolo ao alto sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P2222": {
+      "forma": "um tijolo ao alto sobre um tijolo deitado, em junta",
+      "letra": "L",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "P2223": {
+      "forma": null,
+      "letra": "L",
+      "lista_negra": null,
+      "nota": "cápsulas de ponta redonda: o L lê-se, o tijolo não"
+    },
+    "V1111": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1112": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1113": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V1121": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1122": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1123": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V1211": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1212": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1213": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V1221": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1222": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V1223": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V2111": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2112": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2113": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V2121": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2122": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2123": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V2211": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2212": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2213": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "V2221": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2222": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": ""
+    },
+    "V2223": {
+      "forma": null,
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "cápsulas, não tijolos"
+    },
+    "Y1111": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1112": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1113": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y1121": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1122": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1123": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y1211": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1212": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1213": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y1221": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1222": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y1223": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y2111": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2112": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2113": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y2121": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2122": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2123": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y2211": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2212": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2213": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "Y2221": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2222": {
+      "forma": "degrau de três tijolos (escada)",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "a 24 px os três blocos leem-se como um traço inclinado"
+    },
+    "Y2223": {
+      "forma": null,
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "três pontos em diagonal, não tijolos"
+    },
+    "N1111": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1112": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1113": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": "indicador de carregamento: dois ganchos a rodar, como o sincronizar",
+      "nota": ""
+    },
+    "N1121": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1122": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1123": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": "indicador de carregamento: dois ganchos a rodar, como o sincronizar",
+      "nota": ""
+    },
+    "N1211": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1212": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1213": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": "indicador de carregamento: dois ganchos a rodar, como o sincronizar",
+      "nota": ""
+    },
+    "N1221": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1222": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": ""
+    },
+    "N1223": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": "indicador de carregamento: dois ganchos a rodar, como o sincronizar",
+      "nota": ""
+    },
+    "N2111": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2112": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2113": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "indicador de carregamento: dois arcos a rodar",
+      "nota": ""
+    },
+    "N2121": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2122": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2123": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "indicador de carregamento: dois arcos a rodar",
+      "nota": ""
+    },
+    "N2211": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2212": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2213": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "indicador de carregamento: dois arcos a rodar",
+      "nota": ""
+    },
+    "N2221": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2222": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "marca de corte: dois cantos em L, como o recortar",
+      "nota": ""
+    },
+    "N2223": {
+      "forma": "encaixe de duas peças em L à volta de um vazio",
+      "letra": "nenhuma: um quadrado aberto em dois cantos",
+      "lista_negra": "indicador de carregamento: dois arcos a rodar",
+      "nota": ""
+    },
+    "REF": {
+      "forma": "moldura com três peças",
+      "letra": "nenhuma",
+      "lista_negra": "painel com barra lateral",
+      "nota": "o defeito da sessão 18"
+    },
+    "S1": {
+      "forma": "um tijolo ao alto e um bloco quase quadrado, em junta",
+      "letra": "I e um bloco (i▪)",
+      "lista_negra": "gráfico de barras: uma barra alta e uma baixa, à mesma base",
+      "nota": "a semente S1 tal como desenhada, igual a P1111"
+    },
+    "S2": {
+      "forma": "três tijolos desencontrados, em degrau",
+      "letra": "Z (três barras desencontradas)",
+      "lista_negra": "lista / menu: três barras empilhadas",
+      "nota": "a semente S2 tal como desenhada, igual a V1111"
+    },
+    "S3": {
+      "forma": "degrau de três blocos colados",
+      "letra": "nenhuma: um traço inclinado (/)",
+      "lista_negra": null,
+      "nota": "sem junta: a uma cor os três blocos são uma peça só"
+    },
+    "S4": {
+      "forma": "encaixe de duas peças em gancho",
+      "letra": "S quadrado (as peças escura e clara leem-se como Γ e ⅃, e juntas como S)",
+      "lista_negra": null,
+      "nota": "a semente S4 tal como desenhada, igual a N1111"
+    }
+  }
 }
