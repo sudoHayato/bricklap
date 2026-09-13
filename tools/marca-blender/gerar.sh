@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# Fábrica de silhuetas da marca Bricklap (sessão 18): um comando, de ponta a ponta.
+# Fábrica de silhuetas da marca Bricklap: um comando, de ponta a ponta.
 #
-#   tools/marca-blender/gerar.sh [pasta-de-saída]
+#   tools/marca-blender/gerar.sh [pasta-de-saída]               # sessão 18
+#   tools/marca-blender/gerar.sh --sessao 19 [pasta-de-saída]   # sessão 19
 #
-# Sai: folha-de-contacto.png, folha-24px.png, medidas.json e medidas.md. A pasta
-# de saída fica fora do repositório por omissão — as imagens não entram no git.
+# Sessão 18: folha-de-contacto.png, folha-24px.png, medidas.json e medidas.md.
+# Sessão 19: folha-24px.png, folha-medicao.png, folha-73px-aprovadas.png,
+# folha-recorte-aprovadas.png, medidas.json e medidas.md; lê as leituras
+# humanas de leituras-sessao-19.json. A pasta de saída fica fora do
+# repositório por omissão — as imagens não entram no git.
 #
 # Na WSL usa o Blender instalado no Windows (o mais recente de "Program Files")
 # e passa-lhe todos os caminhos pelo `wslpath -w`. O Blender é um processo
@@ -18,7 +22,22 @@
 set -euo pipefail
 
 aqui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+script="gerar.py"
+parametros="parametros.json"
+extra=()
+if [[ "${1:-}" == "--sessao" ]]; then
+  if [[ "${2:-}" != "19" ]]; then
+    echo "Sessões com gerador: 18 (por omissão) e 19." >&2
+    exit 2
+  fi
+  script="sessao19.py"
+  parametros="parametros-sessao-19.json"
+  shift 2
+fi
 saida="${1:-${TMPDIR:-/tmp}/bricklap-marca-blender}"
+if [[ "$script" == "sessao19.py" ]]; then
+  extra=(--leituras "leituras-sessao-19.json")
+fi
 mkdir -p "$saida"
 saida="$(cd "$saida" && pwd)"
 
@@ -40,8 +59,11 @@ caminho() {
 echo "$("$BLENDER" --version | head -n 1) — $BLENDER"
 # -b sem interface; --factory-startup ignora as preferências e extensões de quem
 # o tiver instalado; --python-exit-code 1 faz um erro no script falhar o comando.
+if [[ ${#extra[@]} -gt 0 ]]; then
+  extra=("${extra[0]}" "$(caminho "$aqui/${extra[1]}")")
+fi
 "$BLENDER" -b --factory-startup -noaudio --python-exit-code 1 \
-  -P "$(caminho "$aqui/gerar.py")" -- \
-  --parametros "$(caminho "$aqui/parametros.json")" \
-  --saida "$(caminho "$saida")"
+  -P "$(caminho "$aqui/$script")" -- \
+  --parametros "$(caminho "$aqui/$parametros")" \
+  --saida "$(caminho "$saida")" "${extra[@]}"
 echo "Saída em $saida"

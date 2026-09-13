@@ -133,12 +133,16 @@ def limpar_cena():
             colecao.remove(item)
 
 
-def malha_plana(nome, poligonos, material):
-    """Uma malha com todos os polígonos de um material; cada um é [exterior, *furos]."""
+def malha_plana(nome, poligonos, material, z=0.0):
+    """Uma malha com todos os polígonos de um material; cada um é [exterior, *furos].
+
+    `z` separa camadas: fundos por baixo das peças, máscaras por cima. A
+    câmara é ortográfica, por isso a altura não muda o tamanho de nada.
+    """
     vertices, faces = [], []
     for contornos in poligonos:
         base = len(vertices)
-        pontos = [[(x, y, 0.0) for x, y in c] for c in contornos]
+        pontos = [[(x, y, z) for x, y in c] for c in contornos]
         for c in pontos:
             vertices.extend(c)
         faces.extend((base + a, base + b, base + c) for a, b, c in geometry.tessellate_polygon(pontos))
@@ -149,7 +153,7 @@ def malha_plana(nome, poligonos, material):
     bpy.context.scene.collection.objects.link(objeto)
 
 
-def texto(corpo, x, y, tamanho, material, alinhar):
+def texto(corpo, x, y, tamanho, material, alinhar, z=0.0):
     curva = bpy.data.curves.new("texto", type="FONT")
     curva.body = corpo
     curva.size = tamanho
@@ -158,7 +162,7 @@ def texto(corpo, x, y, tamanho, material, alinhar):
     curva.materials.append(material)
     objeto = bpy.data.objects.new("texto", curva)
     bpy.context.scene.collection.objects.link(objeto)
-    objeto.location = (x, y, 0.0)
+    objeto.location = (x, y, z)
 
 
 def camara(largura, altura):
@@ -179,34 +183,49 @@ class Folha:
 
     def __init__(self, largura, altura):
         self.largura, self.altura = largura, altura
-        self.poligonos = {"B": [], "L": [], "K": []}
+        # (material, z) -> polígonos; a ordem de criação é a de inserção
+        self.poligonos = {("B", 0.0): [], ("L", 0.0): [], ("K", 0.0): []}
         self.textos = []
         self.caixas = []
 
-    def pousar(self, v, x, y, n, uma_cor):
-        """A variante `v` numa caixa n × n com o canto em (x, y), centrada, sem ampliar nada."""
+    def pousar(self, v, x, y, n, uma_cor, tons=None, **marcas):
+        """A variante `v` numa caixa n × n com o canto em (x, y), centrada, sem ampliar nada.
+
+        `tons` troca o material de cada tom (por omissão B -> "B", L -> "L", e
+        tudo -> "K" a uma cor); `marcas` fica na caixa, para as medidas.
+        """
+        tons = tons or ({"B": "K", "L": "K"} if uma_cor else {"B": "B", "L": "L"})
         escala = n / 100
         dx = math.floor((100 - v["largura"]) / 2 * escala + 0.5)
         dy = math.floor((100 - v["altura"]) / 2 * escala + 0.5)
         for peca in v["pecas"]:
-            self.poligonos["K" if uma_cor else peca["tom"]].append(
+            self.poligonos.setdefault((tons[peca["tom"]], 0.0), []).append(
                 [
                     [(x + dx + px * escala, self.altura - (y + dy + (v["altura"] - py) * escala)) for px, py in c]
                     for c in peca["contornos"]
                 ]
             )
-        self.caixas.append({"id": v["id"], "tamanho": n, "uma_cor": uma_cor, "x": x, "y": y})
+        self.caixas.append({"id": v["id"], "tamanho": n, "uma_cor": uma_cor, "x": x, "y": y, **marcas})
+
+    def poligono(self, contornos, material, z):
+        """Um polígono em píxeis da folha (origem em cima à esquerda): [exterior, *furos]."""
+        self.poligonos.setdefault((material, z), []).append(
+            [[(px, self.altura - py) for px, py in c] for c in contornos]
+        )
+
+    def retangulo(self, x, y, largura, altura, material, z):
+        self.poligono([[(x, y), (x + largura, y), (x + largura, y + altura), (x, y + altura)]], material, z)
 
     def escrever(self, corpo, x, y, tamanho, cor="texto", alinhar="LEFT"):
         self.textos.append((corpo, x, y, tamanho, cor, alinhar))
 
     def renderizar(self, caminho, amostras, materiais):
         limpar_cena()
-        for tom, poligonos in self.poligonos.items():
+        for (tom, z), poligonos in self.poligonos.items():
             if poligonos:
-                malha_plana(f"pecas_{tom}", poligonos, materiais[tom])
+                malha_plana(f"pecas_{tom}_{z}", poligonos, materiais[tom], z)
         for corpo, x, y, tamanho, cor, alinhar in self.textos:
-            texto(corpo, x, self.altura - y, tamanho, materiais[cor], alinhar)
+            texto(corpo, x, self.altura - y, tamanho, materiais[cor], alinhar, z=0.2)
         camara(self.largura, self.altura)
         cena = bpy.context.scene
         cena.render.resolution_x = self.largura
@@ -480,4 +499,7 @@ def main():
     print(f"[marca] pronto em {time.time() - inicio:.1f} s: {opcoes.saida}")
 
 
-main()
+# O Blender corre um script com -P como "__main__"; a sessão 19 importa este
+# ficheiro para lhe reutilizar a cena, a folha e as medidas, sem o correr.
+if __name__ == "__main__":
+    main()

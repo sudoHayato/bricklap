@@ -1,0 +1,84 @@
+{
+  "nota": "Sessão 19: as quatro sementes do CTO, na grelha de 24 dele (peças entre 3 e 21, y para baixo). Cada família varre quatro eixos: espessura, junta e desencontro com dois valores (o 1.º é o da semente, salvo na S3: a junta da semente é zero e os blocos tocam-se, e a espessura 5 é a da semente com a junta tirada aos blocos — 3 × 5 + 2 × 1,5 = 18, a altura da semente; com 6 a escada saía da caixa e o recorte castigava-a por ser maior, não pela forma) e o raio com três (0, 1 e 2,5), 2 × 2 × 2 × 3 = 24 variantes por família. O id é a letra da família e, eixo a eixo, a posição do valor: P1111 é a semente S1 tal como foi desenhada; P1113 é a mesma com raio 2,5. Acrescentar valores ao fim de um eixo não muda nenhum id. Letras novas, para não se confundirem com as da sessão 18: P = S1, V = S2, Y = S3, N = S4.",
+  "cores": {
+    "B": "#C0402C",
+    "L": "#E89478",
+    "creme": "#FBF8F4",
+    "escuro": "#121010",
+    "uma_cor_creme": "#16120F",
+    "uma_cor_escuro": "#FFFFFF",
+    "texto_creme": "#16120F",
+    "texto2_creme": "#5A524B",
+    "texto_escuro": "#F7F2EC",
+    "texto2_escuro": "#B5ABA2",
+    "campo": "#C0402C",
+    "campo_peca": "#FBF8F4",
+    "folha": "#FFFFFF",
+    "recorte_fundo": "#A39A91"
+  },
+  "recorte": {
+    "nota": "A caixa de 24 é a janela de 72 dp que o Android promete mostrar numa tela de 108; o círculo é o de 66 dp, o único que nenhuma máscara corta. Na grelha de 24 tem raio 66 / 72 × 12 = 11. Uma perna perde-se quando um retângulo da construção fica com um quarto ou mais da área fora do círculo.",
+    "raio_na_grelha": 11,
+    "limiar_perna": 0.25
+  },
+  "amostras": {
+    "folha_24": 128,
+    "medicao": 64,
+    "aprovadas": 64,
+    "recorte": 64
+  },
+  "familias": [
+    {
+      "letra": "P",
+      "semente": "S1",
+      "nome": "L de duas peças",
+      "titulo": "P · S1, L de duas peças — haste e pé",
+      "fixos": {},
+      "eixos": [
+        ["espessura", [7, 5]],
+        ["junta", [2, 1.5]],
+        ["desencontro", [0, 1]],
+        ["raio", [0, 1, 2.5]]
+      ]
+    },
+    {
+      "letra": "V",
+      "semente": "S2",
+      "nome": "volta em degrau",
+      "titulo": "V · S2, volta em degrau — três barras desencontradas",
+      "fixos": {},
+      "eixos": [
+        ["espessura", [5, 4]],
+        ["junta", [1.5, 2]],
+        ["desencontro", [2, 3]],
+        ["raio", [0, 1, 2.5]]
+      ]
+    },
+    {
+      "letra": "Y",
+      "semente": "S3",
+      "nome": "escada",
+      "titulo": "Y · S3, escada — três blocos em degrau",
+      "fixos": {},
+      "eixos": [
+        ["espessura", [5, 4]],
+        ["junta", [1.5, 2]],
+        ["desencontro", [3, 1]],
+        ["raio", [0, 1, 2.5]]
+      ]
+    },
+    {
+      "letra": "N",
+      "semente": "S4",
+      "nome": "encaixe em L",
+      "titulo": "N · S4, encaixe em L — dois L à volta de um vazio",
+      "fixos": {},
+      "eixos": [
+        ["espessura", [6, 4]],
+        ["junta", [2, 1.5]],
+        ["desencontro", [2, 0]],
+        ["raio", [0, 1, 2.5]]
+      ]
+    }
+  ]
+}
