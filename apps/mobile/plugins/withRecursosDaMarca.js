@@ -1,4 +1,4 @@
-const { withAndroidColors, withDangerousMod, AndroidConfig } = require("expo/config-plugins");
+const { withAndroidColors, withAndroidStyles, withDangerousMod, AndroidConfig } = require("expo/config-plugins");
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -19,6 +19,13 @@ const path = require("node:path");
  * 2. **O ecrã de arranque.** `android/` é gerado pelo `expo prebuild` e está
  *    fora do git, por isso qualquer ficheiro lá posto à mão desaparece no
  *    prebuild seguinte. Este plugin corre *depois* do template, e ganha.
+ *
+ *    Sessão 16: pôr o logótipo nos drawables não chegava. O template do Expo
+ *    (sem `expo-splash-screen`) usa o PNG diretamente como fundo da janela —
+ *    esticado ao ecrã inteiro no Android < 12 —, e no Android 12+ o sistema
+ *    ignora-o e desenha o arranque com o ícone do lançador sobre o fundo do
+ *    tema, que em modo escuro dava um fotograma escuro antes do creme da app.
+ *    Gravado no telemóvel do fundador. Os estilos abaixo corrigem os dois.
  *
  * As imagens vêm já rasterizadas de `assets/marca/` (geradas a partir do SVG
  * mestre em `docs/marca/` — ver `docs/marca/README.md`); o plugin só as copia
@@ -65,20 +72,57 @@ function copiar(projectRoot, plataformaRoot) {
  */
 const FUNDO_ARRANQUE = "#FBF8F4";
 
+/**
+ * Os estilos do arranque. O `layer-list` `ic_launcher_background` vem do
+ * template (a cor `splashscreen_background` com o logótipo centrado, no seu
+ * tamanho) — é ele que tem de ser o fundo da janela, e não o PNG.
+ *
+ * - `Theme.App.SplashScreen`: fundo da janela = o `layer-list` (Android < 12);
+ *   no Android 12+, fundo e ícone do arranque do sistema = o creme e o
+ *   logótipo. O logótipo mede 144 dp numa tela de 288, para caber no círculo
+ *   de 192 dp que o Android 12 garante (docs/marca/README.md, "Na app").
+ * - `AppTheme`: fundo da janela creme. A `MainActivity` troca para este tema
+ *   antes do primeiro desenho do React; com o `DayNight` do template, o
+ *   telemóvel em modo escuro mostrava um fotograma escuro no meio do arranque.
+ */
+const ESTILOS = [
+  { tema: "Theme.App.SplashScreen", nome: "android:windowBackground", valor: "@drawable/ic_launcher_background" },
+  { tema: "Theme.App.SplashScreen", nome: "android:windowSplashScreenBackground", valor: "@color/splashscreen_background", api: "31" },
+  { tema: "Theme.App.SplashScreen", nome: "android:windowSplashScreenAnimatedIcon", valor: "@drawable/splashscreen_logo", api: "31" },
+  { tema: "AppTheme", nome: "android:windowBackground", valor: "@color/splashscreen_background" },
+];
+
 module.exports = function withRecursosDaMarca(config) {
   const comFicheiros = withDangerousMod(config, [
     "android",
     (cfg) => {
       const feitos = copiar(cfg.modRequest.projectRoot, cfg.modRequest.platformProjectRoot);
+      const camada = path.join(cfg.modRequest.platformProjectRoot, "app", "src", "main", "res", "drawable", "ic_launcher_background.xml");
+      if (!fs.existsSync(camada)) {
+        throw new Error(`withRecursosDaMarca: o template já não traz ${camada}; o fundo do arranque apontava para ele.`);
+      }
       console.log(`withRecursosDaMarca: ${feitos.length} ficheiros copiados para res/`);
       return cfg;
     },
   ]);
-  return withAndroidColors(comFicheiros, (cfg) => {
+  const comCores = withAndroidColors(comFicheiros, (cfg) => {
     cfg.modResults = AndroidConfig.Colors.assignColorValue(cfg.modResults, {
       name: "splashscreen_background",
       value: FUNDO_ARRANQUE,
     });
+    return cfg;
+  });
+  return withAndroidStyles(comCores, (cfg) => {
+    for (const e of ESTILOS) {
+      const parent = e.tema === "AppTheme" ? { name: "AppTheme" } : { name: e.tema, parent: "AppTheme" };
+      cfg.modResults = AndroidConfig.Styles.assignStylesValue(cfg.modResults, {
+        add: true,
+        parent,
+        name: e.nome,
+        value: e.valor,
+        targetApi: e.api,
+      });
+    }
     return cfg;
   });
 };

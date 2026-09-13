@@ -330,7 +330,8 @@ apps/mobile/
                    tokens.ts (temas e cores), tema.ts (o tema decide-se por ecrã),
                    tipografia.ts (Inter + Archivo Expanded, embebidas), icones.tsx (SVG originais),
                    componentes.tsx e estrutura.tsx (botões, cartões, cabeçalho, separadores),
-                   marca.tsx (o botão Marca), fiada.tsx (a fiada)
+                   marca.tsx (o botão Marca), fiada.tsx (a fiada),
+                   logotipo.tsx e coresDoLogotipo.ts (o logótipo do cabeçalho, a duas tonalidades)
   store.ts         uma instância do adaptador de persistência por processo
   i18n.ts          locale do dispositivo (I18nManager) -> t() de @bricklap/i18n
   index.ts         defineRecordingTask() antes de registerRootComponent(App): a tarefa existe em todos os contextos JS
@@ -341,11 +342,15 @@ apps/mobile/
                    Append-only em events e samples; deleteSession é o único DELETE, a pedido do atleta
   device/          testes num telemóvel real: recuperação (test:device) e segundo plano (test:device:background)
   scripts/         geojson.mjs — base + registo bruto -> GeoJSON e resumo; gps-noise.mjs — análise do ruído
-  test/            testes em Node (node:sqlite) do adaptador
-  app.json         configuração Expo (só Android; package com.bricklap.app; plugins expo-location e expo-font)
+  test/            testes em Node (node:sqlite) do adaptador, e as cores do logótipo
+  app.json         configuração Expo (só Android; package com.bricklap.app; plugins expo-location, expo-font
+                   e o local withRecursosDaMarca)
+  plugins/         withRecursosDaMarca.js: ícone de notificação e logótipo de arranque nos drawables
   tsconfig.json    extends expo/tsconfig.base + strict + noUncheckedIndexedAccess
-  assets/          ícones do template (placeholders) e fontes/ com as oito faces embebidas no APK
-                   (Inter 400-800, Archivo Expanded 600-800; declaradas no plugin expo-font do app.json)
+  assets/          ícones da marca (docs/marca/README.md, "Na app"): icon.png, android-icon-foreground.png e
+                   android-icon-monochrome.png (o fundo do adaptativo é a cor #C0402C no app.json);
+                   marca/ com a notificação e o arranque por densidade; fontes/ com as oito faces
+                   embebidas no APK (Inter 400-800, Archivo Expanded 600-800; plugin expo-font do app.json)
   android/         gerada por `expo prebuild`, ignorada pelo git
 ```
 

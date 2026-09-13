@@ -1,4 +1,5 @@
 import { Path, Rect, Svg } from "react-native-svg";
+import { coresDoLogotipo } from "./coresDoLogotipo";
 
 /**
  * O logótipo do Bricklap, na app.
@@ -11,12 +12,11 @@ import { Path, Rect, Svg } from "react-native-svg";
  * preciso para o ler, e assim herda a cor quando tem de ser monocromático.
  *
  * **A distinção entre o B (`#C0402C`) e o L (`#E89478`) é a alma da marca** e
- * mantém-se em tudo o que é visível (decisão do fundador). A propriedade
- * `cor` existe só para os constrangimentos técnicos onde duas tonalidades não
- * cabem — ver `docs/marca/README.md`.
+ * mantém-se em tudo o que é visível (decisão do fundador): sem cores pedidas,
+ * sai a duas tonalidades. `corB` sozinha existe só para os constrangimentos
+ * técnicos onde duas não cabem — ver `coresDoLogotipo.ts` e
+ * `docs/marca/README.md`.
  */
-export const MARCA_B = "#C0402C";
-export const MARCA_L = "#E89478";
 
 const TRACO = 13;
 const RAIO = 20;
@@ -45,8 +45,7 @@ function rr(x: number, y: number, w: number, h: number, r: number): string {
 const MOLDURA = `${rr(0, 0, 100, 100, RAIO)} ${rr(TRACO, TRACO, 100 - 2 * TRACO, 100 - 2 * TRACO, RAIO_INT)}`;
 
 export function Logotipo(props: { tamanho: number; corB?: string; corL?: string }) {
-  const b = props.corB ?? MARCA_B;
-  const l = props.corL ?? b;
+  const { b, l } = coresDoLogotipo(props.corB, props.corL);
   return (
     <Svg width={props.tamanho} height={props.tamanho} viewBox="0 0 100 100">
       <Path d={MOLDURA} fill={b} fillRule="evenodd" />

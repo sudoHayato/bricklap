@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="Bricklap">
+  <title>Bricklap — ícone de notificação do Android</title>
+  <rect x="2" y="2" width="4.194" height="20" rx="1.5" fill="#FFFFFF"/>
+  <path fill="#FFFFFF" fill-rule="evenodd" d="M9.306,2 H20.5 A1.5,1.5 0 0 1 22,3.5 V9.694 A1.5,1.5 0 0 1 20.5,11.194 H9.306 A1.5,1.5 0 0 1 7.806,9.694 V3.5 A1.5,1.5 0 0 1 9.306,2 Z M9.806,4 H20 A0,0 0 0 1 20,4 V9.194 A0,0 0 0 1 20,9.194 H9.806 A0,0 0 0 1 9.806,9.194 V4 A0,0 0 0 1 9.806,4 Z"/>
+  <path fill="#FFFFFF" fill-rule="evenodd" d="M9.306,12.806 H20.5 A1.5,1.5 0 0 1 22,14.306 V20.5 A1.5,1.5 0 0 1 20.5,22 H9.306 A1.5,1.5 0 0 1 7.806,20.5 V14.306 A1.5,1.5 0 0 1 9.306,12.806 Z M9.806,14.806 H20 A0,0 0 0 1 20,14.806 V20 A0,0 0 0 1 20,20 H9.806 A0,0 0 0 1 9.806,20 V14.806 A0,0 0 0 1 9.806,14.806 Z"/>
+</svg>

@@ -13,17 +13,25 @@ import type { Tokens } from "./tokens";
  * esquerda para a direita ao longo dos 500 ms exatos do premir e, ao fechar,
  * é a confirmação de que a marca foi feita.
  *
- * - **Silhueta própria**, e não um retângulo de cantos iguais: 110 px de
- *   altura, raios de 8 px à esquerda e 30 px à direita. A aresta cortada
+ * - **Silhueta própria**, e não um retângulo de cantos iguais: 80 px de
+ *   altura, raios de 8 px à esquerda e 20 px à direita. A aresta cortada
  *   encosta ao que já está construído; a aberta é por onde entra o bloco
  *   seguinte.
  * - **Profundidade a sério**: o casco é `acento-premido` e a face é `acento`,
- *   assente 6 px acima do fundo do casco. Ao premir, a face desce para 4 px e
- *   o leito encolhe para 2, em 90 ms. O que muda é GEOMETRIA e não cor: duas
+ *   assente 4 px acima do fundo do casco. Ao premir, a face desce 3 px e o
+ *   leito encolhe para 1, em 90 ms. O que muda é GEOMETRIA e não cor: duas
  *   terracotas vizinhas são a mesma cor ao sol, e o dedo tapa o centro do
  *   botão mas não a aresta de baixo.
- * - **Rótulo à esquerda**, com 26 px de recuo: o polegar direito cai no terço
+ * - **Rótulo à esquerda**, com 22 px de recuo: o polegar direito cai no terço
  *   direito e a palavra nunca fica debaixo do dedo.
+ *
+ * **Sessão 16: de 110 para 80 px.** No telemóvel real o botão era grande de
+ * mais (fundador). O piso do CTO é 72 px de altura e 90 % da largura; ficou
+ * a toda a largura útil e a 80 — 43 % acima dos 56 px de qualquer alvo de
+ * treino, porque o dedo que o procura está a suar e a tremer. Desceram na
+ * mesma proporção o rótulo (29 → 22, o tamanho das distâncias no cartão), o
+ * ícone (28 → 22, o dos botões), o leito (6 → 4) e a sombra, que era metade
+ * do peso visual e não servia o gesto.
  *
  * **Porquê premir e não tocar** (decisão desta sessão, para o CTO rever):
  * uma marca não se desfaz nesta versão — não há edição do histórico de
@@ -35,8 +43,9 @@ import type { Tokens } from "./tokens";
  */
 export const MS_DO_PREMIR = 500;
 
-const ALTURA = 110;
-const RECUO_ANEL = 10;
+const ALTURA = 80;
+const LEITO = 4;
+const RECUO_ANEL = 8;
 
 export function BotaoMarca(props: { tokens: Tokens; rotulo: string; onMarca: () => void }) {
   const { tokens } = props;
@@ -79,7 +88,7 @@ export function BotaoMarca(props: { tokens: Tokens; rotulo: string; onMarca: () 
   };
 
   const medir = (e: LayoutChangeEvent) => setLargura(e.nativeEvent.layout.width);
-  const raios = { borderTopLeftRadius: 8, borderBottomLeftRadius: 8, borderTopRightRadius: 30, borderBottomRightRadius: 30 };
+  const raios = { borderTopLeftRadius: 8, borderBottomLeftRadius: 8, borderTopRightRadius: 20, borderBottomRightRadius: 20 };
 
   return (
     <Pressable
@@ -95,10 +104,10 @@ export function BotaoMarca(props: { tokens: Tokens; rotulo: string; onMarca: () 
         backgroundColor: tokens.acentoPremido,
         ...raios,
         shadowColor: tokens.acento,
-        shadowOpacity: 0.26,
-        shadowRadius: 24,
-        shadowOffset: { width: 0, height: 8 },
-        elevation: 6,
+        shadowOpacity: 0.16,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 3,
       }}
     >
       <Animated.View
@@ -106,14 +115,14 @@ export function BotaoMarca(props: { tokens: Tokens; rotulo: string; onMarca: () 
           position: "absolute",
           left: 0,
           right: 0,
-          top: face.interpolate({ inputRange: [0, 1], outputRange: [0, 4] }),
-          bottom: face.interpolate({ inputRange: [0, 1], outputRange: [6, 2] }),
+          top: face.interpolate({ inputRange: [0, 1], outputRange: [0, LEITO - 1] }),
+          bottom: face.interpolate({ inputRange: [0, 1], outputRange: [LEITO, 1] }),
           backgroundColor: tokens.acento,
           ...raios,
           flexDirection: "row",
           alignItems: "center",
-          paddingHorizontal: 26,
-          gap: 12,
+          paddingHorizontal: 22,
+          gap: 10,
         }}
       >
         <Animated.View
@@ -131,17 +140,17 @@ export function BotaoMarca(props: { tokens: Tokens; rotulo: string; onMarca: () 
             style={{
               width: larguraDoAnel,
               height: "100%",
-              borderWidth: 3,
+              borderWidth: 2.5,
               borderColor: "rgba(255,255,255,0.92)",
               borderTopLeftRadius: 2,
               borderBottomLeftRadius: 2,
-              borderTopRightRadius: 20,
-              borderBottomRightRadius: 20,
+              borderTopRightRadius: 20 - RECUO_ANEL,
+              borderBottomRightRadius: 20 - RECUO_ANEL,
             }}
           />
         </Animated.View>
-        <Icone nome="marca" cor={tokens.sobreAcento} tamanho={28} />
-        <Text style={numero(29, 800, tokens.sobreAcento, { letterSpacing: -0.29 })}>{props.rotulo}</Text>
+        <Icone nome="marca" cor={tokens.sobreAcento} tamanho={22} />
+        <Text style={numero(22, 800, tokens.sobreAcento, { letterSpacing: -0.22 })}>{props.rotulo}</Text>
       </Animated.View>
     </Pressable>
   );

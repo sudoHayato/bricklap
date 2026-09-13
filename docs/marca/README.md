@@ -10,6 +10,7 @@ Escolhida pelo fundador e desenhada na sessão 15. Uma **moldura quadrada vazada
 |---|---|---|
 | **O B** | `#C0402C` | a moldura, o pilar e o retângulo de cima |
 | **O L** | `#E89478` | o retângulo de baixo, e só ele |
+| Creme | `#FBF8F4` | o pilar e o retângulo de cima **no ícone da app**, e o fundo do arranque; é o `fundo` do tema claro |
 | Preto | `#16120F` | fundos difíceis; é a `tinta` do tema claro |
 | Branco | `#FFFFFF` | fundos difíceis e o ícone de notificação |
 
@@ -43,18 +44,21 @@ Medido, não estimado. Na grelha de 100, cada retângulo da direita mede 44 × 2
 
 **A fronteira é 24 px.** De 24 para cima, duas tonalidades. Abaixo de 24, uma cor — não porque fique melhor, mas porque a outra deixa de ser verdade.
 
-**São píxeis renderizados, não `dp` nem pontos.** Num ecrã a 3× (a maioria dos telemóveis de hoje), 24 dp são **72 px** e a marca está muito acima da fronteira; num ecrã a 1× são 24 px e está em cima dela. Quem aplicar a regra tem de contar os píxeis que a imagem vai mesmo ter, não a medida do esquema. É por isso que o logótipo do cabeçalho da app, desenhado a 26 dp, mostra as duas tonalidades sem problema: no telemóvel são 78 px.
+**São píxeis renderizados, não `dp` nem pontos.** Num ecrã a 3× (a maioria dos telemóveis de hoje), 24 dp são **72 px** e a marca está muito acima da fronteira; num ecrã a 1× são 24 px e está em cima dela. Quem aplicar a regra tem de contar os píxeis que a imagem vai mesmo ter, não a medida do esquema. É por isso que o logótipo do cabeçalho da app, desenhado a 26 dp, **tem de** mostrar as duas tonalidades: no telemóvel do fundador (450 ppp) são 73 px. *Na sessão 15 este parágrafo dizia que as mostrava, e não mostrava — ver "Na app".*
 
 ## Qual variante, em que contexto
 
 | Contexto | Ficheiro |
 |---|---|
 | Uso geral, ≥ 24 px | `bricklap-logo.svg` |
-| Notificação do Android, favicon, < 24 px renderizados | `bricklap-logo-uma-cor.svg` |
+| **Ícone da app** | `bricklap-icone-app.svg` — ver *O ícone da app* |
+| **Ícone de notificação do Android** | `bricklap-notificacao.svg` — ver *O ícone de notificação* |
+| Ecrã de arranque | `bricklap-logo.svg`, a duas tonalidades, sobre `#FBF8F4` |
+| Favicon, < 24 px renderizados | `bricklap-logo-uma-cor.svg` |
 | Fundo claro difícil (impressão a uma cor, fotocópia) | `bricklap-logo-preto.svg` |
 | Fundo escuro ou fotografia | `bricklap-logo-branco.svg` |
 | Marca com a palavra ao lado | `bricklap-horizontal.svg` (preto e branco: `-preto`, `-branco`) |
-| Em estudo, não adotado | `bricklap-selo.svg` — ver *A pergunta do selo* |
+| Registo da sessão 15, **não usar** | `bricklap-selo.svg` — o selo cheio de peças vazadas, que o fundador não escolheu |
 
 A palavra da versão horizontal é **Archivo Expanded Bold (700)**, a mesma família dos números da app, **convertida em contornos**: um logótipo que depende de a fonte estar instalada em quem o abre não é um logótipo. O 700 foi escolhido contra o 800 porque acompanha o traço da moldura sem competir com ele, e porque as contraformas continuam abertas a 20 px, onde o 800 começa a fechar ([comparação](versao-horizontal.png)).
 
@@ -71,12 +75,37 @@ A palavra da versão horizontal é **Archivo Expanded Bold (700)**, a mesma fam�
 - **Redesenhar as peças** — mudar o vão, a espessura da moldura, o raio dos cantos. As proporções estão fixadas abaixo.
 - **Usar a uma cor** onde as duas tonalidades cabem.
 - **Pôr a marca sobre uma fotografia** sem ser a versão a branco ou a preto.
+- **Desenhar a moldura dentro do ícone da app.** O sistema já recorta o ícone; uma moldura lá dentro dá dois quadrados encaixados — ver *O ícone da app*.
 
-## A pergunta do selo, para o fundador
+## O ícone da app
 
-O **selo cheio** (`bricklap-selo.svg`) é um quadrado cheio com as três peças vazadas. Tem mais massa e aguenta melhor os tamanhos pequenos. **Não foi adotado**, e a moldura continua a ser a marca principal em qualquer caso — mas fica a comparação no [ecrã inicial do Android simulado](selo-vs-moldura.png) para o fundador decidir qual usar **como ícone da app**.
+**Decisão do fundador, sessão 16**, depois de ver a app instalada. O ícone da app **não é a moldura desenhada dentro de um quadrado**, nem o selo de peças vazadas: é o **campo `#C0402C` a toda a tela**, com as três peças **a claro** — o pilar e o retângulo de cima em `#FBF8F4`, o de baixo em `#E89478`. **O recorte do sistema é a moldura.**
 
-O argumento técnico contra o selo, que a maqueta mostra: as peças vazadas deixam ver **o que estiver por trás**. Na maqueta leem-se pretas porque o fundo é escuro; com outro papel de parede leriam outra coisa. **O selo não consegue transportar as duas tonalidades**, por construção — e é a distinção entre o B e o L que a regra da cor manda preservar justamente nas aplicações mais visíveis, que é o que o ícone da app é.
+![O ícone adaptativo da sessão 15 e o da 16, sob três recortes](icone-adaptativo.png)
+
+**Porque a moldura desenhada falhou** (medido no lançador do telemóvel do fundador, One UI 8.5): o Android promete mostrar os 72 dp centrais de uma tela de 108, e cada fabricante recorta como quer. O One UI mostra **64,2 %** da tela; a moldura da sessão 15 ocupava **64,0 %**. O contorno da marca e o recorte do sistema eram a mesma linha — a moldura deixava de se ver como forma, o seu traço vermelho passava a fundo, e o ícone lia-se como um **selo cheio**. Nos lançadores que recortam menos, via-se o contrário: **dois quadrados encaixados**, o do sistema e o da marca. Um ícone que depende de quanto o sistema recorta está errado em todos.
+
+**Como a regra da cor se aplica aqui.** O B passa a ser o campo, e as peças que o formam ficam a claro; **o L continua a ser `#E89478`**, e continua a distinguir-se — do campo e do creme. Os números, porque são baixos: o creme sobre o campo dá **4,95:1**; o L sobre o campo **2,23:1**, e o L sobre o creme **2,22:1**. O L fica a meio caminho entre as outras duas cores do ícone (2,23 × 2,22 = 4,95). Distingue-se, mas é a peça mais fraca do ícone, e isso foi visto, não esquecido.
+
+**A medida.** O campo das peças ocupa **62 % da janela de 72 dp** — a mesma proporção entre o campo e a moldura que a marca tem (62 em 100) —, ou seja 44,64 dp numa tela de 108 (**41,3 %**). No One UI isso dá 64 % do ícone visível. É também a medida que cabe na zona segura dos lançadores de recorte circular: o canto mais afastado das peças fica a 61,3 dp de diâmetro, dentro dos 66 dp garantidos. A comparação de escalas (58, 64 e 70 % do ícone) fez-se no lançador real, ao lado das aplicações vizinhas, antes de aplicar.
+
+O **monocromático** (ícones temáticos do Android 13+) são as mesmas três peças a branco, na mesma medida: sem moldura, pela mesma razão.
+
+## O ícone de notificação
+
+O Android obriga a uma silhueta: pinta o canal alfa e ignora a cor. É o primeiro dos três casos técnicos da regra da cor. Na sessão 15 a silhueta era a marca inteira a encher a tela de 24 dp, e o fundador leu-a como **"um tijolo gigante, muito bruto"**: na barra de estado do telemóvel dele desenhava-se a **39 px**, mais alta do que os algarismos do relógio (28 px) e mais pesada do que qualquer ícone ao lado.
+
+**O ícone é as três peças, com o pilar cheio e os dois retângulos em contorno**, numa área de 20 dp dentro da tela de 24 (a margem de 2 dp dos ícones de sistema), com traço de 2 dp e cantos de 1,5. Na barra real desenha-se a **32 px** — da altura do ícone do USB (31) e abaixo do cata-vento (35).
+
+Escolhido entre três tratamentos **postos na barra de estado real** do telemóvel do fundador, sobre a app e sobre a gaveta:
+
+| Tratamento | Na barra real | Leitura |
+|---|---|---|
+| A — só a moldura, em traço fino | 32 × 32 px | leve e de sistema, mas é um quadrado vazio: não diz Bricklap e confunde-se com "parar" |
+| B — só as duas peças da direita, cheias | 23 × 32 px | continua a ser um bloco, só mais estreito |
+| **C — as três peças em contorno** | **32 × 32 px** | **o traço tem o peso dos ícones vizinhos, e é o desenho do ícone da app** |
+
+Um refinamento depois da captura: em contorno, o pilar (13 de 62 do campo, 4,2 dp) não tem largura para dois traços de 2 dp e uma cavidade — ficava com um fio de menos de 1 px no meio, visível na barra. **Cheio**, pesa o mesmo que dois traços e desenha-se limpo.
 
 ## A marca não está registada
 
@@ -86,6 +115,10 @@ O argumento técnico contra o selo, que a maqueta mostra: as peças vazadas deix
 - **Não a usar fora deste repositório e da app** — nada de sítio público, loja, redes ou material impresso.
 
 A verificação é **tarefa do fundador**, quando houver alguma coisa pública para lançar.
+
+## Marca de trabalho, congelada
+
+**Nota do CTO, sessão 16.** A marca fica **congelada como marca de trabalho**: não se redesenha mais nas sessões de desenvolvimento. A recomendação é **levá-la a um designer profissional antes de a app ser mostrada a estranhos**. Este documento existe também para isso: as direções, as cores, as medidas e o raciocínio — incluindo o que falhou e porquê — já estão escritos, o que reduz o trabalho e o custo de quem pegar nela.
 
 ## Geometria, para quem tiver de a redesenhar
 
@@ -108,20 +141,25 @@ Grelha de 100. Todos os ficheiros saem destes números — se algum divergir, o 
 
 ## Na app
 
-### As margens de cada ficheiro, para quem os voltar a gerar
+### As medidas de cada ficheiro, para quem os voltar a gerar
 
-Não são gosto: saem da máscara do Android, que garante só os **72 dp centrais de 108** (≈ 66 %) e corta o resto conforme o fabricante.
+Não são gosto: saem do que o Android garante mostrar de cada imagem, e isso **mede-se no telemóvel**, não se lê só na documentação — a sessão 15 seguiu a documentação e errou (ver *O ícone da app*).
 
-| Ficheiro | Margem transparente | A marca ocupa |
-|---|---:|---:|
-| `android-icon-foreground.png` (adaptativo) | 18 % | **64 %** da tela |
-| `android-icon-monochrome.png` (ícones temáticos) | 18 % | 64 % |
-| `icon.png` (lançador antigo, com fundo) | 14 % | 72 % |
-| `marca/notificacao-*.png` | 0 % | 100 % |
-| `marca/arranque-*.png` | 0 % | 100 % |
+| Ficheiro | O que tem | Medida |
+|---|---|---|
+| fundo do adaptativo | a cor `#C0402C` (`adaptiveIcon.backgroundColor` no `app.json`), sem PNG | toda a tela |
+| `android-icon-foreground.png` | as três peças, creme e L, sem moldura | campo a **41,3 %** da tela (62 % da janela de 72 dp) |
+| `android-icon-monochrome.png` | as três peças a branco | 41,3 % |
+| `icon.png` (Android 7, sem máscara do sistema) | o ícone da app num quadrado de cantos de 20 % | quadrado a 87,5 % da tela |
+| `marca/notificacao-*.png` | pilar cheio e retângulos em contorno, a branco | 20 dp em 24; traço de 2 dp |
+| `marca/arranque-*.png` | a marca a duas tonalidades | **144 dp numa tela de 288** — o Android 12+ só garante um círculo de 192 dp |
 
-Com 28 % — que foi o primeiro valor que usei — a marca fica em 44 % e **lê-se visivelmente mais pequena do que as vizinhas no lançador**. Só se vê no telemóvel, ao lado de outras aplicações; numa captura isolada parece bem.
+### O arranque
+
+Pôr o logótipo nos drawables, como a sessão 15 fez, não chegava, e só se viu ao **gravar o ecrã** num arranque a frio (uma captura não o apanha: o arranque dura menos do que ela). O template do Expo usava o PNG diretamente como fundo da janela — esticado ao ecrã inteiro no Android < 12 —, e no Android 12+ o sistema ignorava-o: o telemóvel do fundador (Android 16, modo escuro) mostrava o ícone do lançador a expandir sobre vermelho, **um fotograma escuro**, e só depois o creme da app. O creme com a marca nunca aparecia. Desde a sessão 16 o plugin define os estilos: fundo da janela = o creme com a marca centrada, fundo e ícone do arranque do Android 12+ = o creme e a marca, e o `AppTheme` com fundo creme. Gravado de novo no mesmo telemóvel: a gaveta funde para creme, a marca a duas tonalidades aparece, e o fotograma escuro deixou de existir.
 
 ### Os componentes
 
-`apps/mobile/ui/logotipo.tsx` desenha a mesma geometria em `react-native-svg` — é o que assina o cabeçalho do Início, do Histórico e da retoma, no lugar onde a app escrevia a palavra "Bricklap" em texto. Os PNG do Android saem de `apps/mobile/assets/` e `apps/mobile/assets/marca/`, e o plugin `apps/mobile/plugins/withRecursosDaMarca.js` põe o ícone de notificação e o logótipo de arranque nos drawables por densidade, porque `android/` é gerado pelo `expo prebuild` e não vive no git.
+`apps/mobile/ui/logotipo.tsx` desenha a mesma geometria em `react-native-svg` — é o que assina o cabeçalho do Início, do Histórico e da retoma, no lugar onde a app escrevia a palavra "Bricklap" em texto. **Na sessão 15 saiu a uma cor**: o componente fazia `corL ?? corB`, e sem cores pedidas o L caía no B. As cores estão agora em `ui/coresDoLogotipo.ts`, com um teste (`apps/mobile/test/logotipo.test.ts`) que falha se o logótipo sem argumentos deixar de ter duas tonalidades.
+
+Os PNG do Android saem de `apps/mobile/assets/` e `apps/mobile/assets/marca/`, e o plugin `apps/mobile/plugins/withRecursosDaMarca.js` põe o ícone de notificação e o logótipo de arranque nos drawables por densidade e define os estilos do arranque, porque `android/` é gerado pelo `expo prebuild` e não vive no git.

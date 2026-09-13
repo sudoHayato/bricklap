@@ -139,7 +139,7 @@ A abreviatura da unidade que pertence ao número (`km`, `m`, `kg`, `/km`, `reps`
 
 - Escala de espaçamento: **4, 8, 12, 16, 20, 24, 32**. Margem lateral dos ecrãs: 20.
 - Raios: 8 (pequeno), 12 (botão, linha de tabela), 16 (cartão), 20 (botão Marca), 24 (folha), 999 (pílula, chip).
-- Alvos de toque: **56 px** para tudo o que se toca durante o treino (botões, −/+, chips da ficha); 44 px para ações de consulta; o **botão Marca tem 108 px** e ocupa a largura toda.
+- Alvos de toque: **56 px** para tudo o que se toca durante o treino (botões, −/+, chips da ficha); 44 px para ações de consulta; o **botão Marca tem 80 px** e ocupa a largura toda (eram 110 até à sessão 16 — ver §6).
 - Um ecrã de treino nunca tem mais de três alvos: Marca, Mudar, Parar.
 
 ## 5. Ícones
@@ -158,11 +158,12 @@ Não usar ícone para: o nome de um exercício de força (o nome é o nome), o e
 
 **Botão Marca.** O gesto central da app, redesenhado na sessão 13c. **Nada de instruções lá dentro**: um botão que se tem de explicar por escrito já falhou, e quem o toca está a suar, a tremer e a olhar de relance.
 
-- **Silhueta própria**, e não um retângulo de cantos iguais: 110 px de altura, largura total, raios **8 px à esquerda e 30 px à direita**. A aresta cortada encosta ao que já está construído; a aberta é por onde entra o bloco seguinte. É a única forma no sistema que não se repete em mais lado nenhum — e continua a não ser redonda, que o §8 proíbe.
-- **Profundidade real**: o casco é `acento-premido` e a face é `acento`, assente 6 px acima do fundo do casco. Ao premir a face desce para `top: 4px` e o leito encolhe de 6 para 2 px, em 90 ms. O que muda é **geometria**, não cor: duas terracotas vizinhas são a mesma cor ao sol, e o dedo tapa o centro do botão mas não a aresta de baixo.
-- **Indicador do gesto longo**: um anel de 3 px em branco a 92 %, recuado 10 px, com os mesmos raios da silhueta, desenhado por `clip-path` da esquerda para a direita ao longo dos **500 ms** exatos do premir. Em repouso está inteiramente recortado — **não existe**, e o botão fica com uma palavra e uma bandeira e mais nada.
-- **Rótulo alinhado à esquerda**, 29/800 com 26 px de recuo: o polegar direito cai no terço direito do botão, e a palavra nunca fica debaixo do dedo.
-- **Alvo**: 110 px de altura por toda a largura, quase o dobro do mínimo de 56.
+- **Silhueta própria**, e não um retângulo de cantos iguais: **80 px** de altura, largura total, raios **8 px à esquerda e 20 px à direita**. A aresta cortada encosta ao que já está construído; a aberta é por onde entra o bloco seguinte. É a única forma no sistema que não se repete em mais lado nenhum — e continua a não ser redonda, que o §8 proíbe.
+- **Profundidade real**: o casco é `acento-premido` e a face é `acento`, assente **4 px** acima do fundo do casco. Ao premir a face desce 3 px e o leito encolhe de 4 para 1 px, em 90 ms. O que muda é **geometria**, não cor: duas terracotas vizinhas são a mesma cor ao sol, e o dedo tapa o centro do botão mas não a aresta de baixo. A sombra é baixa (elevação 3): a profundidade é o leito, não um halo.
+- **Indicador do gesto longo**: um anel de 2,5 px em branco a 92 %, recuado 8 px, com os mesmos raios da silhueta, desenhado por `clip-path` da esquerda para a direita ao longo dos **500 ms** exatos do premir. Em repouso está inteiramente recortado — **não existe**, e o botão fica com uma palavra e uma bandeira e mais nada.
+- **Rótulo alinhado à esquerda**, **22/800** com 22 px de recuo e a bandeira a 22 px: o polegar direito cai no terço direito do botão, e a palavra nunca fica debaixo do dedo.
+- **Alvo**: 80 px de altura por toda a largura útil — 43 % acima do mínimo de 56, e acima do piso que o CTO fixou (72 px de altura, 90 % da largura).
+- **Sessão 16: de 110 para 80 px.** No telemóvel real, com a mão a meio de um treino, o botão da 13c era grande de mais (fundador). Desceram juntos a altura, o rótulo (29 → 22, o tamanho das distâncias no cartão de gravação), a bandeira (28 → 22, a dos outros botões), o leito (6 → 4) e a sombra, que era metade do peso visual e não servia o gesto. **O protótipo HTML continua com a medida da 13c**; em conflito, manda este documento.
 - Parar mantém o gesto de 0,8 s com a barra em acento a 16 %; Mudar e Parar mantêm-se como estão.
 - **Na app, o Marca dispara ao fim do premir e não ao toque** (sessão 14). No protótipo o toque marca e o premir marca **e abre a ficha**; a ficha é a Fase 4.5 e ainda não existe, e até existir um toque e um premir fariam exatamente o mesmo. A escolha foi pelo custo do erro: uma marca **não se desfaz** nesta versão, e um toque acidental no telemóvel pousado no banco partia um bloco em dois sem ninguém dar por isso. Um premir que não chega ao fim não faz nada e **vê-se**, porque o anel recua — e é assim que o botão se explica à primeira tentativa. Quando a ficha entrar, o toque volta a ser marca simples e o anel mantém o significado que já tem.
 
@@ -232,7 +233,8 @@ O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) �
 
 - **A marca e o acento são a mesma terracota, calibrada.** `#C0402C` (matiz 8,1°) vive entre o `#B03A2A` do tema claro (7,2°) e o `#D14F3D` do escuro (7,3°). Não é uma terceira cor a competir; é a mesma família.
 - **O logótipo não é um ícone do §5.** Os ícones do sistema têm traço de 2 px e herdam a cor do texto; a marca é uma forma cheia com cor própria e não se desenha com as regras deles.
-- **Na app, o logótipo assina o cabeçalho** do Início, do Histórico e da retoma, no lugar onde antes estava a palavra "Bricklap" em maiúsculas pequenas (`apps/mobile/ui/logotipo.tsx`).
+- **Na app, o logótipo assina o cabeçalho** do Início, do Histórico e da retoma, no lugar onde antes estava a palavra "Bricklap" em maiúsculas pequenas (`apps/mobile/ui/logotipo.tsx`), **a duas tonalidades**. Na sessão 15 saiu a uma cor por um defeito do componente, corrigido e com teste na 16.
+- **O ícone da app não é o logótipo dentro de um quadrado** (decisão do fundador, sessão 16): é o campo `#C0402C` a toda a tela, com as três peças a claro — o pilar e o retângulo de cima em `#FBF8F4`, o de baixo em `#E89478`. **O recorte do sistema faz de moldura.** Desenhar a moldura dentro do ícone dá dois quadrados encaixados, o do sistema e o da marca, e no One UI o recorte chega a comer a moldura inteira.
 
 ## 9. Onde isto vive na app
 
@@ -248,7 +250,7 @@ Escrito na sessão 14, quando o sistema saiu do protótipo para `apps/mobile`. O
 | §6 botão Marca | `apps/mobile/ui/marca.tsx` |
 | §7 a fiada | `apps/mobile/ui/fiada.tsx` |
 | Os ecrãs | `apps/mobile/ecras.tsx` |
-| §8b a marca | `apps/mobile/ui/logotipo.tsx`, e os PNG em `apps/mobile/assets/` |
+| §8b a marca | `apps/mobile/ui/logotipo.tsx` e `ui/coresDoLogotipo.ts`; os PNG em `apps/mobile/assets/`; os estilos do arranque em `apps/mobile/plugins/withRecursosDaMarca.js` |
 
 Duas notas sobre a tradução, porque nenhuma é óbvia:
 
