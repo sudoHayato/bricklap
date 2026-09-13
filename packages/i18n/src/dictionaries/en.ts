@@ -161,6 +161,7 @@ export const en: Dictionary = {
     blocksSection: "Blocks",
     currentBlock: "Block {n}",
     lap: "Mark {n}",
+    currentSportTag: "Current",
     deleteAsk: "Delete? There is no undo.",
     deleteDone: "Session deleted.",
     themeTitle: "Theme",

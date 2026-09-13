@@ -167,6 +167,8 @@ export type Dictionary = {
     blocksSection: string;
     currentBlock: string;
     lap: string;
+    /** A escolha do Mudar (sessão 17): o desporto que já está a decorrer, não selecionável. */
+    currentSportTag: string;
     deleteAsk: string;
     deleteDone: string;
     themeTitle: string;

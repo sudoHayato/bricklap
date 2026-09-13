@@ -160,6 +160,12 @@ Pôr o logótipo nos drawables, como a sessão 15 fez, não chegava, e só se vi
 
 ### Os componentes
 
-`apps/mobile/ui/logotipo.tsx` desenha a mesma geometria em `react-native-svg` — é o que assina o cabeçalho do Início, do Histórico e da retoma, no lugar onde a app escrevia a palavra "Bricklap" em texto. **Na sessão 15 saiu a uma cor**: o componente fazia `corL ?? corB`, e sem cores pedidas o L caía no B. As cores estão agora em `ui/coresDoLogotipo.ts`, com um teste (`apps/mobile/test/logotipo.test.ts`) que falha se o logótipo sem argumentos deixar de ter duas tonalidades.
+`apps/mobile/ui/logotipo.tsx` desenha a mesma geometria em `react-native-svg`. **Na sessão 15 saiu a uma cor**: o componente fazia `corL ?? corB`, e sem cores pedidas o L caía no B. As cores estão agora em `ui/coresDoLogotipo.ts`, com um teste (`apps/mobile/test/logotipo.test.ts`) que falha se o logótipo sem argumentos deixar de ter duas tonalidades.
 
 Os PNG do Android saem de `apps/mobile/assets/` e `apps/mobile/assets/marca/`, e o plugin `apps/mobile/plugins/withRecursosDaMarca.js` põe o ícone de notificação e o logótipo de arranque nos drawables por densidade e define os estilos do arranque, porque `android/` é gerado pelo `expo prebuild` e não vive no git.
+
+### O nome no cabeçalho, e uma honestidade sobre ele
+
+Desde a sessão 15 o cabeçalho do Início, do Histórico e da retoma tinha só o símbolo; a sessão 17 pôs a palavra **"Bricklap" de volta**, ao lado dele, em `apps/mobile/ui/logotipoComPalavra.tsx`. A palavra vai em **Archivo Expanded** — a mesma família do lockup horizontal acima, e a exceção que o [DESIGN.md](../DESIGN.md) §3 regista para ela, não para o texto corrido.
+
+**Isto não é um wordmark a sério.** O alinhamento — o tamanho da palavra face ao símbolo, o vão entre os dois, o ajuste vertical para o descendente do "p" — foi escolhido a olho, comparando três tratamentos no ecrã real do telemóvel do fundador, não desenhado por um tipógrafo com as ferramentas certas (guias de altura-x, curvas de tensão óptica). É trabalho da mesma qualidade que o resto da marca: uma direção defensável, não uma peça acabada. Continua a valer a nota de "Marca de trabalho, congelada" acima — um designer profissional a rever isto acerta o que aqui foi feito a olho.

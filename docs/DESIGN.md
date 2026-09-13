@@ -131,7 +131,7 @@ Escala (px), a mesma nos dois temas:
 | Texto secundário, detalhe de cartão | 12,5–13,5 / 500–600 |
 | Rótulo em maiúsculas (`kicker`) | 11 / 700, `letter-spacing .1em` |
 
-Regras: números **nunca** em Inter; palavras **nunca** em Archivo; uma só coisa por ecrã acima de 40 px.
+Regras: números **nunca** em Inter; palavras **nunca** em Archivo; uma só coisa por ecrã acima de 40 px. **Uma exceção, e é da marca e não do texto**: a palavra "Bricklap" no lockup do cabeçalho (§8b, §6) vai em Archivo Expanded — a mesma família do lockup horizontal da marca (`docs/marca/bricklap-horizontal.svg`), não a do texto corrido. É a única palavra do sistema que sai desta regra, e é por ser nome próprio da marca, não copy.
 
 A abreviatura da unidade que pertence ao número (`km`, `m`, `kg`, `/km`, `reps`) fica **dentro** da corrida de Archivo: é parte da medida, não texto — `2 000 m` e `5:30 /km` lêem-se como uma coisa só. Palavras que descrevem a medida ("passadeira", "em movimento", "última vez") são Inter.
 
@@ -166,6 +166,8 @@ Não usar ícone para: o nome de um exercício de força (o nome é o nome), o e
 - **Sessão 16: de 110 para 80 px.** No telemóvel real, com a mão a meio de um treino, o botão da 13c era grande de mais (fundador). Desceram juntos a altura, o rótulo (29 → 22, o tamanho das distâncias no cartão de gravação), a bandeira (28 → 22, a dos outros botões), o leito (6 → 4) e a sombra, que era metade do peso visual e não servia o gesto. **O protótipo HTML continua com a medida da 13c**; em conflito, manda este documento.
 - Parar mantém o gesto de 0,8 s com a barra em acento a 16 %; Mudar e Parar mantêm-se como estão.
 - **Na app, o Marca dispara ao fim do premir e não ao toque** (sessão 14). No protótipo o toque marca e o premir marca **e abre a ficha**; a ficha é a Fase 4.5 e ainda não existe, e até existir um toque e um premir fariam exatamente o mesmo. A escolha foi pelo custo do erro: uma marca **não se desfaz** nesta versão, e um toque acidental no telemóvel pousado no banco partia um bloco em dois sem ninguém dar por isso. Um premir que não chega ao fim não faz nada e **vê-se**, porque o anel recua — e é assim que o botão se explica à primeira tentativa. Quando a ficha entrar, o toque volta a ser marca simples e o anel mantém o significado que já tem.
+
+**Escolha de desporto (folha).** O que o botão Mudar abre — sessão 17, reversão de uma decisão de âmbito do CTO na sessão 14 (o Mudar passava para o desporto seguinte de uma lista fixa, em ciclo, sem o fundador o ter pedido; cada toque escrevia um evento). Sobe do fundo, raio 24 em cima, pega de 36×4; os oito desportos em duas grelhas — GINÁSIO e RUA, a mesma ordem e os mesmos ícones do início —, alvos de **56 px**. O desporto atual aparece com o selo "Atual", em `acento-fundo`/`acento`, e **não é premível**: não existe "mudar para o mesmo". **Nenhum evento se escreve ao abrir a folha** — só ao escolher um desporto diferente, e nessa ordem exata: a amostra de fronteira primeiro, o `changeSport` depois, como o CHANGE sempre fez. Cancelar — toque no véu por fora, o botão "Cancelar" no fundo da folha, ou o gesto de voltar do Android — fecha sem tocar na sessão. `apps/mobile/ui/escolhaDesporto.tsx`.
 
 **"A seguir".** Linha própria **acima** do botão, dentro de `.acoes`: rótulo `A SEGUIR` em maiúsculas a 11/700 em `tinta3`, e o nome do bloco seguinte a 17/800 em `tinta`, truncado com reticências. Não é um cartão e não leva acento — o ecrã só tem um bloco de acento e é o Marca. Quando não há bloco seguinte (HIIT, sessão sem modelo) a linha não se desenha: não se põe lá um traço à espera de texto.
 
@@ -233,7 +235,8 @@ O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) �
 
 - **A marca e o acento são a mesma terracota, calibrada.** `#C0402C` (matiz 8,1°) vive entre o `#B03A2A` do tema claro (7,2°) e o `#D14F3D` do escuro (7,3°). Não é uma terceira cor a competir; é a mesma família.
 - **O logótipo não é um ícone do §5.** Os ícones do sistema têm traço de 2 px e herdam a cor do texto; a marca é uma forma cheia com cor própria e não se desenha com as regras deles.
-- **Na app, o logótipo assina o cabeçalho** do Início, do Histórico e da retoma, no lugar onde antes estava a palavra "Bricklap" em maiúsculas pequenas (`apps/mobile/ui/logotipo.tsx`), **a duas tonalidades**. Na sessão 15 saiu a uma cor por um defeito do componente, corrigido e com teste na 16.
+- **Na app, o logótipo assina o cabeçalho** do Início, do Histórico e da retoma (`apps/mobile/ui/logotipo.tsx`), **a duas tonalidades**. Na sessão 15 saiu a uma cor por um defeito do componente, corrigido e com teste na 16.
+- **Desde a sessão 17, o símbolo volta a ter a palavra ao lado** (`ui/logotipoComPalavra.tsx`): entre a 15 e a 17 o cabeçalho só tinha o símbolo, e a app ficou sem nome à vista. A palavra é Archivo Expanded — a exceção do §3 — porque é a mesma família do lockup horizontal da marca; não é um wordmark desenhado, é um alinhamento a olho, tão provisório como o resto da marca (`docs/marca/README.md`).
 - **O ícone da app não é o logótipo dentro de um quadrado** (decisão do fundador, sessão 16): é o campo `#C0402C` a toda a tela, com as três peças a claro — o pilar e o retângulo de cima em `#FBF8F4`, o de baixo em `#E89478`. **O recorte do sistema faz de moldura.** Desenhar a moldura dentro do ícone dá dois quadrados encaixados, o do sistema e o da marca, e no One UI o recorte chega a comer a moldura inteira.
 
 ## 9. Onde isto vive na app
@@ -248,9 +251,11 @@ Escrito na sessão 14, quando o sistema saiu do protótipo para `apps/mobile`. O
 | §5 ícones | `apps/mobile/ui/icones.tsx` |
 | §6 componentes | `apps/mobile/ui/componentes.tsx` e `ui/estrutura.tsx` |
 | §6 botão Marca | `apps/mobile/ui/marca.tsx` |
+| §6 escolha de desporto | `apps/mobile/ui/escolhaDesporto.tsx` |
 | §7 a fiada | `apps/mobile/ui/fiada.tsx` |
 | Os ecrãs | `apps/mobile/ecras.tsx` |
 | §8b a marca | `apps/mobile/ui/logotipo.tsx` e `ui/coresDoLogotipo.ts`; os PNG em `apps/mobile/assets/`; os estilos do arranque em `apps/mobile/plugins/withRecursosDaMarca.js` |
+| §8b o lockup do cabeçalho | `apps/mobile/ui/logotipoComPalavra.tsx` |
 
 Duas notas sobre a tradução, porque nenhuma é óbvia:
 

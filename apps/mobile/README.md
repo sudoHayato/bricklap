@@ -9,7 +9,7 @@ Um único ecrã que percorre a ideia central do produto: uma sessão de treino �
 
 - **Iniciar** com um toque: no ecrã inicial toca-se no **tijolo do desporto** e a sessão começa aí — não há um botão "Iniciar" separado desde a Fase 4. Oito tijolos em dois grupos: **Ginásio** (força, passadeira, remo indoor, natação) e **Rua** (corrida, caminhada, bicicleta, transição).
 - **Marca** a cada bloco: fecha o bloco que acabou e abre o seguinte, **sem mudar de desporto**. É o gesto central da app — cinco séries do mesmo exercício são cinco blocos de um segmento de força, não cinco segmentos. **Dispara ao fim de 500 ms a premir**, com um anel a fechar-se; largar antes do fim não faz nada e o anel recua (o porquê está no [DESIGN.md](../../docs/DESIGN.md) §6).
-- **Mudar** de desporto quantas vezes quiseres, sem parar o relógio — também entre a rua e o ginásio. Percorre a ordem dos oito em ciclo, sem ecrã de escolha a meio do treino.
+- **Mudar** de desporto quantas vezes quiseres, sem parar o relógio — também entre a rua e o ginásio. Abre uma folha com os oito, na ordem dos tijolos, o atual assinalado e não selecionável; nenhum evento se escreve até haver escolha (sessão 17 — [DESIGN.md](../../docs/DESIGN.md) §6).
 - **Parar** no fim — também a premir, 0,8 s, com a barra a encher — e ver o resumo: tempo total, distância quando há segmentos com GPS, e **a lista de blocos com o tempo de cada um**.
 - **Histórico** com **apagar**: dois toques (pedir, confirmar no próprio cartão) e é um `DELETE` real das linhas dessa sessão ([ADR 0006](../../docs/adr/0006-persistencia-sqlite-append-only.md)).
 - **Definições** com o **seletor de tema**: claro, escuro, **híbrido** (treino escuro, consulta clara — a predefinição) ou seguir o sistema. Fica guardado no telemóvel.
@@ -330,8 +330,9 @@ apps/mobile/
                    tokens.ts (temas e cores), tema.ts (o tema decide-se por ecrã),
                    tipografia.ts (Inter + Archivo Expanded, embebidas), icones.tsx (SVG originais),
                    componentes.tsx e estrutura.tsx (botões, cartões, cabeçalho, separadores),
-                   marca.tsx (o botão Marca), fiada.tsx (a fiada),
-                   logotipo.tsx e coresDoLogotipo.ts (o logótipo do cabeçalho, a duas tonalidades)
+                   marca.tsx (o botão Marca), escolhaDesporto.tsx (a folha do Mudar), fiada.tsx (a fiada),
+                   logotipo.tsx e coresDoLogotipo.ts (o símbolo, a duas tonalidades),
+                   logotipoComPalavra.tsx (o símbolo com "Bricklap" ao lado, no cabeçalho)
   store.ts         uma instância do adaptador de persistência por processo
   i18n.ts          locale do dispositivo (I18nManager) -> t() de @bricklap/i18n
   index.ts         defineRecordingTask() antes de registerRootComponent(App): a tarefa existe em todos os contextos JS

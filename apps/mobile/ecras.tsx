@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import {
   SPORT_PACE_KIND,
@@ -23,12 +24,13 @@ import { formatDistanceForUnit, formatPaceForUnit, formatSpeedForUnit } from "@b
 import { locale, t } from "./i18n";
 import type { SessionSummary } from "./persistence";
 import { Botao, Cartao, Kicker, Pilula, Seccao, Tijolo } from "./ui/componentes";
+import { EscolhaDesporto } from "./ui/escolhaDesporto";
 import { BotaoPremir, Cabeca, FUNDO, LinhaBloco, Redondo, TOPO, Tabs } from "./ui/estrutura";
 import { Fiada, type TrocoFiada } from "./ui/fiada";
 import { Icone } from "./ui/icones";
 import { BotaoMarca } from "./ui/marca";
 import { kicker, numero, texto } from "./ui/tipografia";
-import { COR_DESPORTO, E, PRESETS, R, type Preset, type Superficie, type Tokens } from "./ui/tokens";
+import { COR_DESPORTO, E, ORDEM_GINASIO, ORDEM_RUA, PRESETS, R, type Preset, type Superficie, type Tokens } from "./ui/tokens";
 
 /**
  * Os ecrãs, com o sistema visual de `docs/DESIGN.md` aplicado: início,
@@ -40,9 +42,6 @@ import { COR_DESPORTO, E, PRESETS, R, type Preset, type Superficie, type Tokens 
  * anteriores, gráficos. Um bloco é hoje um tempo e, quando é de rua, uma
  * distância — e é só isso que estes ecrãs mostram.
  */
-
-const ORDEM_GINASIO: Sport[] = ["strength", "treadmill", "rowing_indoor", "swimming_pool"];
-const ORDEM_RUA: Sport[] = ["run", "walk", "bike", "transition"];
 
 /** "3 blocos" / "1 bloco". Recebe as palavras já traduzidas: uma chave montada
  * em runtime não é verificável, e o dicionário é tipado de propósito. */
@@ -180,10 +179,11 @@ export function EcraGravacao(props: {
   gpsLinha: string | null;
   avisos: React.ReactNode;
   onMarca: () => void;
-  onMudar: () => void;
+  onMudarPara: (s: Sport) => void;
   onParar: () => void;
 }) {
   const { tokens, tema, session, now } = props;
+  const [aEscolherDesporto, setAEscolherDesporto] = useState(false);
   const sport = currentSport(session.events) ?? "run";
   const blocos = blocksFromEvents(session.events);
   const fechados = blocos.filter((b) => b.endAt !== null);
@@ -298,7 +298,7 @@ export function EcraGravacao(props: {
             rotulo={t("common.change")}
             icone="mudar"
             estilo={undefined}
-            onPress={props.onMudar}
+            onPress={() => setAEscolherDesporto(true)}
           />
           <BotaoPremir
             tokens={tokens}
@@ -312,6 +312,18 @@ export function EcraGravacao(props: {
           />
         </View>
       </View>
+
+      <EscolhaDesporto
+        tokens={tokens}
+        tema={tema}
+        visivel={aEscolherDesporto}
+        atual={sport}
+        onEscolher={(s) => {
+          setAEscolherDesporto(false);
+          props.onMudarPara(s);
+        }}
+        onCancelar={() => setAEscolherDesporto(false)}
+      />
     </View>
   );
 }

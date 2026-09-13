@@ -161,6 +161,7 @@ export const ptPT: Dictionary = {
     blocksSection: "Blocos",
     currentBlock: "Bloco {n}",
     lap: "Marca {n}",
+    currentSportTag: "Atual",
     deleteAsk: "Apagar? Não há volta.",
     deleteDone: "Sessão apagada.",
     themeTitle: "Tema",

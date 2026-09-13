@@ -155,6 +155,15 @@ export const E = { e1: 4, e2: 8, e3: 12, e4: 16, e5: 20, e6: 24, e7: 32 } as con
 /** Raios: pequeno, botão / linha de tabela, cartão, botão largo, folha, pílula. */
 export const R = { s: 8, m: 12, g: 16, xl: 20, folha: 24, pill: 999 } as const;
 
-/** Alvo de toque em treino. Consulta: 44. O botão Marca tem 110. */
+/** Alvo de toque em treino. Consulta: 44. O botão Marca tem 80. */
 export const TOQUE = 56;
 export const TOQUE_CONSULTA = 44;
+
+/**
+ * A ordem dos oito desportos em duas grelhas — ginásio primeiro, rua depois —
+ * a mesma do ecrã inicial (`EcraInicio`). Vive aqui, e não em `ecras.tsx`,
+ * porque a escolha do Mudar (`ui/escolhaDesporto.tsx`) usa-a também, e um
+ * ficheiro de `ui/` não deve importar de `ecras.tsx` (sessão 17).
+ */
+export const ORDEM_GINASIO: Sport[] = ["strength", "treadmill", "rowing_indoor", "swimming_pool"];
+export const ORDEM_RUA: Sport[] = ["run", "walk", "bike", "transition"];

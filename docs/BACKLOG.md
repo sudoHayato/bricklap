@@ -22,6 +22,7 @@ Feito na sessão 03 (ADR 0006): adaptador de persistência SQLite append-only e 
 
 Decisão do fundador em [docs/VISAO.md](VISAO.md): um treino HIIT/AMRAP é uma sessão com blocos, cada um com as suas métricas. Uma linha por bloco futuro, **todos Fase 4+**, nenhum desenhado agora:
 
+- [ ] **O Mudar propõe o bloco seguinte do plano como primeira opção** (Fase 4.5, quando existirem planos; sessão 17). A escolha de desporto (`ui/escolhaDesporto.tsx`) continua a permitir escolher outro; só a ordem ou o destaque da primeira opção muda para seguir o plano, quando houver um.
 - [ ] **Força com exercício, repetições e carga** por segmento (Fase 4+). Introdução após o treino sobre o segmento já gravado é a primeira via a estudar; durante o treino é Fase 5 (relógio).
 - [ ] **Passadeira por ritmo × distância → tempo** (Fase 4+): o atleta introduz o ritmo e a distância da máquina; o tempo já está gravado.
 - [ ] **Remo indoor com metros** (Fase 4+): metros do monitor do remo, introduzidos após o treino.
@@ -65,8 +66,9 @@ Decisão do CTO na sessão 13b ([ROADMAP](../ROADMAP.md), Fase 6; [VISAO](VISAO.
 
 Fora daqui, e de propósito: **feed social e desafios entre atletas** estão **adiados sem fase atribuída** (ROADMAP, "Adiado, sem fase atribuída") — exigem contas, servidor, nuvem, moderação e tornam o fundador responsável pelo tratamento de dados de terceiros. Não entram no backlog até haver utilizadores reais que os peçam.
 
-## Marca (sessões 15 e 16)
+## Marca (sessões 15, 16 e 17)
 
+- [x] ~~**"Peças brancas" no ícone da app**~~ — **fechado na sessão 17**: o fundador viu-as **na gaveta de aplicações, antes da correção da sessão 16**. Era a moldura da sessão 15, cortada pelo One UI à medida exata do seu próprio traço (relatório da sessão 16 §3.1); resolvido pelo ícone novo da mesma sessão.
 - [ ] **Verificar a marca no [TMview](https://www.tmdn.org/tmview/) e no [INPI](https://inpi.justica.gov.pt/) — tarefa do fundador.** A marca **não está registada**. Até haver verificação não se trata como definitiva nem se usa fora deste repositório e da app: nada de sítio público, loja, redes ou material impresso. Faz-se quando houver alguma coisa pública para lançar. Ver [docs/marca/README.md](marca/README.md).
 - [ ] **Levar a marca a um designer profissional antes de a app ser mostrada a estranhos** (nota do CTO, sessão 16). A marca fica **congelada como marca de trabalho**: não se redesenha nas sessões de desenvolvimento. O [docs/marca/README.md](marca/README.md) tem as direções, as cores, as medidas e o que falhou, para reduzir o trabalho e o custo de quem pegar nela.
 - [x] ~~**Decidir o ícone da app: moldura ou selo cheio**~~ — **decidido pelo fundador na sessão 16, e não foi nenhum dos dois**: campo `#C0402C` a toda a tela com as três peças a claro, sem moldura desenhada — o recorte do sistema é a moldura. A moldura desenhada dentro do ícone lia-se como selo no One UI, que recorta a tela à medida exata da moldura (relatório da sessão 16).
@@ -76,7 +78,7 @@ Fora daqui, e de propósito: **feed social e desafios entre atletas** estão **a
 
 ## Mapa dos percursos GPS (Fase 4, a seguir aos planos de treino — sem código)
 
-Decisão do CTO na sessão 16 ([ROADMAP](../ROADMAP.md), 4.5b). O [ADR 0007](adr/0007-gps-primeiro-plano.md) deixou o mapa de fora da Fase 2 por ser uma dependência pesada para uma pergunta que uma linha de texto respondia; na Fase 4 a pergunta passa a ser "por onde andei", e aí o mapa é a resposta.
+Decisão do CTO na sessão 16 ([ROADMAP](../ROADMAP.md), 4.5b). O [ADR 0007](adr/0007-gps-primeiro-plano.md) deixou o mapa de fora da Fase 2 por ser uma dependência pesada para uma pergunta que uma linha de texto respondia; na Fase 4 a pergunta passa a ser "por onde andei", e aí o mapa é a resposta. **As zonas de privacidade não são decisão do CTO**: vêm das diretrizes que o fundador deu ao CTO no início do projeto, fora do repositório; o CTO só as trouxe para aqui na sessão 16 (correção do fundador, sessão 17).
 
 - [ ] **Mapa de uma sessão de rua com MapLibre e OpenStreetMap** — gratuito, sem licença paga. Um cartão com contorno, nunca o fundo do ecrã (DESIGN.md §8). Nova dependência nativa: justificar no relatório dessa sessão.
 - [ ] **Zonas de privacidade, no mesmo brief que o mapa e não depois**: esconder o início e o fim de cada percurso. Um mapa sem elas mostra onde o atleta mora ou trabalha. A decidir no brief: o raio, e a quem se esconde — ao próprio atleta no ecrã, ou só no que sai do telemóvel (captura, exportação GPX).

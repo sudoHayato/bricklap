@@ -353,20 +353,28 @@ export default function App() {
     setSession(store.live());
   }, [boundarySample]);
 
-  const mudar = useCallback(() => {
-    // Sem ecrã de escolha a meio do treino: o desporto seguinte é o seguinte
-    // da lista, como no relógio. O picker era mais um ecrã entre o atleta e a
-    // gravação — e a ordem dos oito é a mesma do ecrã inicial.
-    const s = sessionRef.current;
-    if (!s) return;
-    const atual = currentSport(s.events);
-    if (!atual) return;
-    const sample = boundarySample();
-    const store = getStore();
-    if (sample) store.pushSample(sample);
-    store.changeSport(proximoDesporto(atual), sample?.t ?? Date.now());
-    setSession(store.live());
-  }, [boundarySample]);
+  /**
+   * O Mudar. Sessão 17: reverte uma decisão de âmbito da sessão 14, que fazia
+   * o Mudar percorrer os oito desportos em ciclo sem o brief o mandar. O
+   * ecrã (`EscolhaDesporto`) já garantiu a escolha — aqui só falta escrevê-la,
+   * com a mesma ordem que o CHANGE sempre teve: a amostra de fronteira
+   * primeiro, para a distância do segmento que fecha não escorregar para o
+   * seguinte, e só depois o `changeSport`.
+   */
+  const mudarPara = useCallback(
+    (sport: Sport) => {
+      const s = sessionRef.current;
+      if (!s) return;
+      const atual = currentSport(s.events);
+      if (!atual || atual === sport) return;
+      const sample = boundarySample();
+      const store = getStore();
+      if (sample) store.pushSample(sample);
+      store.changeSport(sport, sample?.t ?? Date.now());
+      setSession(store.live());
+    },
+    [boundarySample],
+  );
 
   const parar = useCallback(() => {
     const sample = boundarySample();
@@ -529,7 +537,7 @@ export default function App() {
           gpsLinha={linhaGps()}
           avisos={avisosDe(feedWanted)}
           onMarca={marcar}
-          onMudar={mudar}
+          onMudarPara={mudarPara}
           onParar={parar}
         />
       ) : screen.kind === "resumo" ? (
@@ -589,25 +597,4 @@ export default function App() {
       )}
     </View>
   );
-}
-
-/**
- * O desporto seguinte na ordem dos ecrãs: ginásio primeiro, rua depois — a
- * mesma dos tijolos do início, e não a do motor (que é a ordem dos pickers da
- * Fase 1). Mudar percorre-a em ciclo.
- */
-const ORDEM_MUDAR: Sport[] = [
-  "strength",
-  "treadmill",
-  "rowing_indoor",
-  "swimming_pool",
-  "run",
-  "walk",
-  "bike",
-  "transition",
-];
-
-function proximoDesporto(atual: Sport): Sport {
-  const i = ORDEM_MUDAR.indexOf(atual);
-  return ORDEM_MUDAR[(i + 1) % ORDEM_MUDAR.length]!;
 }
