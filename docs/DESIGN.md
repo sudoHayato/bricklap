@@ -219,12 +219,20 @@ O que faz um ecrã ser do Bricklap e de mais nenhuma app, por ordem de importân
 
 Nenhum ecrã do Bricklap pode ser confundido de relance com outra app de treino, em nenhum tema. Em concreto:
 
-- **Sem laranja.** O acento é vermelho-tijolo de matiz 7°. Nada entre 15° e 45° em nenhum token.
+- **Sem laranja.** O acento é vermelho-tijolo de matiz 7°. Nada entre 15° e 45° em nenhum token. **Uma exceção conhecida, e é da marca e não de um token**: a tonalidade clara do logótipo (`#E89478`, o L) está a **15,0°**, em cima da fronteira — decisão do fundador na sessão 15, registada em [docs/marca/README.md](marca/README.md) para não se ler um dia como esquecimento.
 - **Sem mapa como fundo.** O mapa, quando existir, é um cartão com contorno, nunca o fundo de um ecrã.
 - **Sem botão redondo de gravar.** A ação principal é um retângulo largo de cantos de 20 px, com rótulo escrito. Nenhum botão circular em nenhum ecrã.
 - **Sem ícones de terceiros**, sem tipografia de terceiros, sem o seu vocabulário visual (medalhas, chamas, corações de kudos, gráficos de área em gradiente).
 - **Uma só coisa grande por ecrã**, e é sempre um número: o cronómetro na gravação, o total no resumo.
 - **Cor de desporto em fio**, nunca em bloco: é o que impede o resumo de virar um mosaico colorido.
+
+## 8b. A marca
+
+O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) —, com as cores, a regra da cor (a distinção entre o B e o L mantém-se em tudo o que é visível; a versão a uma cor existe só para constrangimentos técnicos), os tamanhos mínimos medidos, o espaço livre e o que nunca fazer. O que interessa a este documento:
+
+- **A marca e o acento são a mesma terracota, calibrada.** `#C0402C` (matiz 8,1°) vive entre o `#B03A2A` do tema claro (7,2°) e o `#D14F3D` do escuro (7,3°). Não é uma terceira cor a competir; é a mesma família.
+- **O logótipo não é um ícone do §5.** Os ícones do sistema têm traço de 2 px e herdam a cor do texto; a marca é uma forma cheia com cor própria e não se desenha com as regras deles.
+- **Na app, o logótipo assina o cabeçalho** do Início, do Histórico e da retoma, no lugar onde antes estava a palavra "Bricklap" em maiúsculas pequenas (`apps/mobile/ui/logotipo.tsx`).
 
 ## 9. Onde isto vive na app
 
@@ -240,6 +248,7 @@ Escrito na sessão 14, quando o sistema saiu do protótipo para `apps/mobile`. O
 | §6 botão Marca | `apps/mobile/ui/marca.tsx` |
 | §7 a fiada | `apps/mobile/ui/fiada.tsx` |
 | Os ecrãs | `apps/mobile/ecras.tsx` |
+| §8b a marca | `apps/mobile/ui/logotipo.tsx`, e os PNG em `apps/mobile/assets/` |
 
 Duas notas sobre a tradução, porque nenhuma é óbvia:
 

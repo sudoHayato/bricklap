@@ -47,7 +47,8 @@
             "./assets/fontes/ArchivoExpanded-ExtraBold.ttf"
           ]
         }
-      ]
+      ],
+      "./plugins/withRecursosDaMarca"
     ]
   }
 }

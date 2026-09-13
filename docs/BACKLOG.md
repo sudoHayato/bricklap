@@ -65,6 +65,13 @@ Decisão do CTO na sessão 13b ([ROADMAP](../ROADMAP.md), Fase 6; [VISAO](VISAO.
 
 Fora daqui, e de propósito: **feed social e desafios entre atletas** estão **adiados sem fase atribuída** (ROADMAP, "Adiado, sem fase atribuída") — exigem contas, servidor, nuvem, moderação e tornam o fundador responsável pelo tratamento de dados de terceiros. Não entram no backlog até haver utilizadores reais que os peçam.
 
+## Marca (sessão 15)
+
+- [ ] **Verificar a marca no [TMview](https://www.tmdn.org/tmview/) e no [INPI](https://inpi.justica.gov.pt/) — tarefa do fundador.** A marca **não está registada**. Até haver verificação não se trata como definitiva nem se usa fora deste repositório e da app: nada de sítio público, loja, redes ou material impresso. Faz-se quando houver alguma coisa pública para lançar. Ver [docs/marca/README.md](marca/README.md).
+- [ ] **Decidir o ícone da app: moldura ou selo cheio** — decisão do fundador, com a comparação já feita no ecrã inicial simulado ([selo-vs-moldura.png](marca/selo-vs-moldura.png)). A moldura é a marca principal em qualquer caso; o que está em aberto é só o ícone. O argumento técnico contra o selo está no relatório da sessão 15 §3.4: as peças vazadas mostram o que estiver por trás, e o selo não transporta as duas tonalidades.
+- [ ] **A geometria da marca está escrita em três sítios e nada os prende um ao outro** (sessão 15): o SVG mestre `docs/marca/bricklap-logo.svg`, as constantes de `apps/mobile/ui/logotipo.tsx` e a tabela do `docs/marca/README.md`. Hoje concordam nas 13 medidas — verifiquei — mas a concordância é manual: editar o SVG não parte nada e o componente da app fica a desenhar outra coisa em silêncio. Um teste que leia os três e os compare resolve-o em vinte linhas; fica por decidir se vale atravessar a fronteira entre `apps/mobile/test/` e `docs/`, que hoje nenhum teste atravessa.
+- [ ] **Favicon**, quando houver uma página pública — usa a versão a uma cor (regra da cor, `docs/marca/README.md`).
+
 ## P1 — i18n (sessão 02)
 
 - [ ] **Sistema de unidades imperial**: `UnitSystem` já declara `"imperial"`; `formatDistanceForUnit`/`formatSpeedForUnit`/`formatPaceForUnit` lançam em vez de o implementar. Implementar quando houver pedido real (milhas, pés, mph).

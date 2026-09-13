@@ -9,6 +9,7 @@ import {
   type ViewStyle,
 } from "react-native";
 import { Icone, type NomeIcone } from "./icones";
+import { Logotipo } from "./logotipo";
 import { kicker, numero, texto } from "./tipografia";
 import { E, R, TOQUE, TOQUE_CONSULTA, type Tokens } from "./tokens";
 
@@ -51,6 +52,8 @@ export function Redondo(props: { tokens: Tokens; icone: NomeIcone; rotulo: strin
 /** O cabeçalho de um ecrã de consulta: rótulo ou "voltar", título e subtítulo. */
 export function Cabeca(props: {
   tokens: Tokens;
+  /** O logótipo no lugar do rótulo: é a marca que assina o ecrã, não a palavra. */
+  logotipo?: boolean;
   rotulo?: string;
   voltar?: { rotulo: string; onPress: () => void };
   direita?: ReactNode;
@@ -70,6 +73,10 @@ export function Cabeca(props: {
             <Icone nome="voltar" cor={props.tokens.acentoTinta} tamanho={18} />
             <Text style={texto(15, 700, props.tokens.acentoTinta)}>{props.voltar.rotulo}</Text>
           </Pressable>
+        ) : props.logotipo ? (
+          <View accessible accessibilityRole="image" accessibilityLabel="Bricklap">
+            <Logotipo tamanho={26} />
+          </View>
         ) : (
           <Text style={kicker(props.tokens.tinta3)}>{props.rotulo ?? ""}</Text>
         )}

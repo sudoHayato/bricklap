@@ -112,7 +112,7 @@ export function EcraInicio(props: {
     <View style={{ flex: 1, paddingTop: TOPO }}>
       <Cabeca
         tokens={tokens}
-        rotulo="Bricklap"
+        logotipo
         titulo={t("mobile.startTitle")}
         sub={t("mobile.startSubtitle")}
         direita={
@@ -332,7 +332,7 @@ export function EcraRetoma(props: {
   const blocos = blocksFromEvents(session.events);
   return (
     <View style={{ flex: 1, paddingTop: TOPO }}>
-      <Cabeca tokens={tokens} rotulo="Bricklap" titulo={t("mobile.resumeTitle")} sub={t("mobile.resumeCopy")} />
+      <Cabeca tokens={tokens} logotipo titulo={t("mobile.resumeTitle")} sub={t("mobile.resumeCopy")} />
       <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e4, paddingBottom: E.e6 }}>
         <Text style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}>
           {formatDuration(durationMs(session, now))}
@@ -465,7 +465,7 @@ export function EcraHistorico(props: {
     <View style={{ flex: 1, paddingTop: TOPO }}>
       <Cabeca
         tokens={tokens}
-        rotulo="Bricklap"
+        logotipo
         titulo={t("mobile.history")}
         sub={plural(linhas.length, t("mobile.sessionsOne"), t("mobile.sessionsOther"))}
         direita={
