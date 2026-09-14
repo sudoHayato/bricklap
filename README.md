@@ -6,6 +6,14 @@ O atleta carrega em START uma vez, muda de modalidade sem parar (CHANGE) e só n
 
 Língua do produto: **inglês** é a língua-base; **pt-PT** é a primeira tradução, detetada automaticamente pelo dispositivo. Os textos legais são a exceção — continuam pt-PT, jurisdição Portugal e União Europeia, sem tradução. Fase 1: **Android only**.
 
+## Por onde começar
+
+1. [AGENTS.md](AGENTS.md) — as regras de trabalho, para qualquer agente de código. [STATUS.md](STATUS.md) — onde o projeto está agora.
+2. [docs/CTO.md](docs/CTO.md) — como o CTO trabalha, os factos fixos e o que ler se mudares de agente.
+3. [docs/NEGOCIO.md](docs/NEGOCIO.md) — o que o produto quer ser; [LEGAL.md](LEGAL.md) — o que a lei exige; [docs/AMBIENTE.md](docs/AMBIENTE.md) — em que máquinas se trabalha.
+
+O repositório é a fonte de verdade: manda sempre sobre a memória de qualquer modelo ou conversa.
+
 ## O que há neste repositório
 
 Monorepo com npm workspaces:
@@ -18,7 +26,7 @@ Monorepo com npm workspaces:
 | `apps/mobile` | `@bricklap/mobile` | App Android (Expo SDK 57, dev client). START/CHANGE/STOP com GPS real **em segundo plano** (tarefa de localização com serviço em primeiro plano e notificação persistente; grava com o ecrã apagado — ADR 0010), persistência SQLite append-only (esquema v2, com a precisão de cada fix), recuperação ao reabrir e depois de o Android matar o processo; desportos de ginásio e piscina só de tempo, com o GPS ligado ao segmento; ritmo médio e ritmo dos últimos 30 s; exportação da base pela partilha do sistema (Fase 3); simulador só em desenvolvimento. |
 | `docs/` | — | ADRs, backlog, história, [visão do produto](docs/VISAO.md), relatórios de sessão. |
 
-Leitura recomendada, por esta ordem: este ficheiro → [STATUS.md](STATUS.md) → [ARCHITECTURE.md](ARCHITECTURE.md) → [ROADMAP.md](ROADMAP.md) → o relatório mais recente em `docs/reports/`. Agentes de código: [CLAUDE.md](CLAUDE.md).
+Leitura recomendada, por esta ordem: este ficheiro → [STATUS.md](STATUS.md) → [ARCHITECTURE.md](ARCHITECTURE.md) → [ROADMAP.md](ROADMAP.md) → o relatório mais recente em `docs/reports/`. Agentes de código: [AGENTS.md](AGENTS.md) (o `CLAUDE.md` é só um ponteiro para lá, para o Claude Code o encontrar). Diretrizes de CTO: [docs/CTO.md](docs/CTO.md).
 
 ## Requisitos
 
@@ -66,17 +74,23 @@ O lab fica em http://localhost:8080. Para a app Android ver [apps/mobile/README.
 ├── docs/
 │   ├── adr/                decisões de arquitetura
 │   ├── reports/            relatório por sessão de trabalho
+│   ├── dogfooding/         treinos reais do fundador com a app
+│   ├── AMBIENTE.md         máquinas, telemóvel, relógio, forma de trabalhar
 │   ├── BACKLOG.md
-│   └── HISTORY.md          origem (Grok Build) e cronologia
-├── ARCHITECTURE.md · ROADMAP.md · STATUS.md · CLAUDE.md
+│   ├── CTO.md              diretrizes de quem escreve os briefs
+│   ├── HISTORY.md          origem (Grok Build) e cronologia
+│   ├── NEGOCIO.md          etapas, receita, diferenciação
+│   └── VISAO.md            a tese do produto
+├── ARCHITECTURE.md · ROADMAP.md · STATUS.md · AGENTS.md · CLAUDE.md (ponteiro)
+├── LEGAL.md                requisitos e restrições legais (não são os textos legais)
 ├── LICENSE · NOTICE        todos os direitos reservados; marcas de terceiros
 └── package.json            workspaces, vitest, TypeScript
 ```
 
 ## Memória do projeto
 
-O repositório GitHub é a memória do projeto. Um chat não o é. Quem abrir uma conversa nova deve partir do `main` atual: `README.md`, `STATUS.md`, `ARCHITECTURE.md`, `packages/engine/src`, `git log` e o último relatório em `docs/reports/`.
+O repositório GitHub é a memória do projeto. Um chat não o é, e a memória de qualquer modelo também não — o repositório manda sempre sobre as duas. Quem abrir uma conversa nova deve partir do `main` atual: `README.md`, `STATUS.md`, `ARCHITECTURE.md`, `docs/CTO.md`, `packages/engine/src`, `git log` e o último relatório em `docs/reports/`.
 
 ## Marcas e licença
 
-Sem afiliação a Garmin, Strava, Apple, Google ou Ironman. Ver [NOTICE](NOTICE). Todos os direitos reservados — ver [LICENSE](LICENSE). Textos legais do lab em `apps/web-lab/LEGAL.md` e `apps/web-lab/src/lib/legal/`.
+Sem afiliação a Garmin, Strava, Apple, Google ou Ironman. Ver [NOTICE](NOTICE). Todos os direitos reservados — ver [LICENSE](LICENSE). Textos legais do lab em `apps/web-lab/LEGAL.md` e `apps/web-lab/src/lib/legal/`; requisitos e restrições legais do produto em [LEGAL.md](LEGAL.md).
