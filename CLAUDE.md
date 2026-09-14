@@ -46,7 +46,7 @@ Node 24 LTS (`.nvmrc`). Não alterar versões de Node/npm da máquina sem pedir.
 - **O motor fica puro**: sem DOM, React, React Native, zustand, `localStorage`, `AsyncStorage`, `fetch`. Tempo (`at`) e aleatoriedade (`rng`) entram por parâmetro. Adaptadores (persistência, GPS, relógio) vivem nas apps.
 - **Eventos são a verdade**: nunca guardar segmentos ou métricas; derivar sempre com `segmentsFromEvents` e afins.
 - Identificadores em inglês no código; documentação, mensagens de commit descritivas e cópia da app Android em **pt-PT** (não pt-BR: ficheiro, utilizador, equipa, ecrã). A cópia do lab web mantém-se em inglês como está.
-- Commits pequenos, no imperativo, com corpo a explicar o porquê, terminados em `Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`. Branches: `chore/`, `feat/`, `fix/`, `docs/`.
+- Commits pequenos, no imperativo, com corpo a explicar o porquê, terminados com a linha `Co-Authored-By: Claude <modelo> <noreply@anthropic.com>` do **modelo que fez o trabalho** — o rasto regista quem fez cada commit, não um nome fixo (decisão do CTO, sessão 19b). Branches: `chore/`, `feat/`, `fix/`, `docs/`.
 - Nova dependência só com uma linha no relatório da sessão a justificar. Instalar sempre a partir da raiz.
 - `apps/mobile/android` e `ios` são gerados (`expo prebuild`) e ignorados pelo git.
 - `apps/web-lab/src/routeTree.gen.ts` é gerado pelo router plugin e **fica** no repo.
