@@ -1,0 +1,152 @@
+{
+  "nota": "Sessão 19b: doze conceitos do repertório (relatório da 19b, §2), quatro variantes cada, dois eixos de dois valores. Grelha de 24 com coordenadas inteiras, cantos pela tabela do icon-design.md. O id é a letra do conceito e, eixo a eixo, a posição do valor: J12 é a J com o 1.º valor do 1.º eixo e o 2.º do 2.º. Letras novas, que não se confundem com as das sessões 18 (F, E, C, L, D, M, G) e 19 (P, V, Y, N). As referências (o símbolo atual, a P2122 e a P2121) ficam fora da contagem.",
+  "cores": {
+    "B": "#C0402C",
+    "L": "#E89478",
+    "creme": "#FBF8F4",
+    "escuro": "#121010",
+    "uma_cor_creme": "#16120F",
+    "uma_cor_escuro": "#FFFFFF",
+    "texto_creme": "#16120F",
+    "texto2_creme": "#5A524B",
+    "texto_escuro": "#F7F2EC",
+    "texto2_escuro": "#B5ABA2",
+    "campo": "#C0402C",
+    "campo_peca": "#FBF8F4",
+    "folha": "#FFFFFF",
+    "recorte_fundo": "#A39A91"
+  },
+  "recorte": {
+    "nota": "O mesmo modelo da sessão 19: a caixa de 24 é a janela de 72 dp de uma tela de 108; o círculo é o de 66 dp, raio 11 na grelha. Uma perna perde-se quando um retângulo da construção fica com um quarto ou mais da área fora do círculo.",
+    "raio_na_grelha": 11,
+    "limiar_perna": 0.25
+  },
+  "desfoque": {
+    "nota": "Critério 5, reportado: a 24 px, a uma cor sobre o creme. Peso = cobertura média na caixa de 24; mancha = máximo da cobertura desfocada por uma gaussiana de sigma 2 px. Destoa fora de ±25 % dos da P2122.",
+    "sigma_px": 2,
+    "tolerancia": 0.25,
+    "ancora": "P2122"
+  },
+  "contraste": {
+    "nota": "Passo 4, sobre a P2122 e a P2121. Um braço passa quando as duas peças dão pelo menos 3:1 nos dois temas. O (c) guarda o matiz e a saturação HSL do tom claro e desce a luminosidade até ao primeiro valor com 3:1 sobre o creme.",
+    "limiar": 3.0,
+    "variantes": ["P2122", "P2121"]
+  },
+  "amostras": {
+    "folha_24": 128,
+    "medicao": 64,
+    "aprovadas": 64,
+    "recorte": 64,
+    "contraste": 64
+  },
+  "conceitos": [
+    {
+      "letra": "J",
+      "funcao": "l_na_junta",
+      "nome": "L na junta",
+      "categoria": "(b)",
+      "letra_em": "fundo",
+      "fixos": { "c": 2 },
+      "eixos": [["t", [4, 6]], ["bloco", ["quadrado", "alto"]]]
+    },
+    {
+      "letra": "H",
+      "funcao": "cama_de_argamassa",
+      "nome": "cama de argamassa",
+      "categoria": "(b)",
+      "letra_em": "fundo",
+      "fixos": {},
+      "eixos": [["c", [3, 4]], ["t", [2, 3]]]
+    },
+    {
+      "letra": "K",
+      "funcao": "esquina_aberta",
+      "nome": "esquina aberta",
+      "categoria": "(b)",
+      "letra_em": "fundo",
+      "fixos": { "c": 3 },
+      "eixos": [["t", [3, 4]], ["e", [0, 3]]]
+    },
+    {
+      "letra": "T",
+      "funcao": "l_de_luz",
+      "nome": "L de luz",
+      "categoria": "(b)",
+      "letra_em": ["L de luz"],
+      "fixos": {},
+      "eixos": [["m", [3, 4]], ["c", [2, 3]]]
+    },
+    {
+      "letra": "U",
+      "funcao": "cunhal",
+      "nome": "cunhal",
+      "categoria": "(a)",
+      "letra_em": ["pé, canto", "pé, fim"],
+      "fixos": {},
+      "eixos": [["t", [4, 5]], ["partido", ["pé", "haste e pé"]]]
+    },
+    {
+      "letra": "Q",
+      "funcao": "curva_da_pista",
+      "nome": "curva da pista",
+      "categoria": "(a)",
+      "letra_em": ["pista de fora", "pista de dentro"],
+      "fixos": {},
+      "eixos": [["w", [3, 4]], ["d", [0, 3]]]
+    },
+    {
+      "letra": "A",
+      "funcao": "l_em_aparelho",
+      "nome": "L em aparelho",
+      "categoria": "(a)",
+      "letra_em": ["pé"],
+      "fixos": {},
+      "eixos": [["t", [5, 6]], ["lado", ["fora", "dentro"]]]
+    },
+    {
+      "letra": "X",
+      "funcao": "blocos_que_encaixam",
+      "nome": "blocos que encaixam",
+      "categoria": "(a)",
+      "letra_em": ["pé 1", "pé 2"],
+      "fixos": {},
+      "eixos": [["a", [4, 5]], ["pe", [1, 2]]]
+    },
+    {
+      "letra": "S",
+      "funcao": "sapatilha",
+      "nome": "sapatilha",
+      "categoria": "(d)",
+      "letra_em": ["sola"],
+      "fixos": {},
+      "eixos": [["biqueira", ["na sola", "à parte"]], ["h", [3, 5]]]
+    },
+    {
+      "letra": "R",
+      "funcao": "remo_indoor",
+      "nome": "remo indoor",
+      "categoria": "(d)",
+      "letra_em": ["carril"],
+      "fixos": {},
+      "eixos": [["torre", ["alta", "baixa"]], ["banco", ["meio", "ponta"]]]
+    },
+    {
+      "letra": "W",
+      "funcao": "barra_e_disco",
+      "nome": "barra e disco",
+      "categoria": "(d)",
+      "letra_em": ["barra"],
+      "fixos": {},
+      "eixos": [["barra", ["chão", "eixo"]], ["disco", ["alto", "baixo"]]]
+    },
+    {
+      "letra": "O",
+      "funcao": "l_otico",
+      "nome": "L ótico",
+      "categoria": "(c)",
+      "letra_em": ["pé"],
+      "fixos": {},
+      "eixos": [["h", [4, 5]], ["dp", [1, 2]]]
+    }
+  ]
+}

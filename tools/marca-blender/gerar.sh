@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 # Fábrica de silhuetas da marca Bricklap: um comando, de ponta a ponta.
 #
-#   tools/marca-blender/gerar.sh [pasta-de-saída]               # sessão 18
-#   tools/marca-blender/gerar.sh --sessao 19 [pasta-de-saída]   # sessão 19
+#   tools/marca-blender/gerar.sh [pasta-de-saída]                # sessão 18
+#   tools/marca-blender/gerar.sh --sessao 19 [pasta-de-saída]    # sessão 19
+#   tools/marca-blender/gerar.sh --sessao 19b [pasta-de-saída]   # sessão 19b
 #
 # Sessão 18: folha-de-contacto.png, folha-24px.png, medidas.json e medidas.md.
 # Sessão 19: folha-24px.png, folha-medicao.png, folha-73px-aprovadas.png,
 # folha-recorte-aprovadas.png, medidas.json e medidas.md; lê as leituras
-# humanas de leituras-sessao-19.json. A pasta de saída fica fora do
-# repositório por omissão — as imagens não entram no git.
+# humanas de leituras-sessao-19.json.
+# Sessão 19b: as mesmas folhas, mais folha-desfoque.png e folha-contraste.png,
+# e contraste.md; lê as leituras de leituras-sessao-19b.json. A pasta de
+# saída fica fora do repositório por omissão — as imagens não entram no git.
 #
 # Na WSL usa o Blender instalado no Windows (o mais recente de "Program Files")
 # e passa-lhe todos os caminhos pelo `wslpath -w`. O Blender é um processo
@@ -26,18 +29,19 @@ script="gerar.py"
 parametros="parametros.json"
 extra=()
 if [[ "${1:-}" == "--sessao" ]]; then
-  if [[ "${2:-}" != "19" ]]; then
-    echo "Sessões com gerador: 18 (por omissão) e 19." >&2
-    exit 2
-  fi
-  script="sessao19.py"
-  parametros="parametros-sessao-19.json"
+  case "${2:-}" in
+    19 | 19b) sessao="$2" ;;
+    *)
+      echo "Sessões com gerador: 18 (por omissão), 19 e 19b." >&2
+      exit 2
+      ;;
+  esac
+  script="sessao${sessao}.py"
+  parametros="parametros-sessao-${sessao}.json"
+  extra=(--leituras "leituras-sessao-${sessao}.json")
   shift 2
 fi
 saida="${1:-${TMPDIR:-/tmp}/bricklap-marca-blender}"
-if [[ "$script" == "sessao19.py" ]]; then
-  extra=(--leituras "leituras-sessao-19.json")
-fi
 mkdir -p "$saida"
 saida="$(cd "$saida" && pwd)"
 
