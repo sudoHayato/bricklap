@@ -1,5 +1,5 @@
 {
-  "nota": "As leituras humanas da sessão 19. O gerar.sh --sessao 19 junta-as às medidas: uma variante só é aprovada com os píxeis a 24 px, o recorte, uma forma, a letra L e nenhuma leitura da lista negra. Os critérios abaixo foram escritos e publicados antes de a folha dos 24 px ser vista; as leituras vêm depois, num commit à parte.",
+  "nota": "As leituras humanas da sessão 19. O gerar.sh --sessao 19 junta-as às medidas: uma variante só é aprovada com os píxeis a 24 px, o recorte, uma forma, a letra L e nenhuma leitura da lista negra. Os critérios abaixo foram escritos e fixados num commit antes de a folha dos 24 px ser vista; as leituras vêm depois, num commit à parte.",
   "criterios": {
     "pixeis_24": "Automático. A 24 px, sobre o creme E sobre o escuro, a duas tonalidades E a uma cor, todas as peças saem separadas com a junta limpa (um píxel com três quartos de fundo à vista); a peça mais fina tem pelo menos 2 px e a junta pelo menos 1,5 px.",
     "a_forma": "Leitura. Na folha dos 24 px, a 100 %, no creme e sem contexto, tenho de conseguir nomear uma forma do vocabulário do Bricklap: tijolo, tijolos em junta, encaixe, degrau de tijolos, volta. Uma forma geométrica genérica (dois retângulos, três barras, um quadrado aberto) não conta.",

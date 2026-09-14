@@ -61,6 +61,7 @@ Uma tarefa só está feita quando:
 4. `npm run export:android -w @bricklap/mobile` verde (Metro resolve o monorepo).
 5. `STATUS.md` atualizado e relatório da sessão em `docs/reports/AAAA-MM-DD-sessao-NN.md`, **a abrir com "Estado lido"** e depois feito, por fazer, decisões, dúvidas para o CTO, próximos passos.
 5b. **`ROADMAP.md` reflete as decisões tomadas na sessão.** Nenhuma sessão termina com uma decisão do fundador só no relatório: o roadmap é o que a sessão seguinte lê.
+5c. **Exceção: branches de exploração.** Num branch de exploração — sem código de produto e que não se funde em `main` (por exemplo `feat/marca-blender`) — o `STATUS.md` e o `ROADMAP.md` não são obrigatórios. Quando o brief o autoriza, atualiza-se só a linha dessa exploração, e mais nada. Decisão do CTO, sessão 19; não é preciso voltar a perguntar.
 6. Nenhuma dependência nova sem justificação escrita.
 7. Textos legais intocados (salvo pedido explícito do fundador).
 8. **Branch de trabalho publicado no remoto** (`git push -u origin <branch>`), com o commit local confirmado igual ao remoto. Regra permanente: nenhuma sessão termina sem este push.
