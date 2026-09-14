@@ -1,0 +1,94 @@
+{
+  "nota": "Varrimento da fábrica de silhuetas (sessão 18). Cada família varre três eixos de dois valores cada, 2 × 2 × 2 = 8 variantes. O id é a letra da família seguida, eixo a eixo e pela ordem dos eixos, da posição do valor na lista (1 ou 2): F121 = fiada com o 1.º valor de pecas, o 2.º de desencontro e o 1.º de proporcao. Acrescentar valores ao fim de um eixo não muda nenhum id existente. Medidas na grelha de 100 do docs/marca/README.md: a maior dimensão da marca mede 100; espacamento e raio contam nessa grelha (espacamento 8 = 1,92 px a 24 px).",
+  "cores": {
+    "B": "#C0402C",
+    "L": "#E89478",
+    "uma_cor": "#000000",
+    "fundo": "#FFFFFF",
+    "texto": "#16120F",
+    "texto2": "#5A524B"
+  },
+  "amostras": {
+    "folha": 64,
+    "folha_24": 256
+  },
+  "familias": [
+    {
+      "letra": "F",
+      "nome": "fiada",
+      "titulo": "fiada — tijolos em fiadas desencontradas",
+      "fixos": { "espacamento": 8, "raio": 3, "rotacao": 0 },
+      "eixos": [
+        ["pecas", [3, 4]],
+        ["desencontro", [0.5, 0.25]],
+        ["proporcao", [2, 3]]
+      ]
+    },
+    {
+      "letra": "E",
+      "nome": "escada",
+      "titulo": "escada — um tijolo por fiada, sempre desencontrado para o mesmo lado",
+      "fixos": { "proporcao": 2.5, "espacamento": 8, "raio": 3 },
+      "eixos": [
+        ["pecas", [2, 3]],
+        ["desencontro", [0.5, 0.333333333333]],
+        ["rotacao", [0, 90]]
+      ]
+    },
+    {
+      "letra": "C",
+      "nome": "cata_vento",
+      "titulo": "cata-vento — quatro tijolos à volta do centro",
+      "fixos": { "raio": 3, "rotacao": 0 },
+      "eixos": [
+        ["vazio", [true, false]],
+        ["proporcao", [2, 3]],
+        ["espacamento", [6, 10]]
+      ]
+    },
+    {
+      "letra": "L",
+      "nome": "encaixe_l",
+      "titulo": "encaixe em L — um L claro e a peça que fecha o quadrado",
+      "fixos": { "espacamento": 8, "raio": 3 },
+      "eixos": [
+        ["vazio", [false, true]],
+        ["proporcao", [0.3, 0.42]],
+        ["rotacao", [0, 90]]
+      ]
+    },
+    {
+      "letra": "D",
+      "nome": "dentado",
+      "titulo": "dentado — tijolos empilhados com um dente que encaixa",
+      "fixos": { "proporcao": 2.4, "raio": 3, "rotacao": 0 },
+      "eixos": [
+        ["pecas", [2, 3]],
+        ["desencontro", [0.5, 0.35]],
+        ["espacamento", [6, 10]]
+      ]
+    },
+    {
+      "letra": "M",
+      "nome": "moldura",
+      "titulo": "moldura — a família do símbolo atual, com e sem o aro",
+      "fixos": { "raio": 3, "rotacao": 0 },
+      "eixos": [
+        ["moldura", [true, false]],
+        ["pecas", [3, 2]],
+        ["espacamento", [5, 10]]
+      ]
+    },
+    {
+      "letra": "G",
+      "nome": "haste_e_bojo",
+      "titulo": "haste e bojo — uma haste alta e um bojo ao pé dela",
+      "fixos": { "espacamento": 8, "raio": 3, "rotacao": 0 },
+      "eixos": [
+        ["proporcao", [2.0, 1.6]],
+        ["vazio", [true, false]],
+        ["tom_claro", ["bojo", "haste"]]
+      ]
+    }
+  ]
+}

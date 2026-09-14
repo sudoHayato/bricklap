@@ -1,0 +1,79 @@
+{
+  "nota": "As leituras humanas da sessão 19b. O gerar.sh --sessao 19b junta-as às medidas: uma variante só é aprovada com os píxeis a 24 px nos dois temas, o recorte, o alinhamento à grelha, uma forma do repertório, a letra L (na figura ou no fundo) e nenhuma leitura da lista negra. Os critérios abaixo foram escritos e publicados num commit antes de existir a geometria (o relatório docs/reports/2026-09-13-sessao-19b.md, §3, tem a mesma régua por extenso); as leituras vêm depois, num commit à parte.",
+  "criterios": {
+    "1_pixeis_24": "Automático, igual à sessão 19. A 24 px, sobre o creme E sobre o escuro, a duas tonalidades E a uma cor, todas as peças saem separadas com a junta limpa (um píxel com três quartos de fundo à vista); a peça mais fina tem pelo menos 2 px e a junta mais estreita pelo menos 1,5 px. Os 48 e os 73 px renderizam-se e medem-se, e não decidem.",
+    "2_temas": "Creme #FBF8F4 e escuro #121010; a uma cor, #16120F e branco. Vale dentro do 1, do 6 e do 7.",
+    "3_recorte": "Automático, igual à sessão 19. A caixa de 24 é a janela de 72 dp de uma tela de 108 e o círculo é o de 66 dp (raio 11 na grelha). Perde-se uma perna quando um retângulo da construção fica com um quarto ou mais da área fora do círculo, medido sem arredondar.",
+    "4_alinhamento": "Automático. Todas as coordenadas dos retângulos da construção, juntas incluídas, são inteiras na grelha de 24. Os cantos seguem a tabela do icon-design.md (raio 1 abaixo de 8 de espessura, 2 a partir de 8, cantos interiores a 0) e não contam como desalinhamento.",
+    "5_desfoque": "Automático, reportado, não elimina. A 24 px, a uma cor sobre o creme: peso = cobertura média de tinta na caixa de 24; mancha = máximo da cobertura desfocada por uma gaussiana de sigma 2 px. Destoa quando o peso ou a mancha fica fora de ±25 % dos da P2122.",
+    "6_lista_negra": "Leitura. Chumba se a primeira leitura, ou uma segunda que salte à vista, for: lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras ou cronómetro. Vale o creme e o escuro. Na dúvida, chumba. Os ícones da própria app não estão nesta lista: ficam em nota e não decidem.",
+    "7a_forma": "Leitura, a 24 px, a 100 % e sem contexto. Nomear um objeto do repertório do passo 1 (tijolo, tijolos em junta, junta, esquina ou cunhal, pista, degrau, encaixe, bloco, sapatilha, remo, barra com disco). Uma forma geométrica genérica não conta; blocos contam, cápsulas e pontos não.",
+    "7b_letra": "Leitura. A primeira leitura é um L direito — haste à esquerda, pé em baixo a correr para a direita —, na figura ou no fundo. Espelhado, rodado ou outro sinal não é L. A uma cor lê-se a mesma letra. Na dúvida, não é L. Só uma das duas perguntas com resposta, chumba.",
+    "contraste": "Contraste WCAG 2.1 de cada peça sobre cada fundo, limiar 3:1 (WCAG 1.4.11). Nas 48 é reportado (a peça que faz a letra, declarada nos parâmetros, e a mais fraca). No passo 4 decide: a P2122 e a P2121 com as colorações atual, (a) tons trocados, (b) uma cor só, (c) o tom claro escurecido até 3:1 sobre o creme com o matiz e a saturação HSL do #E89478; um braço passa quando as duas peças dão pelo menos 3:1 nos dois temas."
+  },
+  "leituras": {
+    "REF": { "forma": null, "letra": null, "lista_negra": "painel com barra lateral", "nota": "moldura com três peças; como na 18 e na 19" },
+    "P2122": { "forma": "um tijolo ao alto sobre um tijolo deitado, em junta", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "a mesma leitura da 19; sobre o creme, a duas tonalidades, o pé claro é a peça que menos se vê" },
+    "P2121": { "forma": "um tijolo ao alto sobre um tijolo deitado, em junta", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "igual à P2122, de cantos vivos" },
+
+    "J11": { "forma": "encaixe de um L e um bloco no canto dele", "letra": "L", "onde": "figura", "lista_negra": "painel com barra lateral e rodapé: um bloco com uma faixa em L à volta", "nota": "o L que se lê primeiro é a peça de fora; a junta lê-se como costura, não como letra" },
+    "J12": { "forma": "encaixe de um L fino e um tijolo ao alto", "letra": "L e I ao mesmo tempo: sobre o creme o L escuro, sobre o escuro o bloco claro lê-se I, a uma cor LI — na dúvida, não é L", "lista_negra": null, "nota": "" },
+    "J21": { "forma": "encaixe de um L e um bloco no canto dele", "letra": "L", "onde": "figura", "lista_negra": "painel com barra lateral e rodapé: um bloco com uma faixa em L à volta", "nota": "mais pesada do que a J11; a mesma leitura" },
+    "J22": { "forma": "tijolo ao alto partido por uma junta em L", "letra": "L e I ao mesmo tempo (a peça de fora é um L, o bloco ao alto lê-se I) — na dúvida, não é L", "lista_negra": null, "nota": "a uma cor é um retângulo com uma costura em L: a junta de 2 px não chega para ser letra" },
+
+    "H11": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": "marca de corte: o L fino é o canto de enquadramento, com um bloco dentro", "nota": "um bloco e um canto: forma geométrica genérica; o L largo do fundo vê-se, mas depois do canto" },
+    "H12": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": "marca de corte: o L fino é o canto de enquadramento, com um bloco dentro", "nota": "" },
+    "H21": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": "marca de corte: o L fino é o canto de enquadramento, com um bloco dentro", "nota": "" },
+    "H22": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": "marca de corte: o L fino é o canto de enquadramento, com um bloco dentro", "nota": "" },
+
+    "K11": { "forma": null, "letra": null, "lista_negra": null, "nota": "um bloco com duas barras soltas; sem o canto de fora o L do fundo não se fecha, e as barras não fazem L" },
+    "K12": { "forma": null, "letra": null, "lista_negra": null, "nota": "barras mais curtas: um bloco com dois traços" },
+    "K21": { "forma": null, "letra": null, "lista_negra": null, "nota": "um bloco com duas barras soltas" },
+    "K22": { "forma": null, "letra": null, "lista_negra": null, "nota": "um bloco com dois traços" },
+
+    "T11": { "forma": "encaixe de três peças: dois L e um bloco", "letra": "L", "onde": "figura", "lista_negra": "marca de corte: cantos em L encaixados à volta de um bloco, como o enquadramento de uma imagem", "nota": "sobre o creme o L claro lê-se como cor, não como fundo: a 2,22:1 a 24 px continua a ser tinta, e a dupla leitura pelo tom não acontece" },
+    "T12": { "forma": "encaixe de três peças: dois L e um bloco", "letra": "L", "onde": "figura", "lista_negra": "marca de corte: cantos em L encaixados à volta de um bloco", "nota": "" },
+    "T21": { "forma": "encaixe de três peças: dois L e um bloco", "letra": "L", "onde": "figura", "lista_negra": "marca de corte: cantos em L encaixados à volta de um bloco", "nota": "" },
+    "T22": { "forma": "encaixe de três peças: dois L e um bloco", "letra": "L", "onde": "figura", "lista_negra": "marca de corte: cantos em L encaixados à volta de um bloco", "nota": "" },
+
+    "U11": { "forma": "tijolos em junta: uma esquina de três tijolos", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "o fim do pé lê-se como um ponto depois do L (L.), sem tirar a letra" },
+    "U12": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "L tracejado: a haste partida dá peças de 4 × 5, que a 24 px são pontos, não tijolos" },
+    "U21": { "forma": "tijolos em junta: uma esquina de três tijolos", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "o fim do pé (4 × 5) lê-se como um ponto depois do L" },
+    "U22": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "L tracejado: a haste partida dá peças de 5 × 4 e 5 × 5, pontos" },
+
+    "Q11": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": "marca de corte: dois cantos finos encaixados, como o canto de enquadramento", "nota": "duas faixas em L paralelas: não se lê pista sem contexto" },
+    "Q12": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": "marca de corte: dois cantos finos encaixados", "nota": "o escalonamento das partidas não se vê a 24 px" },
+    "Q21": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "um L duplo, como o canto de linha dupla (╚); forma geométrica genérica, não pista" },
+    "Q22": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "um L duplo com a faixa de dentro mais curta" },
+
+    "A11": { "forma": "um tijolo ao alto assente desencontrado sobre um tijolo deitado", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "os 2 px de desencontro leem-se como um degrau pequeno no canto, e o L fica" },
+    "A12": { "forma": "um tijolo ao alto sobre um tijolo deitado, com o pé a sair 2 px para trás", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "o pé que sai lê-se como um calcanhar, e o L fica" },
+    "A21": { "forma": "degrau: um bloco desencontrado sobre um tijolo deitado", "letra": "degrau, com a haste meio fora do pé — na dúvida, não é L", "lista_negra": null, "nota": "com 3 px de desencontro em 6, a haste parece cair do pé" },
+    "A22": { "forma": "um tijolo ao alto sobre um tijolo deitado", "letra": "⊥, um T invertido desencontrado", "lista_negra": null, "nota": "com 3 px de pé para trás, a figura deixa de ter canto" },
+
+    "X11": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "L de pontos: blocos de 4 px são pontos a 24 px" },
+    "X12": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "L de pontos" },
+    "X21": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "L de pontos: os blocos de 5 px continuam a ser pontos, não tijolos" },
+    "X22": { "forma": null, "letra": "L", "onde": "figura", "lista_negra": null, "nota": "L de pontos; chumba também no recorte" },
+
+    "S11": { "forma": null, "letra": "U assimétrico, ou L com a ponta levantada — na dúvida, não é L", "lista_negra": null, "nota": "lê-se cama ou sofá de perfil (cabeceira, colchão, pé), não sapatilha" },
+    "S12": { "forma": null, "letra": "U: a biqueira de 5 fecha a figura", "lista_negra": null, "nota": "cama ou banheira de perfil" },
+    "S21": { "forma": null, "letra": "L e um ponto", "lista_negra": "gráfico de barras: uma barra alta e uma baixa sobre a mesma base", "nota": "" },
+    "S22": { "forma": null, "letra": "L e um ponto", "lista_negra": "gráfico de barras: uma barra alta e uma baixa sobre a mesma base", "nota": "" },
+
+    "R11": { "forma": null, "letra": "L e um ponto", "lista_negra": "gráfico de barras: uma barra alta e uma baixa sobre a mesma base", "nota": "não se lê remo" },
+    "R12": { "forma": null, "letra": "L e um ponto", "lista_negra": "gráfico de barras: uma barra alta e uma baixa sobre a mesma base", "nota": "" },
+    "R21": { "forma": null, "letra": null, "lista_negra": "gráfico de barras: duas barras baixas sobre a mesma base", "nota": "" },
+    "R22": { "forma": null, "letra": null, "lista_negra": "gráfico de barras: duas barras baixas sobre a mesma base", "nota": "" },
+
+    "W11": { "forma": null, "letra": "I e um traço (l_), como a P2111 da sessão 19 — na dúvida, não é L", "lista_negra": null, "nota": "não se lê barra com disco" },
+    "W12": { "forma": null, "letra": "I e um traço (l_) — na dúvida, não é L", "lista_negra": null, "nota": "" },
+    "W21": { "forma": null, "letra": "⊢, um T deitado", "lista_negra": null, "nota": "" },
+    "W22": { "forma": null, "letra": "⊢, um T deitado", "lista_negra": null, "nota": "" },
+
+    "O11": { "forma": "um tijolo ao alto sobre um tijolo deitado, em junta", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "a haste de 4 é visivelmente mais fina do que o pé de 5" },
+    "O12": { "forma": "um tijolo ao alto sobre um tijolo deitado, em junta", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "" },
+    "O21": { "forma": "um tijolo ao alto sobre um tijolo deitado, em junta", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "a P2122 com o pé de 6" },
+    "O22": { "forma": "um bloco sobre um tijolo deitado, em junta", "letra": "L", "onde": "figura", "lista_negra": null, "nota": "o pé de 7 encurta a haste para 5 × 9" }
+  }
+}
