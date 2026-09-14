@@ -1,6 +1,8 @@
 # Bricklap — Diretrizes do CTO
 
 > Transcrição das diretrizes que o CTO usava fora do repositório, versionadas na sessão 22 para o projeto não depender de nenhuma ferramenta nem da memória de nenhum modelo. O texto até à secção "Critério de continuar/parar (Fase 1)" é transcrito sem alterações; a secção "Se mudares de agente", no fim, é nova.
+>
+> **A numeração canónica das fases é a do [`ROADMAP.md`](../ROADMAP.md).** As diretrizes foram escritas antes dela e usam "Fase 1" com outro significado. Onde isso acontece há uma nota como esta, marcada "sessão 22b" — as notas não fazem parte da transcrição.
 
 ## Papel
 - O CTO é o parceiro de decisão técnica do Bricklap. O fundador é o decisor.
@@ -51,6 +53,8 @@
 - Fase 1 (MVP): Running/Cycling/Walking, troca manual de segmento, só
   telemóvel, persistência local durável (SQLite append-only), sem
   contas/cloud, sem BLE, sem HealthKit, sem deteção automática.
+
+  > **Nota (sessão 22b) — numeração histórica.** A "Fase 1 (MVP)" das diretrizes **não é a Fase 1 do `ROADMAP.md`**. Corresponde, no roadmap, às **Fases 1, 2 e 3 juntas**: Fase 1, base do produto e esqueleto Android (concluída a 2026-09-10); Fase 2, GPS real e persistência SQLite append-only (concluída a 2026-09-10); Fase 3, segundo plano e fiabilidade (concluída a 2026-09-12). O MVP cresceu pelo caminho: a app tem oito desportos, incluindo força, remo indoor, passadeira e natação, e não só corrida, bicicleta e caminhada. Sempre que um ficheiro disser "Fase N" sem mais, é a numeração do roadmap.
 - Ambiente: PC Windows + telemóvel Android. Fase 1 é ANDROID-ONLY — sem Mac,
   sem iPhone, sem conta Apple, sem custos de hardware. React Native mantém a
   porta do iOS aberta; iOS só se avalia depois da Fase 1.
@@ -73,21 +77,17 @@
   Strava ou do Garmin para os seus treinos híbridos? Sessões longas sem
   perder dados? Se não: pivotar ou parar — não acrescentar funcionalidades.
 
+> **Nota (sessão 22b).** "Fase 1" aqui é o MVP histórico da nota acima, ou seja, as Fases 1 a 3 do roadmap, já concluídas. O dogfooding que este critério mede começou a 2026-09-14, **durante a Fase 4**, e é aí que o critério está escrito no [`ROADMAP.md`](../ROADMAP.md): "Fase 4", "Critério de continuar ou parar".
+
 ## Se mudares de agente
 
 Secção nova da sessão 22, não transcrita. Vale para o CTO e para o agente de código, seja qual for a ferramenta ou o modelo.
 
 **O repositório manda sempre sobre a memória de qualquer modelo.** O que um modelo "se lembra" de uma conversa anterior — incluindo um resumo automático de contexto — é, no melhor dos casos, uma fotografia antiga do repositório. Se contradisser o que está em `main`, está errado o que o modelo se lembra, e não o ficheiro. Nada que só exista numa conversa conta como decidido: ou está escrito aqui, ou não existe.
 
-**Um agente novo lê, por esta ordem:**
+**Um agente novo começa pelo [`AGENTS.md`](../AGENTS.md)** e segue a secção "Ler primeiro": o nível A em todas as sessões, o nível B na primeira sessão de um agente neste repositório — é para quem chega que ele existe — e o C quando o trabalho o pedir. A lista não se repete aqui, para não haver duas versões da mesma regra a divergir.
 
-1. [`AGENTS.md`](../AGENTS.md) — as regras de trabalho: papéis, o que ler, comandos, convenções, definition of done, o que nunca fazer. O `CLAUDE.md` da raiz é só um ponteiro para lá.
-2. [`STATUS.md`](../STATUS.md) — onde o projeto está hoje, pacote a pacote, e as limitações conhecidas.
-3. [`ROADMAP.md`](../ROADMAP.md) — as fases, o que está feito e o que vem a seguir, com as decisões do fundador em cada fase.
-4. [`docs/VISAO.md`](VISAO.md) — a tese do produto e as três frases fixas.
-5. **Este ficheiro** — como o CTO trabalha e os factos fixos do projeto.
-6. [`docs/NEGOCIO.md`](NEGOCIO.md), [`LEGAL.md`](../LEGAL.md) e [`docs/AMBIENTE.md`](AMBIENTE.md) — o que o produto quer ser, o que a lei exige e em que máquinas se trabalha.
-7. O relatório mais recente em [`docs/reports/`](reports/) e `git log --oneline -20` — o que se fez por último e o que ficou em aberto.
-8. Só depois, e só o que o brief precisar: [`ARCHITECTURE.md`](../ARCHITECTURE.md), `packages/engine/src/index.ts`, os ADR em [`docs/adr/`](adr/) e o [`docs/BACKLOG.md`](BACKLOG.md).
+**Um CTO novo** segue o "Protocolo de início de cada chat" acima e, na primeira conversa, lê também o nível B do `AGENTS.md`: este ficheiro, `LEGAL.md`, `docs/NEGOCIO.md`, `docs/AMBIENTE.md` e o ADR 0006.
 
-**Quando os ficheiros não concordam entre si**, não se escolhe sozinho: diz-se onde está a contradição e pergunta-se (ao CTO, se for o agente de código; ao fundador, se for o CTO). Os factos fixos acima foram escritos no início do projeto e a numeração não é a do `ROADMAP.md`: a "Fase 1 (MVP)" daqui corresponde, no roadmap, às Fases 1 a 3 (concluídas em 2026-09-12), e a app já tem oito desportos, com força, remo, passadeira e natação, e não só corrida, bicicleta e caminhada. Onde houver diferença, o `ROADMAP.md` e os ADR são mais recentes.
+**Quando os ficheiros não concordam entre si**, não se escolhe sozinho: diz-se onde está a contradição e pergunta-se (ao CTO, se for o agente de código; ao fundador, se for o CTO). Os factos fixos acima foram escritos no início do projeto, e onde a numeração das fases não coincide está anotado (notas "sessão 22b"). Onde houver diferença, o `ROADMAP.md` e os ADR são mais recentes, e a numeração das fases é sempre a do `ROADMAP.md`.
+

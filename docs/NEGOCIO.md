@@ -33,7 +33,9 @@
 - **Objetivo global.** Inglês é a língua-base, com traduções; **por agora inglês e pt-PT chegam**.
 - **Unidades**: métricas, e as dos EUA e do Reino Unido (as imperiais estão na Fase 6 do [`ROADMAP.md`](../ROADMAP.md)).
 
-## Critério de continuar ou parar (Fase 1)
+## Critério de continuar ou parar
+
+Nas diretrizes do CTO é o critério da "Fase 1 (MVP)", que são as Fases 1 a 3 do [`ROADMAP.md`](../ROADMAP.md), já concluídas. O dogfooding que o mede corre na Fase 4, e é lá que o critério está escrito no roadmap ("Fase 4", "Critério de continuar ou parar").
 
 Ao fim de **~6 semanas de dogfooding**:
 
