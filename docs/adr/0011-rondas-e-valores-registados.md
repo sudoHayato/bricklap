@@ -69,7 +69,7 @@ Revisto na sessão 20b: o ponto sobre a taxonomia de exercícios saiu de aqui �
 
 1. **Aceitar, ajustar ou rejeitar** o marcador de ronda como evento, com identidade de exercício (pontos 1 e 1b).
 2. **Os campos exatos por desporto** (ponto 2) — a lista acima é a leitura do CTO do que o fundador pediu no dogfooding, não um levantamento exaustivo.
-2a. **As duas portas** (secção 2a, sessão 22b): confirmar que o modelo as prevê as duas, e a regra de qual valor vale quando um bloco tem mais do que um — a proposta é o último registado, sem apagar os anteriores. É um detalhe acrescentado pela equipa de desenvolvimento na 22b, não pelo CTO.
+2a. **As duas portas** (secção 2a, sessão 22b): confirmar que o modelo as prevê as duas, e a regra de qual valor vale quando um bloco tem mais do que um — a proposta é o último registado, sem apagar os anteriores. É um detalhe acrescentado pela equipa de desenvolvimento na 22b, não pelo CTO; o CTO manteve-o na sessão 22c como proposta, por ser coerente com o append-only (a correção acrescenta um evento, não reescreve o anterior).
 3. **Ordem de implementação**: este ADR antes ou depois de outra prioridade da Fase 4 (ver ROADMAP).
 
 A taxonomia de exercícios (peso puro vs. peso do corpo) continua a decidir-se em separado, como item de interface no BACKLOG — não bloqueia este ADR.

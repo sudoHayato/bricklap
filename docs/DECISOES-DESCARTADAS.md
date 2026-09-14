@@ -78,7 +78,8 @@ Lê-se antes de propor uma abordagem nova ([`AGENTS.md`](../AGENTS.md), "Ler pri
 - **Porque parecia boa ideia.** A conta parecia simples: um B tem dois vazios empilhados, e a 24 px não há píxeis para os dois.
 - **Porque se abandonou — e o que estava errado.** **A premissa estava errada, e o CTO corrigiu-se.** A conta assumia que o B tinha de caber **acima do pé do L**. Se o traço de baixo do B **for** o pé do L — uma **ligadura** —, a aritmética muda: **todos os traços ficam ao mesmo peso** e as contraformas passam de **~2 para ~5,5 unidades** da grelha.
 - **Uma consequência que não se pode esquecer:** **a ligadura obriga a uma cor.** Um pé partilhado pelo B e pelo L não pode ter dois tons ao mesmo tempo. Isto choca com a regra das duas tonalidades (entrada 5).
-- **A prova.** **Os números (~2 px, ~5,5 unidades) são a estimativa do CTO e não estão medidos em nenhum relatório nem no gerador.** A ligadura BL **não foi desenhada nem testada**: está em standby, como toda a marca, por decisão do fundador.
+- **A prova.** **Os números (~2 px, ~5,5 unidades) são uma estimativa NÃO MEDIDA**: o CTO fê-la num desenho de navegador, nunca no rasterizador calibrado, e não está em nenhum relatório nem no gerador. A ligadura BL **não foi desenhada nem testada**: está em standby, como toda a marca, por decisão do fundador.
+- **Quando a marca sair do standby, o primeiro passo é medir a ligadura na cadeia do Blender** ([`tools/marca-blender/`](../tools/marca-blender/)), aos três tamanhos (24, 48 e 73 px) e com o recorte circular, **antes de desenhar seja o que for**. Se a medição contrariar a estimativa, **corrige-se esta entrada — não se defende** (decisão do CTO, sessão 22c).
 - **O que não se deve tentar outra vez.** **Não declarar uma forma impossível sem verificar a premissa geométrica em que a impossibilidade assenta.**
 
 ## 5. A regra das duas tonalidades está partida
