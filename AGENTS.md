@@ -30,13 +30,14 @@ Ler tudo em todas as sessões não é realista; não saber que um ficheiro exist
 7. `docs/NEGOCIO.md` — as três etapas do negócio, a receita, a diferenciação, o social. **Obrigatório** em qualquer sessão que decida âmbito ou produto.
 8. `docs/AMBIENTE.md` — as máquinas, o telemóvel, o relógio, o build local, e o que se pede e não se pede ao fundador. **Obrigatório** em qualquer sessão que faça build, instale no telemóvel, use o Blender, ou precise de alguma coisa do fundador.
 9. `docs/adr/0006-persistencia-sqlite-append-only.md` — **porque é que tudo é eventos e append-only**: um só registo de verdade, nada derivado guardado, uma escrita interrompida não corrompe o que já estava. **Obrigatório** em qualquer sessão que mexa no motor, na persistência ou no modelo de dados.
+10. `docs/DECISOES-DESCARTADAS.md` — o que se tentou e se abandonou, e o argumento que o matou. **Obrigatório** em qualquer sessão que proponha uma abordagem nova.
 
 **C — Consulta, quando o trabalho o pedir:**
 
-10. `README.md` — o mapa do repositório, requisitos e scripts.
-11. `ARCHITECTURE.md` — modelo de dados, invariantes do motor, fronteiras entre pacotes. **Obrigatório** antes de mudar o motor ou a fronteira entre pacotes.
-12. `packages/engine/src/index.ts` — a API do motor. **Obrigatório** antes de tocar no motor ou no código de uma app que o use.
-13. Os outros ADR em `docs/adr/` — o do tema, antes de o contrariar; e `docs/BACKLOG.md`, antes de acrescentar uma ideia.
+11. `README.md` — o mapa do repositório, requisitos e scripts.
+12. `ARCHITECTURE.md` — modelo de dados, invariantes do motor, fronteiras entre pacotes. **Obrigatório** antes de mudar o motor ou a fronteira entre pacotes.
+13. `packages/engine/src/index.ts` — a API do motor. **Obrigatório** antes de tocar no motor ou no código de uma app que o use.
+14. Os outros ADR em `docs/adr/` — o do tema, antes de o contrariar; e `docs/BACKLOG.md`, antes de acrescentar uma ideia.
 
 ## Layout
 

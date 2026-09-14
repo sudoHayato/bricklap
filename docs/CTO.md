@@ -87,7 +87,7 @@ Secção nova da sessão 22, não transcrita. Vale para o CTO e para o agente de
 
 **Um agente novo começa pelo [`AGENTS.md`](../AGENTS.md)** e segue a secção "Ler primeiro": o nível A em todas as sessões, o nível B na primeira sessão de um agente neste repositório — é para quem chega que ele existe — e o C quando o trabalho o pedir. A lista não se repete aqui, para não haver duas versões da mesma regra a divergir.
 
-**Um CTO novo** segue o "Protocolo de início de cada chat" acima e, na primeira conversa, lê também o nível B do `AGENTS.md`: este ficheiro, `LEGAL.md`, `docs/NEGOCIO.md`, `docs/AMBIENTE.md` e o ADR 0006.
+**Um CTO novo** segue o "Protocolo de início de cada chat" acima e, na primeira conversa, lê também os ficheiros do nível B do `AGENTS.md`.
 
 **Quando os ficheiros não concordam entre si**, não se escolhe sozinho: diz-se onde está a contradição e pergunta-se (ao CTO, se for o agente de código; ao fundador, se for o CTO). Os factos fixos acima foram escritos no início do projeto, e onde a numeração das fases não coincide está anotado (notas "sessão 22b"). Onde houver diferença, o `ROADMAP.md` e os ADR são mais recentes, e a numeração das fases é sempre a do `ROADMAP.md`.
 

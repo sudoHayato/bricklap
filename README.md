@@ -11,6 +11,7 @@ Língua do produto: **inglês** é a língua-base; **pt-PT** é a primeira tradu
 1. [AGENTS.md](AGENTS.md) — as regras de trabalho, para qualquer agente de código. [STATUS.md](STATUS.md) — onde o projeto está agora.
 2. [docs/CTO.md](docs/CTO.md) — como o CTO trabalha, os factos fixos e o que ler se mudares de agente.
 3. [docs/NEGOCIO.md](docs/NEGOCIO.md) — o que o produto quer ser; [LEGAL.md](LEGAL.md) — o que a lei exige; [docs/AMBIENTE.md](docs/AMBIENTE.md) — em que máquinas se trabalha.
+4. [docs/DECISOES-DESCARTADAS.md](docs/DECISOES-DESCARTADAS.md) — o que se tentou e se abandonou, e porquê: lê-se antes de propor uma abordagem nova.
 
 O repositório é a fonte de verdade: manda sempre sobre a memória de qualquer modelo ou conversa.
 
@@ -78,6 +79,7 @@ O lab fica em http://localhost:8080. Para a app Android ver [apps/mobile/README.
 │   ├── AMBIENTE.md         máquinas, telemóvel, relógio, forma de trabalhar
 │   ├── BACKLOG.md
 │   ├── CTO.md              diretrizes de quem escreve os briefs
+│   ├── DECISOES-DESCARTADAS.md  o que se abandonou e o argumento que o matou
 │   ├── HISTORY.md          origem (Grok Build) e cronologia
 │   ├── NEGOCIO.md          etapas, receita, diferenciação
 │   └── VISAO.md            a tese do produto
