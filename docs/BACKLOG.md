@@ -22,11 +22,21 @@ Feito na sessão 03 (ADR 0006): adaptador de persistência SQLite append-only e 
 
 Decisão do fundador em [docs/VISAO.md](VISAO.md): um treino HIIT/AMRAP é uma sessão com blocos, cada um com as suas métricas. Uma linha por bloco futuro, **todos Fase 4+**, nenhum desenhado agora:
 
-- [ ] **O Mudar propõe o bloco seguinte do plano como primeira opção** (Fase 4.5, quando existirem planos; sessão 17). A escolha de desporto (`ui/escolhaDesporto.tsx`) continua a permitir escolher outro; só a ordem ou o destaque da primeira opção muda para seguir o plano, quando houver um.
+- [ ] **O Mudar propõe o bloco seguinte do plano como primeira opção** (Fase 4.5, quando existirem planos; sessão 17). A escolha de desporto (`ui/escolhaDesporto.tsx`) continua a permitir escolher outro; só a ordem ou o destaque da primeira opção muda para seguir o plano, quando houver um. **Ligação (sessão 20)**: quando os planos de treino (4.5) tiverem também rondas ([ADR 0011](adr/0011-rondas-e-valores-registados.md), proposto), esta proposta é o mecanismo que os percorre — não uma segunda linha.
 - [ ] **Força com exercício, repetições e carga** por segmento (Fase 4+). Introdução após o treino sobre o segmento já gravado é a primeira via a estudar; durante o treino é Fase 5 (relógio).
 - [ ] **Passadeira por ritmo × distância → tempo** (Fase 4+): o atleta introduz o ritmo e a distância da máquina; o tempo já está gravado.
 - [ ] **Remo indoor com metros** (Fase 4+): metros do monitor do remo, introduzidos após o treino.
 - [ ] **Natação em piscina com piscinas/metros** (Fase 4+), pela mesma via.
+
+## Dogfooding 01 (sessão 20, 2026-09-14) — do primeiro treino a sério
+
+Do primeiro registo de campo do fundador com a app instalada ([registo](dogfooding/2026-09-14-treino-01.md); modelo de dados proposto no [ADR 0011](adr/0011-rondas-e-valores-registados.md)):
+
+- [ ] **Taxonomia de exercícios**: separar peso puro (haltere, barra) de peso do corpo (flexões, push ups, RDL sem carga externa se for o caso); rever as oito etiquetas de desporto atuais, que hoje juntam os dois num só "Força". Sem isto, "carga" no ADR 0011 não sabe a que exercícios se aplica.
+- [ ] **Edição pós-treino**: corrigir e preencher valores em falta (metros, repetições, carga, velocidade) sobre uma sessão já gravada, sem apagar nem reescrever o registo de eventos original — só acrescentar.
+- [ ] **Relógio — prioridade alta**: o fundador tem um Garmin Fenix 6X Pro. Facto duro registado para não se perder: uma app Connect IQ escreve-se em **Monkey C**, com limites de memória apertados, e o `packages/engine` em TypeScript **não corre lá** — teria de ser reimplementado. Isto é uma **segunda implementação do motor**, não mais um ecrã da mesma app; exige ADR próprio quando entrar em roadmap (hoje é a Fase 5 do [ROADMAP](../ROADMAP.md); o brief desta sessão referiu-se a esta linha como "Fase 2", que não bate com a numeração atual — ver dúvida no relatório da sessão 20).
+- [ ] **Caminho intermédio a avaliar antes do relógio**: importar ficheiros **FIT** gravados pela app nativa do Garmin, sem escrever nenhum Monkey C. Não resolve a introdução de valores durante o treino, mas dá dados reais de um relógio sem o custo de uma segunda implementação do motor.
+- [ ] **Marca: em standby**, por decisão do fundador (não desta sessão). A exploração vive em `feat/marca-blender`, não fundido: a **P2122** é a candidata das sessões 18/19 ([relatório](reports/2026-09-13-sessao-19.md)), e a **ligadura BL** — o B a partilhar a haste e o pé do L, a uma cor — é uma direção ainda por testar, não desenhada.
 
 ## P1 — Fase 3 (concluída em 2026-09-12; sessões 05–09)
 
