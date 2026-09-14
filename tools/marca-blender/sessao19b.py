@@ -343,7 +343,8 @@ def folha_73(itens, n_aprovadas):
             folha.pousar(v, x0 + m, y, 73, False, sessao19.tons(tema, False))
             folha.pousar(v, x0 + m + 89, y, 73, True, sessao19.tons(tema, True))
             folha.escrever(v["id"], x0 + m + 190, y + 12, 18, sessao19.cor_do_texto(tema))
-            folha.escrever(f"{v.get('nome', '')} · {descricao(v)}", x0 + m + 190, y + 42, 12, sessao19.cor_do_texto(tema, True))
+            texto = descricao(v) if v["id"] == "REF" else f"{v.get('nome', '')} · {descricao(v)}"
+            folha.escrever(texto, x0 + m + 190, y + 42, 12, sessao19.cor_do_texto(tema, True))
         if not n_aprovadas:
             folha.escrever("Nenhuma variante nova aprovada.", x0 + m, cabeca + len(itens) * linha_a + 8, 15, sessao19.cor_do_texto(tema))
     return folha
