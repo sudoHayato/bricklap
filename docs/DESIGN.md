@@ -231,13 +231,48 @@ Nenhum ecrã do Bricklap pode ser confundido de relance com outra app de treino,
 
 ## 8b. A marca
 
-O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) —, com as cores, a regra da cor (a distinção entre o B e o L mantém-se em tudo o que é visível; a versão a uma cor existe só para constrangimentos técnicos), os tamanhos mínimos medidos, o espaço livre e o que nunca fazer. O que interessa a este documento:
+O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) —, com as cores, a regra da cor (a distinção entre o B e o L mantém-se em tudo o que é visível; a versão a uma cor existe só para constrangimentos técnicos — **substituída como regra de desenho em 2026-09-15, ver abaixo**), os tamanhos mínimos medidos, o espaço livre e o que nunca fazer. O que interessa a este documento:
 
 - **A marca e o acento são a mesma terracota, calibrada.** `#C0402C` (matiz 8,1°) vive entre o `#B03A2A` do tema claro (7,2°) e o `#D14F3D` do escuro (7,3°). Não é uma terceira cor a competir; é a mesma família.
 - **O logótipo não é um ícone do §5.** Os ícones do sistema têm traço de 2 px e herdam a cor do texto; a marca é uma forma cheia com cor própria e não se desenha com as regras deles.
 - **Na app, o logótipo assina o cabeçalho** do Início, do Histórico e da retoma (`apps/mobile/ui/logotipo.tsx`), **a duas tonalidades**. Na sessão 15 saiu a uma cor por um defeito do componente, corrigido e com teste na 16.
 - **Desde a sessão 17, o símbolo volta a ter a palavra ao lado** (`ui/logotipoComPalavra.tsx`): entre a 15 e a 17 o cabeçalho só tinha o símbolo, e a app ficou sem nome à vista. A palavra é Archivo Expanded — a exceção do §3 — porque é a mesma família do lockup horizontal da marca; não é um wordmark desenhado, é um alinhamento a olho, tão provisório como o resto da marca (`docs/marca/README.md`).
 - **O ícone da app não é o logótipo dentro de um quadrado** (decisão do fundador, sessão 16): é o campo `#C0402C` a toda a tela, com as três peças a claro — o pilar e o retângulo de cima em `#FBF8F4`, o de baixo em `#E89478`. **O recorte do sistema faz de moldura.** Desenhar a moldura dentro do ícone dá dois quadrados encaixados, o do sistema e o da marca, e no One UI o recorte chega a comer a moldura inteira.
+
+### Regras de desenho de uma marca nova — decisão do fundador, 2026-09-15 (sessão 24)
+
+**O que mudou e porquê.** As regras com que a marca se explorou desde a sessão 15 — plana, cortes a 90°, duas tonalidades, nunca inclinar — foram escritas antes de haver medições. Deram **200 variantes** nas sessões 18, 19 e 19b que convergiram sempre para tijolos empilhados, e mataram **por construção** a leitura dupla que o fundador quer: o espaço negativo precisava de uma forma que contivesse, e sem curvas a forma que contém é a moldura ([DECISOES-DESCARTADAS](DECISOES-DESCARTADAS.md), entradas 2, 3 e 6). O fundador decidiu abri-las. **Isto governa o desenho de uma marca nova; a marca de trabalho que está na app não muda por esta decisão** (nada entra na app sem decisão própria).
+
+**Passa a ser legal:**
+
+- **Curvas verdadeiras**, não só cortes a 90°.
+- **Inclinação**, em qualquer ângulo.
+- **Uma cor só.** As duas tonalidades deixam de ser obrigatórias.
+- **Qualquer número de peças**, ou uma peça só.
+- **3D como método, não como resultado**: modelar em três dimensões, rodar, e ficar com a **silhueta plana** que a forma projeta.
+
+**Continua proibido — e a razão é medida, não estética:** o **resultado** parecer 3D (volume, sombreado, gradiente, perspetiva visível). Um cubo isométrico a 24 px é uma mancha: as faces têm luminâncias diferentes e o antisserrilhado mistura-as. E a notificação do Android é monocromática: um volume sem sombreado deixa de ser volume. Os quatro cubos e tijolos em 3D que o Canva deu na sessão 23 confirmaram-no ([relatório](reports/2026-09-15-sessao-23.md) §4).
+
+**As quatro regras que não se tocam** — mataram 200 variantes e nunca falharam:
+
+1. **Legível a 24 px.**
+2. **Sobrevive ao recorte circular** do ícone adaptativo (janela de 72 dp, círculo de 66 dp).
+3. **Funciona a uma cor.**
+4. **Não se lê como controlo de interface** — lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro.
+
+**E uma restrição nova, de originalidade:** cada candidato compara-se, por sobreposição de silhuetas, com as marcas do mesmo espaço (Strava, Replit, Nike, Adidas, Under Armour, Garmin, Hevy, Whoop, Peloton, Zwift, Fitbit, Decathlon); acima de 0,40 de semelhança elimina-se, entre 0,30 e 0,40 apresenta-se com o número. Não se reproduz nem adapta nenhuma marca existente.
+
+**As regras antigas, substituídas** (ficam para se perceber de onde vieram):
+
+| Regra antiga | De onde vinha | Estado desde 2026-09-15 |
+|---|---|---|
+| A marca é **plana** | [marca/README.md](marca/README.md), "Nunca" (sessão 15) | **Mantém-se no resultado**; o 3D passa a ser legal como método |
+| **Cortes a 90°**, só retângulos | a construção do gerador das sessões 18 a 19b (os briefs e o [relatório da 19b](reports/2026-09-13-sessao-19b.md) §9 leram-na como regra deste documento) | **Substituída**: curvas legais |
+| **Duas tonalidades** em tudo o que é visível; uma cor só por constrangimento técnico | [marca/README.md](marca/README.md), "A regra da cor" (sessão 15) — já partida pelas medições da 19b ([DECISOES-DESCARTADAS](DECISOES-DESCARTADAS.md), entrada 5) | **Substituída**: uma cor é legal; duas deixam de ser obrigatórias |
+| **Nunca rodar ou inclinar** | [marca/README.md](marca/README.md), "Nunca" (sessão 15) | **Substituída**: inclinação legal |
+| As **peças** da marca (três, depois duas: a haste e o pé) | a moldura da sessão 15 e as famílias das 18 a 19b | **Substituída**: qualquer número, ou uma só |
+
+A primeira sessão com estas regras foi a 24 ([relatório](reports/2026-09-15-sessao-24.md)).
 
 ## 9. Onde isto vive na app
 
