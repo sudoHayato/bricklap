@@ -9,8 +9,8 @@ Lê-se antes de propor uma abordagem nova ([`AGENTS.md`](../AGENTS.md), "Ler pri
 ## Índice
 
 1. [O Mudar em ciclo](#1-o-mudar-em-ciclo) — sessão 14, revertido na 17
-2. [O espaço negativo na marca](#2-o-espaço-negativo-na-marca) — sessão 19b
-3. [As famílias de marca encerradas com medições](#3-as-famílias-de-marca-encerradas-com-medições) — sessões 18 e 19
+2. [O espaço negativo na marca](#2-o-espaço-negativo-na-marca) — sessão 19b; reaberto e medido na 24
+3. [As famílias de marca encerradas com medições](#3-as-famílias-de-marca-encerradas-com-medições) — sessões 18 e 19; a G reaberta na 24
 4. [O B sozinho no símbolo, e a ligadura BL medida](#4-o-b-sozinho-no-símbolo-e-a-ligadura-bl-medida) — sessões 19 a 23
 5. [A regra das duas tonalidades está partida](#5-a-regra-das-duas-tonalidades-está-partida) — sessões 19 e 19b
 6. [O Blender como ferramenta de marca](#6-o-blender-como-ferramenta-de-marca) — sessões 18 a 19b
@@ -48,6 +48,7 @@ Lê-se antes de propor uma abordagem nova ([`AGENTS.md`](../AGENTS.md), "Ler pri
   - **L de luz (T)**: a 2,22:1, o tom claro continua a ser tinta, e dois L encaixados à volta de um bloco são outra vez o canto de enquadramento.
   - Todas as 16 destoam no desfoque: peso de 0,30 a 0,48, contra 0,24 da P2122. **O espaço negativo custa massa, e a 24 px a massa lê-se como interface.**
 - **O que não se deve tentar outra vez.** **Não voltar a tentar espaço negativo sem primeiro mudar as regras do DESIGN.md.** É uma decisão de produto do fundador, não uma sessão de logótipo.
+- **Sessão 24: as regras mudaram, e tentou-se outra vez** ([relatório](reports/2026-09-15-sessao-24.md) §3 e §6). O fundador tornou legais as curvas (2026-09-15), e com curvas o recipiente já não tem de ser a moldura: o conceito **ES** pôs o L no vazio de um **disco** (a volta vista de cima) e de um **tijolo de cantos redondos**, com o corte aberto até à borda ou fechado lá dentro. **0 de 4**, por uma razão nova: no disco, o L vazio **são os ponteiros de um relógio às três** (cronómetro, na lista negra); no tijolo redondo, é **uma letra fechada numa tecla** — a moldura outra vez, só com cantos redondos. E pesam: peso de 0,27 a 0,37 contra 0,24 da P2122. **O que se aprendeu:** tirar os 90° resolve a moldura, mas um L vazio dentro de uma forma redonda lê-se como mostrador. Um espaço negativo que funcione precisa de uma forma de fora que já seja uma ideia (o que o FedEx tem e estes recipientes não).
 
 ## 3. As famílias de marca encerradas com medições
 
@@ -69,6 +70,7 @@ Lê-se antes de propor uma abordagem nova ([`AGENTS.md`](../AGENTS.md), "Ler pri
 | **N** — encaixe em L (S4) | 19 | 0 de 24 na letra | As duas peças leem-se Γ e ⅃, e juntas um **S quadrado**; finas, a **marca de corte**; redondas, dois ganchos a rodar: o **indicador de carregamento** |
 
 - **O que não se deve tentar outra vez.** **Estas famílias não voltam sem um argumento novo que não seja estético.** Mexer no vão, no raio ou na espessura não as salva: foi exatamente isso que o varrimento fez.
+- **Sessão 24: a G reaberta, porque as duas regras que a mataram caíram** ([relatório](reports/2026-09-15-sessao-24.md) §6). A G lia-se «lo» porque a haste e o bojo eram **duas peças separadas por uma junta**, e «l■» porque o bojo era **um retângulo** — a junta obrigatória e os 90°. Com uma peça só e curvas legais (decisão do fundador, 2026-09-15), a haste e o bojo foram desenhados como um **b de pista** (BP, BF: 8 variantes). **Chumbaram de outra maneira:** leem-se «b», uma letra de fonte e nada mais — o mesmo defeito da ligadura BL (entrada 4) —, e no campo vermelho do ícone o b branco num círculo é **a marca da Beats by Dre**. As outras famílias (F, M, D, V, Y, N) não se reabriram: nenhuma morreu por uma regra que caiu.
 
 ## 4. O B sozinho no símbolo, e a ligadura BL medida
 
