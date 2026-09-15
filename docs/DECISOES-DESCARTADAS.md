@@ -11,7 +11,7 @@ Lê-se antes de propor uma abordagem nova ([`AGENTS.md`](../AGENTS.md), "Ler pri
 1. [O Mudar em ciclo](#1-o-mudar-em-ciclo) — sessão 14, revertido na 17
 2. [O espaço negativo na marca](#2-o-espaço-negativo-na-marca) — sessão 19b
 3. [As famílias de marca encerradas com medições](#3-as-famílias-de-marca-encerradas-com-medições) — sessões 18 e 19
-4. [O B sozinho no símbolo, e a ligadura que o salvou](#4-o-b-sozinho-no-símbolo-e-a-ligadura-que-o-salvou) — sessões 19 a 22
+4. [O B sozinho no símbolo, e a ligadura BL medida](#4-o-b-sozinho-no-símbolo-e-a-ligadura-bl-medida) — sessões 19 a 23
 5. [A regra das duas tonalidades está partida](#5-a-regra-das-duas-tonalidades-está-partida) — sessões 19 e 19b
 6. [O Blender como ferramenta de marca](#6-o-blender-como-ferramenta-de-marca) — sessões 18 a 19b
 7. [O âmbito da Fase 1 perante o primeiro dogfooding](#7-o-âmbito-da-fase-1-perante-o-primeiro-dogfooding) — sessão 20
@@ -70,17 +70,21 @@ Lê-se antes de propor uma abordagem nova ([`AGENTS.md`](../AGENTS.md), "Ler pri
 
 - **O que não se deve tentar outra vez.** **Estas famílias não voltam sem um argumento novo que não seja estético.** Mexer no vão, no raio ou na espessura não as salva: foi exatamente isso que o varrimento fez.
 
-## 4. O B sozinho no símbolo, e a ligadura que o salvou
+## 4. O B sozinho no símbolo, e a ligadura BL medida
 
-**Sessões 19 a 22.** Prova: o B saiu do símbolo no brief da sessão 19 ([relatório da sessão 19](reports/2026-09-13-sessao-19.md), §10: "o B e o wordmark ficam para outra sessão"); a ligadura BL está registada como direção por testar desde a sessão 20 ([BACKLOG](BACKLOG.md), "Marca: em standby"; [ROADMAP](../ROADMAP.md), 4.4c). **A correção do argumento abaixo não está em nenhum relatório**: vem das conversas com o CTO, e é aqui registada pela primeira vez.
+**Sessões 19 a 23.** Prova: o B saiu do símbolo no brief da sessão 19 ([relatório da sessão 19](reports/2026-09-13-sessao-19.md), §10: "o B e o wordmark ficam para outra sessão"); a ligadura BL ficou registada como direção por testar na sessão 20 ([BACKLOG](BACKLOG.md), "Marca: em standby"); **a medição é da sessão 23** ([relatório da sessão 23](reports/2026-09-15-sessao-23.md), §5). O argumento da ligadura veio das conversas com o CTO e foi registado aqui pela primeira vez na sessão 22d; **a sessão 23 mediu-o e corrigiu esta entrada**.
 
 - **O que se tentou.** Tirar o B do símbolo e deixá-lo só para o wordmark, porque se assumiu — **três vezes** — que um B era impossível a 24 px: as contraformas ficam com **~2 px** e fecham-se com o antisserrilhado.
 - **Porque parecia boa ideia.** A conta parecia simples: um B tem dois vazios empilhados, e a 24 px não há píxeis para os dois.
-- **Porque se abandonou — e o que estava errado.** **A premissa estava errada, e o CTO corrigiu-se.** A conta assumia que o B tinha de caber **acima do pé do L**. Se o traço de baixo do B **for** o pé do L — uma **ligadura** —, a aritmética muda: **todos os traços ficam ao mesmo peso** e as contraformas passam de **~2 para ~5,5 unidades** da grelha.
+- **O que o CTO propôs em vez disso (sessão 22d, estimativa).** A conta assumia que o B tinha de caber **acima do pé do L**. Se o traço de baixo do B **for** o pé do L — uma **ligadura**, com o B a partilhar a haste e o pé —, **todos os traços ficam ao mesmo peso** e as contraformas passam de **~2 para ~5,5 unidades** da grelha. Número estimado num desenho de navegador, nunca no rasterizador.
 - **Uma consequência que não se pode esquecer:** **a ligadura obriga a uma cor.** Um pé partilhado pelo B e pelo L não pode ter dois tons ao mesmo tempo. Isto choca com a regra das duas tonalidades (entrada 5).
-- **A prova.** **Os números (~2 px, ~5,5 unidades) são uma estimativa NÃO MEDIDA**: o CTO fê-la num desenho de navegador, nunca no rasterizador calibrado, e não está em nenhum relatório nem no gerador. A ligadura BL **não foi desenhada nem testada**: está em standby, como toda a marca, por decisão do fundador.
-- **Quando a marca sair do standby, o primeiro passo é medir a ligadura na cadeia do Blender** ([`tools/marca-blender/`](../tools/marca-blender/)), aos três tamanhos (24, 48 e 73 px) e com o recorte circular, **antes de desenhar seja o que for**. Se a medição contrariar a estimativa, **corrige-se esta entrada — não se defende** (decisão do CTO, sessão 22c).
-- **O que não se deve tentar outra vez.** **Não declarar uma forma impossível sem verificar a premissa geométrica em que a impossibilidade assenta.**
+- **A prova — medida na sessão 23**, na cadeia do Blender, a 24, 48 e 73 px, creme e escuro, a uma cor, com o recorte circular. O "antes" é uma reconstrução (a P2122 com um B de traço 2 acima do pé, a partilhar a haste), porque o desenho do CTO não está no repositório. **A estimativa estava certa num caso só, e errada em duas coisas:**
+  1. **As ~5,5 unidades só existem com traço fino.** Com a haste e o pé na grelha 3..21, cada contraforma mede `(18 − 3 × traço) / 2` de alto. Medido: **traço 2 → 6 e 6** (a estimativa); **traço 3 → 4 e 5**; **traço 4 → 3 e 3**; **traço 5, o peso da P2122 → 1 e 2**. "Todos os traços ao mesmo peso" e "contraformas de 5,5" só são verdade juntos com traços de 2 unidades — **2,5 vezes mais finos do que a P2122**.
+  2. **A premissa da impossibilidade também estava errada, por outra razão.** Com as coordenadas inteiras da grelha de 24 (regra da sessão 19b), **contraformas de 2 e 3 px não se fecham com o antisserrilhado**: no "antes", 12 de 12 e 18 de 18 píxeis limpos a 24 px, nos dois temas; mesmo a contraforma de 1 × 2 da ligadura de traço 5 fica limpa (2 de 2). O que fecha as contraformas é o desalinhamento à grelha, não o tamanho do B.
+  3. **O custo que a estimativa não via é o peso ótico.** No desfoque (a régua da 19b, ±25 % da P2122, peso 0,24 · mancha 0,80), **nenhuma espessura cabe**: traço 2 fica leve demais (mancha 0,53, −34 %); traço 3 já pesa demais (peso 0,31, +29 %); traço 4 e 5, 0,36 e 0,40. No recorte passam todas (a perna mais cortada, 7 % a 16,6 %).
+  4. **E na leitura, a ligadura é um monograma, não um símbolo**: a 24 px lê-se "BL" ou "B_" em letra de píxeis. Responde a "que letra é?", não a "que forma é?" — ao contrário da P2122, que responde às duas.
+- **Conclusão da medição.** A ligadura **abre** o B a 24 px, mas não o salvou como símbolo: **não bateu a P2122** (sessão 23). Serve, quando muito, de ponto de partida para um **wordmark** ou um monograma, que é outra pergunta.
+- **O que não se deve tentar outra vez.** **Não declarar uma forma impossível sem verificar a premissa geométrica em que a impossibilidade assenta** — e **não dar por boa uma estimativa de contraformas sem dizer com que espessura de traço foi feita**.
 
 ## 5. A regra das duas tonalidades está partida
 
