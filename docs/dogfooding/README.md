@@ -3,6 +3,8 @@
 Os treinos reais do fundador com a app instalada, um ficheiro por treino. É a etapa 1 de [`docs/NEGOCIO.md`](../NEGOCIO.md): validar se a app presta. Cada registo tem só factos e queixas do fundador; as soluções vão para ADR e para o [BACKLOG](../BACKLOG.md).
 
 - [2026-09-14 — treino 01](2026-09-14-treino-01.md): HIIT de 4 rondas; a app gravou o tempo do treino, não o treino.
+- [2026-09-16 — treino 02](2026-09-16-treino-02.md): corrida na rua e circuito no ginásio na mesma sessão; auditado na base na sessão 26 — a fronteira rua/ginásio certa ao milissegundo, o circuito inteiro num bloco só.
+- [2026-09-18 — treino 03](2026-09-18-treino-03.md): HIIT de passadeira e circuito, cinco rondas em dez blocos; auditado na base na sessão 26 — sem velocidade, sem exercícios, sem rondas.
 
 ## Que desportos a app tem mesmo de servir
 
