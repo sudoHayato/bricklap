@@ -1,6 +1,25 @@
-# ADR 0011 — Rondas e valores registados: proposta para o modelo de dados
+# ADR 0011 — Rondas e valores registados: o modelo de dados
 
-**Estado**: **proposto** (continua proposto depois da sessão 20b — quem aceita é o fundador, na quarta). Escrito pelo CTO na sessão 20 (2026-09-14) a partir do primeiro dogfooding ([registo](../dogfooding/2026-09-14-treino-01.md)); revisto na sessão 20b (2026-09-14) com a identidade de exercício (secção 1b) e a correção da carga (secção 2), e na sessão 22b (2026-09-14) com as duas portas para os valores (secção 2a). Continua proposto depois da 22b. Não implementado; nenhuma destas sessões tocou em código.
+**Estado**: **aceite** — decisão do fundador, 2026-09-18 (sessão 26). Escrito pelo CTO na sessão 20 (2026-09-14) a partir do primeiro dogfooding ([registo](../dogfooding/2026-09-14-treino-01.md)); revisto na sessão 20b (2026-09-14) com a identidade de exercício (secção 1b) e a correção da carga (secção 2), e na sessão 22b (2026-09-14) com as duas portas para os valores (secção 2a). **Aceite pelo fundador na sessão 26 com os seis pontos abaixo, e implementado no motor e na app nessa mesma sessão** ([relatório](../reports/2026-09-18-sessao-26.md)). O texto da proposta fica como estava, a seguir, para se perceber o caminho.
+
+## Decisão (aceite pelo fundador, 2026-09-18)
+
+O fundador aprovou as três decisões do CTO e as duas propostas da equipa de desenvolvimento, mais o agregado. Os seis pontos, tal como valem a partir daqui:
+
+1. **A ronda é um evento, com identidade de exercício.** Não é entidade nova, não é desporto. A comparação entre rondas faz-se **pelo identificador do exercício, nunca pela posição** — se o atleta saltar um exercício, a posição mente. A posição pode guardar-se, mas só como dado descritivo. *No motor:* `round_started` no registo de eventos; `roundsFromEvents` deriva as rondas e cada bloco leva `round` (ou `null` antes da primeira ronda); o exercício viaja no evento `recorded` e `exerciseAcrossRounds` compara por ele.
+2. **Campos por desporto.** **Remo: metros.** O ritmo médio que a máquina mostra entra como campo opcional; a app calcula o *split* a partir dos metros e do tempo. Não é velocidade — as máquinas de remo dão metros e *split* /500 m. **Passadeira: km/h OU distância**; a app calcula o outro com o tempo do bloco. **Exercícios: repetições e carga.** *No motor:* `VALUE_FIELDS_BY_SPORT`; `blockFigures` deriva o que falta e marca-o como derivado.
+3. **Declarado vs. medido, separados na base desde o primeiro dia.** Uma distância que o atleta escreveu não é uma distância de GPS. Se entrarem no mesmo total, o primeiro recorde pessoal é falso; acrescentar isto depois obrigava a reescrever o histórico. *No motor e na base:* cada `recorded` leva `origin` (`declared` | `measured`); tudo o que vem de amostras GPS é medido por construção; `distanceTotals` devolve os dois totais e nunca um só.
+4. **As duas portas** (proposta da equipa de desenvolvimento, aceite): registar **durante** o treino, bloco a bloco, **e** poder completar ou corrigir **no fim**. Razão: os números da passadeira e do remo estão no mostrador da máquina e desaparecem quando se sai dela. *No motor:* `applyRecord` é a única escrita e aceita-se numa sessão viva e numa sessão parada — o único evento aceite depois de `stopped`.
+5. **Vale o último valor registado** (proposta da equipa de desenvolvimento, aceite): a correção acrescenta um evento novo, nunca reescreve o anterior. *No motor:* `blockRecords` faz o replay por campo, o último ganha, os anteriores ficam no registo; `null` limpa um campo.
+6. **Agregados:** a média de ritmo é **tempo total a dividir por distância total**, nunca a média aritmética dos ritmos de cada ronda. *No motor:* `paceSecPerKm` e `aggregateBySport`, com o teste que fixa a diferença entre as duas fórmulas.
+
+**Na base** (esquema v4): uma coluna `payload TEXT` na tabela de eventos, `NULL` em todas as linhas anteriores e em todas as que não sejam `recorded`; nenhuma linha antiga muda. Provado sobre a base real do telemóvel do fundador na sessão 26.
+
+**O que ficou de fora, de propósito:** a interface das duas portas é desenho, não modelo (a sessão 26 fez a mínima: a ficha de valores no ecrã de gravação e no resumo); a taxonomia de exercícios continua no BACKLOG — o exercício é hoje um nome escrito pelo atleta, comparado depois de aparar e baixar a caixa; a natação em piscina não tem campos; a importação de valores medidos por um dispositivo (FIT) usa o mesmo evento com `origin: "measured"`, mas não existe ainda.
+
+---
+
+## A proposta, como foi escrita (sessões 20 a 22b)
 
 ## Contexto
 
@@ -63,7 +82,7 @@ pace_médio = tempo_total / distância_total
 
 **nunca** a média aritmética dos paces de cada ronda (`(pace_1 + pace_2 + … + pace_n) / n`). As duas divergem sempre que as rondas têm distâncias diferentes, e divergem na direção errada — a média aritmética pesa igual uma ronda de 200 m e uma de 500 m, escondendo exatamente a ronda mais lenta que o atleta quer ver. O motor já faz isto para o ritmo médio de um segmento (`recentMetrics`, ADR 0009); a mesma regra sobe para o agregado entre rondas.
 
-## O que falta decidir na quarta (2026-09-17)
+## O que faltava decidir na quarta (2026-09-17) — decidido na sessão 26, ver "Decisão" acima
 
 Revisto na sessão 20b: o ponto sobre a taxonomia de exercícios saiu de aqui — a carga não depende dela (ver "Correção" na secção 2 acima), e o índice de posição já não é uma dúvida em aberto, ficou resolvido como identidade de exercício (secção 1b). Na sessão 22b entrou o ponto 2a, das duas portas. Ficam quatro pontos, todos do fundador:
 
