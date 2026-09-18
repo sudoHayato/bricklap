@@ -1,0 +1,280 @@
+{
+ "nota": "Sessão 25: a lista da sessão 24 (as doze do fitness) alargada, por decisão do CTO, a marcas simples e conhecidas de fora do fitness — as doze do brief e sete escolhidas por mim, cada uma com o porquê em 'origem'. Os ficheiros descarregam-se para fora do git pelo sessao24_marcas.py; 'caixa' recorta o símbolo em frações da imagem.",
+ "marcas": [
+  {
+   "id": "strava",
+   "marca": "Strava",
+   "simbolo": "as duas divisas",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/strava.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "replit",
+   "marca": "Replit",
+   "simbolo": "os três blocos",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/replit.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "nike",
+   "marca": "Nike",
+   "simbolo": "o swoosh",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/nike.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "adidas-barras",
+   "marca": "Adidas",
+   "simbolo": "as três barras (Performance)",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/adidas.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "adidas-trevo",
+   "marca": "Adidas",
+   "simbolo": "o trevo (Originals)",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Adidas-original.svg",
+   "caixa": [
+    0,
+    0,
+    1,
+    0.64
+   ],
+   "origem": "sessão 24"
+  },
+  {
+   "id": "underarmour",
+   "marca": "Under Armour",
+   "simbolo": "o UA",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/underarmour.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "garmin-triangulo",
+   "marca": "Garmin",
+   "simbolo": "o triângulo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/garmin.svg",
+   "caixa": [
+    0.75,
+    0,
+    0.95,
+    0.45
+   ],
+   "origem": "sessão 24"
+  },
+  {
+   "id": "garmin-palavra",
+   "marca": "Garmin",
+   "simbolo": "a palavra com o triângulo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/garmin.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "hevy",
+   "marca": "Hevy",
+   "simbolo": "o H da app",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/hevy.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "whoop-palavra",
+   "marca": "Whoop",
+   "simbolo": "a palavra",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/WHOOP_Logo_Black.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "whoop-w",
+   "marca": "Whoop",
+   "simbolo": "o W da palavra",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/WHOOP_Logo_Black.svg",
+   "caixa": [
+    0,
+    0,
+    0.24,
+    1
+   ],
+   "origem": "sessão 24"
+  },
+  {
+   "id": "peloton",
+   "marca": "Peloton",
+   "simbolo": "o P",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/peloton.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "zwift",
+   "marca": "Zwift",
+   "simbolo": "o Z",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Zwift_Logo.png",
+   "caixa": [
+    0,
+    0,
+    1,
+    0.74
+   ],
+   "origem": "sessão 24"
+  },
+  {
+   "id": "fitbit",
+   "marca": "Fitbit",
+   "simbolo": "os pontos",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/fitbit.svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "decathlon-orbita",
+   "marca": "Decathlon",
+   "simbolo": "a órbita (2024)",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Decathlon_-_logo_(France,_2024).svg",
+   "caixa": [
+    0,
+    0,
+    0.205,
+    1
+   ],
+   "origem": "sessão 24"
+  },
+  {
+   "id": "decathlon-caixa",
+   "marca": "Decathlon",
+   "simbolo": "a caixa com a palavra (1990–2024)",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Decathlon_-_logo_(1990-2024).svg",
+   "origem": "sessão 24"
+  },
+  {
+   "id": "beatsbydre",
+   "marca": "Beats by Dre",
+   "simbolo": "o b no círculo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/beatsbydre.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "airbnb",
+   "marca": "Airbnb",
+   "simbolo": "o Bélo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/airbnb.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "slack",
+   "marca": "Slack",
+   "simbolo": "o cardinal (2019)",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Slack_icon_2019.svg",
+   "origem": "brief da sessão 25; retirado do Simple Icons, vem da Commons"
+  },
+  {
+   "id": "dropbox",
+   "marca": "Dropbox",
+   "simbolo": "a caixa aberta",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/dropbox.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "spotify",
+   "marca": "Spotify",
+   "simbolo": "as três ondas no círculo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/spotify.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "pinterest",
+   "marca": "Pinterest",
+   "simbolo": "o P no círculo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/pinterest.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "reddit",
+   "marca": "Reddit",
+   "simbolo": "o Snoo no círculo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/reddit.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "telegram",
+   "marca": "Telegram",
+   "simbolo": "o avião de papel no círculo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/telegram.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "monzo",
+   "marca": "Monzo",
+   "simbolo": "o M",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/monzo.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "revolut",
+   "marca": "Revolut",
+   "simbolo": "o R",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/revolut.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "vercel",
+   "marca": "Vercel",
+   "simbolo": "o triângulo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/vercel.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "linear",
+   "marca": "Linear",
+   "simbolo": "o círculo às riscas",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/linear.svg",
+   "origem": "brief da sessão 25"
+  },
+  {
+   "id": "mcdonalds",
+   "marca": "McDonald's",
+   "simbolo": "os arcos dourados",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/mcdonalds.svg",
+   "origem": "escolha minha: dois arcos — o risco direto da família AR"
+  },
+  {
+   "id": "toyota",
+   "marca": "Toyota",
+   "simbolo": "as três elipses",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/toyota.svg",
+   "origem": "escolha minha: elipses cruzadas — o risco direto da família GI"
+  },
+  {
+   "id": "meta",
+   "marca": "Meta",
+   "simbolo": "a fita infinita",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/meta.svg",
+   "origem": "escolha minha: uma fita fechada que torce — o risco direto da família GI"
+  },
+  {
+   "id": "olympics",
+   "marca": "Jogos Olímpicos",
+   "simbolo": "os cinco anéis",
+   "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Olympic_rings_without_rims.svg",
+   "origem": "escolha minha: anéis entrelaçados e desporto; não está no Simple Icons, vem da Commons"
+  },
+  {
+   "id": "mastercard",
+   "marca": "Mastercard",
+   "simbolo": "os dois círculos",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/mastercard.svg",
+   "origem": "escolha minha: círculos sobrepostos, reconhecidos de relance"
+  },
+  {
+   "id": "target",
+   "marca": "Target",
+   "simbolo": "o alvo",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/target.svg",
+   "origem": "escolha minha: o anel com o ponto, o símbolo mais simples de todos"
+  },
+  {
+   "id": "apple",
+   "marca": "Apple",
+   "simbolo": "a maçã",
+   "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/apple.svg",
+   "origem": "escolha minha: a silhueta mais reconhecida de relance"
+  }
+ ]
+}

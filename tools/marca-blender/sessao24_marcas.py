@@ -1,9 +1,9 @@
 """
 Sessão 24: os símbolos das marcas do mesmo espaço, prontos para a semelhança.
 
-    python3 -B tools/marca-blender/sessao24_marcas.py <pasta-fora-do-git>
+    python3 -B tools/marca-blender/sessao24_marcas.py <pasta-fora-do-git> [marcas-sessao-NN.json]
 
-Lê marcas-sessao-24.json, descarrega cada ficheiro para <pasta>/fontes/ (se
+Lê marcas-sessao-24.json (ou a lista indicada; a sessão 25 usa a alargada), descarrega cada ficheiro para <pasta>/fontes/ (se
 ainda lá não estiver), desenha-o a preto sobre branco, recorta a caixa do
 símbolo e grava <pasta>/<id>.png, que o semelhanca.silhueta_do_logotipo lê tal
 como leu o favicon do Replit na sessão 19. Grava também <pasta>/marcas.png,
@@ -53,7 +53,8 @@ def desenhar(caminho):
 
 def main():
     pasta = sys.argv[1]
-    with open(os.path.join(AQUI, "marcas-sessao-24.json"), encoding="utf-8") as f:
+    lista = sys.argv[2] if len(sys.argv) > 2 else "marcas-sessao-24.json"
+    with open(os.path.join(AQUI, lista), encoding="utf-8") as f:
         marcas = json.load(f)["marcas"]
     fichas = []
     for m in marcas:

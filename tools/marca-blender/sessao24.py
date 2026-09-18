@@ -5,6 +5,10 @@ Corre dentro do Blender, sem interface, pelo sessao24.sh ao lado:
 
     tools/marca-blender/sessao24.sh <pasta-das-formas> [pasta-de-saída]
 
+A sessão 25 usa este mesmo medidor pelo sessao25.sh, com --ficheiro formas.json,
+--sessao 25 e --titulo: mudam o ficheiro de entrada e o título das folhas, mais
+nada. Com os valores por omissão, a sessão 24 volta a sair píxel a píxel igual.
+
 Lê <pasta-das-formas>/formas-sessao-24.json (o sessao24_formas.py) e pousa as
 variantes com a P2122 como âncora. Importa sem alterar o resto da cadeia
 (gerar.py, sessao19.py, sessao19b.py; a P2122 de ligadura.py) e usa as cores do
@@ -34,6 +38,9 @@ argv = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
 opcoes_ap = argparse.ArgumentParser(prog="sessao24.py")
 opcoes_ap.add_argument("--formas", required=True)
 opcoes_ap.add_argument("--saida", required=True)
+opcoes_ap.add_argument("--ficheiro", default="formas-sessao-24.json")
+opcoes_ap.add_argument("--sessao", default="24")
+opcoes_ap.add_argument("--titulo", default="regras abertas")
 opcoes = opcoes_ap.parse_args(argv)
 
 CADEIA = os.path.dirname(os.path.abspath(__file__))
@@ -76,7 +83,7 @@ def folha_24(itens):
     largura = m + colunas * largura_col + m
     linhas = math.ceil(len(itens) / colunas)
     folha = gerar.Folha(2 * largura, cabeca + linhas * passo_linha + m)
-    sessao19.paineis(folha, largura, lambda tema: [(f"Sessão 24 · 24 px · {tema}", 15, False), ("#C0402C. Ver a 100 %.", 12, True)])
+    sessao19.paineis(folha, largura, lambda tema: [(f"Sessão {opcoes.sessao} · 24 px · {tema}", 15, False), ("#C0402C. Ver a 100 %.", 12, True)])
     for k, tema in enumerate(TEMAS):
         for i, v in enumerate(itens):
             x = k * largura + m + (i % colunas) * largura_col
@@ -104,7 +111,7 @@ def folha_medicao(itens):
     sessao19.paineis(
         folha,
         colunas * largura,
-        lambda tema: [(f"Bricklap · sessão 24 · regras abertas · 73, 48 e 24 px · {tema}", 15, False), ("Uma cor, #C0402C. À escala real, nada ampliado.", 12, True)],
+        lambda tema: [(f"Bricklap · sessão {opcoes.sessao} · {opcoes.titulo} · 73, 48 e 24 px · {tema}", 15, False), ("Uma cor, #C0402C. À escala real, nada ampliado.", 12, True)],
     )
     for k, tema in enumerate(TEMAS):
         for i, v in enumerate(itens):
@@ -126,7 +133,7 @@ def folha_recorte(itens, raio_grelha=11):
     linhas = math.ceil(len(itens) / colunas)
     folha = gerar.Folha(largura, cabeca + linhas * linha_a + m)
     folha.retangulo(0, 0, largura, folha.altura, "recorte_fundo", -1.0)
-    folha.escrever("Bricklap · sessão 24 · recorte circular do ícone adaptativo (janela de 72 dp, círculo de 66 dp)", m, 14, 15)
+    folha.escrever(f"Bricklap · sessão {opcoes.sessao} · recorte circular do ícone adaptativo (janela de 72 dp, círculo de 66 dp)", m, 14, 15)
     folha.escrever("Em cada variante: sobre o creme, o escuro e o campo do ícone da app. Uma cor.", m, 38, 12)
     tratamentos = (("creme", {"B": "B", "L": "B"}), ("escuro", {"B": "B", "L": "B"}), ("campo", {"B": "campo_peca", "L": "campo_peca"}))
     for i, v in enumerate(itens):
@@ -151,7 +158,7 @@ def main():
     sigma = parametros["desfoque"]["sigma_px"]
     tol = parametros["desfoque"]["tolerancia"]
     os.makedirs(opcoes.saida, exist_ok=True)
-    with open(os.path.join(opcoes.formas, "formas-sessao-24.json"), encoding="utf-8") as f:
+    with open(os.path.join(opcoes.formas, opcoes.ficheiro), encoding="utf-8") as f:
         formas = json.load(f)
     variantes = formas["variantes"]
 
@@ -219,7 +226,7 @@ def main():
             f,
             ensure_ascii=False,
         )
-    print("[marca] sessão 24 pronta:", opcoes.saida)
+    print(f"[marca] sessão {opcoes.sessao} pronta:", opcoes.saida)
 
 
 main()
