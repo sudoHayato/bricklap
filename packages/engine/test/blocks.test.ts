@@ -235,19 +235,19 @@ describe("blockMetrics", () => {
       [],
       "stopped",
     );
-    const aberto = { index: 0, segmentIndex: 0, sport: "strength" as const, startAt: 0, endAt: null };
+    const aberto = { index: 0, segmentIndex: 0, sport: "strength" as const, startAt: 0, endAt: null, round: null };
     expect(blockMetrics(s, aberto, 999_000).durationMs).toBe(50_000);
   });
 
   it("a block pointing at no segment of these events is time only", () => {
     const s = makeSession([{ type: "started", at: 0, sport: "run" }], track(0, 60_000, 1_000, 3));
-    const orfao = { index: 0, segmentIndex: 7, sport: "run" as const, startAt: 0, endAt: 30_000 };
+    const orfao = { index: 0, segmentIndex: 7, sport: "run" as const, startAt: 0, endAt: 30_000, round: null };
     expect(blockMetrics(s, orfao)).toEqual({ durationMs: 30_000, distanceM: 0, avgSpeedMps: 0 });
   });
 
   it("avgSpeedMps is 0 for a block of no duration", () => {
     const s = makeSession([{ type: "started", at: 0, sport: "run" }], track(0, 10_000, 1_000, 3));
-    const vazio = { index: 0, segmentIndex: 0, sport: "run" as const, startAt: 5_000, endAt: 5_000 };
+    const vazio = { index: 0, segmentIndex: 0, sport: "run" as const, startAt: 5_000, endAt: 5_000, round: null };
     expect(blockMetrics(s, vazio).avgSpeedMps).toBe(0);
   });
 });

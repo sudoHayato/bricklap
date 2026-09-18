@@ -24,6 +24,10 @@ import type { SqlDb } from "./sql";
  *
  * A third table, `settings` (v3), holds preferences. It is metadata like
  * `schema_version`, not session data, and it is rewritten in place.
+ *
+ * Since v4 an event row may carry a JSON `payload`: the block, origin,
+ * exercise and values of a `recorded` event (ADR 0011). NULL on every other
+ * row.
  */
 export type Migration = { version: number; up: (db: SqlDb) => void };
 
@@ -79,6 +83,20 @@ export const MIGRATIONS: readonly Migration[] = [
           value TEXT NOT NULL
         );
       `);
+    },
+  },
+  {
+    // v4 (ADR 0011, session 26): rounds and recorded values. Two new event
+    // types in the same append-only table — `round_started`, which needs no
+    // column, and `recorded`, whose fields (block, origin, exercise, values)
+    // travel as one JSON `payload`. One nullable column, no new table: the
+    // hot path (samples) is untouched, every row written before this
+    // migration keeps its seq and reads back exactly as it did, and a
+    // `recorded` row is the only kind that ever fills the column. Proven
+    // against the founder's own database in the session 26 report.
+    version: 4,
+    up: (db) => {
+      db.execSync("ALTER TABLE events ADD COLUMN payload TEXT");
     },
   },
 ];

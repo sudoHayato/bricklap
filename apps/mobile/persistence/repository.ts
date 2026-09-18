@@ -2,19 +2,22 @@ import {
   appendSample,
   applyChange,
   applyMark,
+  applyRecord,
   applyRecovered,
+  applyRoundStart,
   applyStop,
   createLiveSession,
   currentSport,
   isLive,
   newId,
   nowMs,
+  type RecordInput,
   type Sample,
   type Session,
   type SessionEvent,
   type Sport,
 } from "@bricklap/engine";
-import { RECOVERED_HEADLESS_TYPE, replaySessions, type EventRow, type SampleRow, type StoredSession } from "./replay";
+import { RECOVERED_HEADLESS_TYPE, payloadOf, replaySessions, type EventRow, type SampleRow, type StoredSession } from "./replay";
 import { migrate } from "./schema";
 import type { SqlDb } from "./sql";
 
@@ -45,6 +48,15 @@ export interface SessionStore {
   changeSport(sport: Sport, at?: number): void;
   /** "Marca": close the open block and start the next, same sport (Fase 4). */
   mark(at?: number): void;
+  /** "Ronda": a round starts now (ADR 0011). Same write path as a mark. */
+  startRound(at?: number): void;
+  /**
+   * Attach values to a block of any session — live or stopped — by id (ADR
+   * 0011, the two doors). One `recorded` row, appended; never an UPDATE.
+   * Returns true when something was written, false when the engine had
+   * nothing to record (unknown session or block, no applicable field).
+   */
+  record(sessionId: string, input: RecordInput, at?: number): boolean;
   stop(at?: number): string | null;
   pushSample(sample: Sample): void;
   discardLive(at?: number): void;
@@ -95,7 +107,7 @@ export type RepositoryOptions = {
 
 export const DEFAULT_FLUSH_INTERVAL_MS = 2000;
 
-const SELECT_EVENTS = "SELECT seq, session_id, type, at, sport, discarded FROM events";
+const SELECT_EVENTS = "SELECT seq, session_id, type, at, sport, discarded, payload FROM events";
 const SELECT_SAMPLES = "SELECT session_id, t, lat, lng, speed_mps, source, accuracy FROM samples";
 
 function defaultClock(): number {
@@ -184,6 +196,29 @@ export class SqliteSessionStore implements SessionStore {
     if (next === live) return;
     this.writeEvent(next.id, next.events[next.events.length - 1]!, false);
     this.liveSession = next;
+  }
+
+  startRound(at = this.now()): void {
+    const live = this.liveSession;
+    if (!live) return;
+    const next = applyRoundStart(live, at);
+    if (next === live) return;
+    this.writeEvent(next.id, next.events[next.events.length - 1]!, false);
+    this.liveSession = next;
+  }
+
+  record(sessionId: string, input: RecordInput, at = this.now()): boolean {
+    const live = this.liveSession;
+    // The live session is the copy in memory (it may hold samples not yet on
+    // disk); any other session is replayed from disk, events only — values
+    // do not need the samples, and a stopped session's log is complete.
+    const session = live?.id === sessionId ? live : this.eventsOnly(sessionId);
+    if (!session) return false;
+    const next = applyRecord(session, input, at);
+    if (next === session) return false;
+    this.writeEvent(sessionId, next.events[next.events.length - 1]!, false);
+    if (live?.id === sessionId) this.liveSession = next;
+    return true;
   }
 
   stop(at = this.now()): string | null {
@@ -283,6 +318,13 @@ export class SqliteSessionStore implements SessionStore {
 
   // -- internals -----------------------------------------------------------
 
+  /** A stored session replayed from its events alone (no samples). */
+  private eventsOnly(sessionId: string): Session | undefined {
+    const events = this.db.getAllSync<EventRow>(`${SELECT_EVENTS} WHERE session_id = ? ORDER BY seq`, [sessionId]);
+    if (events.length === 0) return undefined;
+    return replaySessions(events, [])[0]?.session;
+  }
+
   /**
    * The theme is read before the first frame, which may be before `hydrate`
    * has run on a fresh install. Migrating is idempotent and cheap, but not
@@ -345,12 +387,13 @@ export class SqliteSessionStore implements SessionStore {
       for (const p of batch) this.insertSample(p.sessionId, p.sample);
       const sport = event.type === "started" || event.type === "sport_changed" ? event.sport : null;
       const type = event.type === "recovered" && origin === "headless" ? RECOVERED_HEADLESS_TYPE : event.type;
-      this.db.runSync("INSERT INTO events (session_id, type, at, sport, discarded) VALUES (?, ?, ?, ?, ?)", [
+      this.db.runSync("INSERT INTO events (session_id, type, at, sport, discarded, payload) VALUES (?, ?, ?, ?, ?, ?)", [
         sessionId,
         type,
         event.at,
         sport,
         discarded ? 1 : 0,
+        payloadOf(event),
       ]);
     });
     this.onTiming?.({ kind: "event", ms: this.clock() - t0, rows: batch.length + 1 });
