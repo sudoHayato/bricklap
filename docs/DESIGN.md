@@ -258,9 +258,13 @@ O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) �
 1. **Legível a 24 px.**
 2. **Sobrevive ao recorte circular** do ícone adaptativo (janela de 72 dp, círculo de 66 dp).
 3. **Funciona a uma cor.**
-4. **Não se lê como controlo de interface** — lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro.
+4. **Não se lê como controlo de interface** — lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro, **e, desde a sessão 25 (decisão do CTO), o visto (✓), o cadeado e o sinal de wi-fi**. A leitura é a estrita: um controlo de interface fora desta lista também chumba, e diz-se qual.
 
-**E uma restrição nova, de originalidade:** cada candidato compara-se, por sobreposição de silhuetas, com as marcas do mesmo espaço (Strava, Replit, Nike, Adidas, Under Armour, Garmin, Hevy, Whoop, Peloton, Zwift, Fitbit, Decathlon); acima de 0,40 de semelhança elimina-se, entre 0,30 e 0,40 apresenta-se com o número. Não se reproduz nem adapta nenhuma marca existente.
+**E uma restrição nova, de originalidade:** cada candidato compara-se, por sobreposição de silhuetas, com marcas existentes. Não se reproduz nem adapta nenhuma marca existente.
+
+- **A régua é relativa desde a sessão 25** (decisão do CTO): a semelhança com uma marca conta só no que **excede** a semelhança com uma forma cheia qualquer (um disco ou um quadrado cheios); sinaliza-se quando esse excesso passa **0,20**, uma margem calibrada só com marcas ([relatório da sessão 25](reports/2026-09-18-sessao-25.md) §3; `tools/marca-blender/sessao25_semelhanca.py`). *O corte absoluto de 0,40 da sessão 24 ficou suspenso*: eliminava a própria P2122 (0,475), um disco cheio (0,686) e marcas reais umas contra as outras (Garmin contra Zwift, 0,659) — media o enchimento da silhueta, não a cópia.
+- **As marcas** (35 símbolos, `tools/marca-blender/marcas-sessao-25.json`): as doze do fitness (Strava, Replit, Nike, Adidas, Under Armour, Garmin, Hevy, Whoop, Peloton, Zwift, Fitbit, Decathlon), as simples e conhecidas de fora dele (Beats by Dre, Airbnb, Slack, Dropbox, Spotify, Pinterest, Reddit, Telegram, Monzo, Revolut, Vercel, Linear) e McDonald's, Toyota, Meta, os anéis olímpicos, Mastercard, Target e Apple.
+- **A leitura humana continua a ser o crivo que decide**, e é o único para as marcas quase circulares (Beats, Spotify, Telegram…), onde uma cópia se parece tanto com um disco como com a marca e nenhuma régua de silhueta a apanha. Foi a leitura que apanhou a Beats by Dre na sessão 24.
 
 **As regras antigas, substituídas** (ficam para se perceber de onde vieram):
 

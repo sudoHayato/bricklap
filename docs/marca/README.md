@@ -10,8 +10,8 @@ Escolhida pelo fundador e desenhada na sessão 15. Uma **moldura quadrada vazada
 
 - **Passa a ser legal:** curvas verdadeiras; inclinação; uma cor só (as duas tonalidades deixam de ser obrigatórias); qualquer número de peças, ou uma só; o 3D **como método** — modelar, rodar e ficar com a silhueta plana.
 - **Continua proibido, por medição:** o **resultado** parecer 3D — volume, sombreado, gradiente, perspetiva visível. A 24 px um cubo é uma mancha (as faces têm luminâncias diferentes e o antisserrilhado mistura-as), e a notificação é monocromática: um volume sem sombreado deixa de ser volume.
-- **Não se tocam:** legível a 24 px; sobrevive ao recorte circular do ícone adaptativo; funciona a uma cor; não se lê como controlo de interface (lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro).
-- **Originalidade:** a silhueta compara-se com as marcas do mesmo espaço; acima de 0,40 de semelhança elimina-se.
+- **Não se tocam:** legível a 24 px; sobrevive ao recorte circular do ícone adaptativo; funciona a uma cor; não se lê como controlo de interface (lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro — e, desde a sessão 25, o visto, o cadeado e o sinal de wi-fi; um controlo fora da lista também chumba).
+- **Originalidade:** a silhueta compara-se com 35 símbolos de marcas existentes, do fitness e de fora dele. Desde a sessão 25 a régua é **relativa**: sinaliza-se quando a semelhança com uma marca excede em mais de 0,20 a semelhança com um disco ou um quadrado cheios (o corte absoluto de 0,40 da sessão 24 ficou suspenso: eliminava a própria P2122). A leitura humana continua a decidir.
 
 **O que isto não muda:** a marca de trabalho que está hoje na app (a moldura e as três peças, abaixo) continua a ser a que se usa, com as suas regras de uso, até o fundador escolher outra. As regras que caíram estão anotadas onde aparecem, e não foram apagadas.
 
