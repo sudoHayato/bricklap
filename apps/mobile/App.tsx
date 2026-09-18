@@ -28,8 +28,12 @@
  * faz falta.
  *
  * Marca (Fase 4): fecha um bloco dentro do segmento atual sem mudar de
- * desporto. É um evento como os outros — escrito antes de o ecrã reagir — e
- * não guarda valores: reps, cargas e metros são a sessão seguinte.
+ * desporto. É um evento como os outros — escrito antes de o ecrã reagir.
+ *
+ * Rondas e valores (sessão 26, ADR 0011): a Ronda é mais um evento; os
+ * valores de um bloco (metros, km/h, repetições, carga, o exercício) são um
+ * evento `recorded` acrescentado ao registo, escrito pelas duas portas — a
+ * ficha durante a gravação e a ficha sobre o resumo — nunca uma reescrita.
  */
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -44,6 +48,8 @@ import {
   sportHasGps,
   stepSim,
   formatClock,
+  type Block,
+  type RecordInput,
   type Sample,
   type Session,
   type SimState,
@@ -376,6 +382,30 @@ export default function App() {
     [boundarySample],
   );
 
+  /** A Ronda. Não muda o segmento, por isso não precisa de amostra de fronteira. */
+  const novaRonda = useCallback(() => {
+    const store = getStore();
+    store.startRound(Date.now());
+    setSession(store.live());
+  }, []);
+
+  /**
+   * As duas portas escrevem aqui: a ficha da gravação (sessão viva) e a do
+   * resumo (sessão parada, pelo id). O ecrã relê a sessão do store depois,
+   * porque a verdade é o que ficou escrito.
+   */
+  const registar = useCallback((sessionId: string, _block: Block, input: RecordInput) => {
+    const store = getStore();
+    store.record(sessionId, input, Date.now());
+    setScreen((atual) => {
+      if (atual.kind !== "resumo" || atual.session.id !== sessionId) return atual;
+      const relida = store.byId(sessionId);
+      return relida ? { ...atual, session: relida } : atual;
+    });
+    const live = store.live();
+    if (live?.id === sessionId) setSession(live);
+  }, []);
+
   const parar = useCallback(() => {
     const sample = boundarySample();
     const store = getStore();
@@ -537,6 +567,8 @@ export default function App() {
           gpsLinha={linhaGps()}
           avisos={avisosDe(feedWanted)}
           onMarca={marcar}
+          onNovaRonda={novaRonda}
+          onRegistar={(block, input) => registar(session.id, block, input)}
           onMudarPara={mudarPara}
           onParar={parar}
         />
@@ -547,6 +579,7 @@ export default function App() {
           session={screen.session}
           voltar={screen.doHistorico ? abrirHistorico : undefined}
           onConcluir={screen.doHistorico ? undefined : irInicio}
+          onRegistar={(block, input) => registar(screen.session.id, block, input)}
         />
       ) : screen.kind === "historico" ? (
         <EcraHistorico

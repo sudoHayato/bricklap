@@ -187,6 +187,38 @@ export type Dictionary = {
     unitsMetricDetail: string;
     aboutTitle: string;
     aboutCopy: string;
+    /**
+     * ADR 0011 (sessão 26): rondas e valores registados. O botão Ronda, a
+     * ficha de valores (as duas portas: durante o treino e no fim), os
+     * campos por desporto e a marca de origem dos números.
+     */
+    round: string;
+    roundN: string;
+    newRound: string;
+    noRound: string;
+    record: string;
+    recordTitle: string;
+    thisBlock: string;
+    previousBlock: string;
+    blockContext: string;
+    exercise: string;
+    exercisePlaceholder: string;
+    meters: string;
+    split: string;
+    speed: string;
+    reps: string;
+    load: string;
+    computedFromSpeed: string;
+    computedFromDistance: string;
+    computedSplit: string;
+    later: string;
+    save: string;
+    clear: string;
+    declaredTag: string;
+    nothingToRecord: string;
+    tapToRecord: string;
+    perSport: string;
+    declaredDistance: string;
   };
   meta: {
     title: string;

@@ -138,7 +138,12 @@ export function Tabs(props: {
   );
 }
 
-/** Uma linha da lista de blocos: ícone + nome | valor | tempo. */
+/**
+ * Uma linha da lista de blocos: ícone + nome | valor | tempo. Com `onPress`
+ * a linha é um botão — no resumo abre a ficha de valores desse bloco
+ * (ADR 0011, a porta do fim). `porPreencher` marca, em acento, um bloco
+ * que aceita valores e ainda não tem nenhum.
+ */
 export function LinhaBloco(props: {
   tokens: Tokens;
   icone: NomeIcone;
@@ -147,27 +152,67 @@ export function LinhaBloco(props: {
   valor?: string | null;
   tempo: string;
   primeira?: boolean;
+  porPreencher?: string;
+  testID?: string;
+  onPress?: () => void;
 }) {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: E.e2,
-        paddingVertical: 10,
-        paddingHorizontal: E.e3,
-        borderTopWidth: props.primeira ? 0 : 1,
-        borderTopColor: props.tokens.linha,
-      }}
-    >
+  const conteudo = (
+    <>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 7, flex: 1, minWidth: 0 }}>
         <Icone nome={props.icone} cor={props.corDoIcone} tamanho={18} />
         <Text numberOfLines={1} style={texto(14, 600, props.tokens.tinta, { flexShrink: 1 })}>
           {props.nome}
         </Text>
       </View>
-      {props.valor ? <Text style={numero(14.5, 800, props.tokens.tinta)}>{props.valor}</Text> : null}
+      {props.valor ? (
+        <Text style={numero(14.5, 800, props.tokens.tinta)}>{props.valor}</Text>
+      ) : props.porPreencher ? (
+        <Text style={texto(12.5, 700, props.tokens.acentoTinta)}>{props.porPreencher}</Text>
+      ) : null}
       <Text style={numero(13, 600, props.tokens.tinta2, { width: 52, textAlign: "right" })}>{props.tempo}</Text>
+    </>
+  );
+  const estilo = {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: E.e2,
+    paddingVertical: 10,
+    paddingHorizontal: E.e3,
+    borderTopWidth: props.primeira ? 0 : 1,
+    borderTopColor: props.tokens.linha,
+  };
+  if (!props.onPress) return <View style={estilo}>{conteudo}</View>;
+  return (
+    <Pressable
+      testID={props.testID}
+      accessibilityRole="button"
+      accessibilityLabel={props.nome}
+      onPress={props.onPress}
+      style={({ pressed }) => ({ ...estilo, minHeight: TOQUE_CONSULTA, backgroundColor: pressed ? props.tokens.sup2 : "transparent" })}
+    >
+      {conteudo}
+    </Pressable>
+  );
+}
+
+/** A linha que abre uma ronda na lista de blocos do resumo. */
+export function LinhaRonda(props: { tokens: Tokens; rotulo: string; lado?: string; primeira?: boolean }) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+        paddingTop: props.primeira ? 8 : 12,
+        paddingBottom: 4,
+        paddingHorizontal: E.e3,
+        borderTopWidth: props.primeira ? 0 : 1,
+        borderTopColor: props.tokens.linha,
+        backgroundColor: props.tokens.sup2,
+      }}
+    >
+      <Text style={{ ...kicker(props.tokens.tinta2), fontSize: 11.5 }}>{props.rotulo}</Text>
+      {props.lado ? <Text style={texto(12, 500, props.tokens.tinta3)}>{props.lado}</Text> : null}
     </View>
   );
 }

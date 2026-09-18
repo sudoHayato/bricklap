@@ -1,0 +1,21 @@
+{
+  "nota": "Sessão 24: os símbolos das marcas do mesmo espaço, para a semelhança de silhueta (o método da sessão 19, semelhanca.py). Os logótipos não vivem no repositório: o sessao24_marcas.py descarrega-os destes URL públicos para uma pasta fora do git. 'caixa' recorta a parte do ficheiro que é o símbolo, em frações da imagem (x0, y0, x1, y1), quando o ficheiro traz também a palavra; sem caixa, usa-se o ficheiro todo. Onde a marca tem mais do que um símbolo em uso, entram os dois.",
+  "marcas": [
+    { "id": "strava", "marca": "Strava", "simbolo": "as duas divisas", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/strava.svg" },
+    { "id": "replit", "marca": "Replit", "simbolo": "os três blocos", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/replit.svg" },
+    { "id": "nike", "marca": "Nike", "simbolo": "o swoosh", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/nike.svg" },
+    { "id": "adidas-barras", "marca": "Adidas", "simbolo": "as três barras (Performance)", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/adidas.svg" },
+    { "id": "adidas-trevo", "marca": "Adidas", "simbolo": "o trevo (Originals)", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Adidas-original.svg", "caixa": [0, 0, 1, 0.64] },
+    { "id": "underarmour", "marca": "Under Armour", "simbolo": "o UA", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/underarmour.svg" },
+    { "id": "garmin-triangulo", "marca": "Garmin", "simbolo": "o triângulo", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/garmin.svg", "caixa": [0.75, 0, 0.95, 0.45] },
+    { "id": "garmin-palavra", "marca": "Garmin", "simbolo": "a palavra com o triângulo", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/garmin.svg" },
+    { "id": "hevy", "marca": "Hevy", "simbolo": "o H da app", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/hevy.svg" },
+    { "id": "whoop-palavra", "marca": "Whoop", "simbolo": "a palavra", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/WHOOP_Logo_Black.svg" },
+    { "id": "whoop-w", "marca": "Whoop", "simbolo": "o W da palavra", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/WHOOP_Logo_Black.svg", "caixa": [0, 0, 0.24, 1] },
+    { "id": "peloton", "marca": "Peloton", "simbolo": "o P", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/peloton.svg" },
+    { "id": "zwift", "marca": "Zwift", "simbolo": "o Z", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Zwift_Logo.png", "caixa": [0, 0, 1, 0.74] },
+    { "id": "fitbit", "marca": "Fitbit", "simbolo": "os pontos", "url": "https://cdn.jsdelivr.net/npm/simple-icons@16.31.0/icons/fitbit.svg" },
+    { "id": "decathlon-orbita", "marca": "Decathlon", "simbolo": "a órbita (2024)", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Decathlon_-_logo_(France,_2024).svg", "caixa": [0, 0, 0.205, 1] },
+    { "id": "decathlon-caixa", "marca": "Decathlon", "simbolo": "a caixa com a palavra (1990–2024)", "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Decathlon_-_logo_(1990-2024).svg" }
+  ]
+}

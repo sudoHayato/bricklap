@@ -52,8 +52,104 @@ export type SessionEvent =
    * athlete fires repeatedly during a session.
    */
   | { type: "marked"; at: number }
+  /**
+   * "Ronda" (ADR 0011, §1): a round starts here. Not a sport and not a new
+   * entity — one more marker in the log, from which `roundsFromEvents`
+   * derives the rounds the way `segmentsFromEvents` derives the segments.
+   * It is also a block boundary, like a mark, unless it lands exactly on
+   * one (a CHANGE at the same instant): then the block that just opened is
+   * the first of the round, and nothing of ~0 s is created.
+   */
+  | { type: "round_started"; at: number }
+  /**
+   * Values the athlete (or, one day, a device import) attached to a block
+   * (ADR 0011, §2 to §5): which block, where the numbers came from, an
+   * optional exercise identity and the fields themselves. Both doors —
+   * during the workout and at the end — append this same event; a
+   * correction is a later `recorded` for the same block, never an edit,
+   * and the last value recorded for each field is the one that counts.
+   * A field set to `null` clears it. The only event accepted on a stopped
+   * session, because the end door has to work after `stopped`.
+   */
+  | {
+      type: "recorded";
+      at: number;
+      /** Index of the block in `blocksFromEvents`, stable because the log is append-only. */
+      block: number;
+      origin: ValueOrigin;
+      /**
+       * Identity of the exercise (ADR 0011, §1b): what the block was, not
+       * where it sat. Two blocks of different rounds are comparable when
+       * they share it; position never decides that. Free text today,
+       * compared as written after trimming and lowercasing (`exerciseKey`).
+       */
+      exercise?: string;
+      values: RecordedValues;
+    }
   | { type: "stopped"; at: number }
   | { type: "recovered"; at: number };
+
+/**
+ * Where a number came from (ADR 0011, §3): typed by the athlete — a
+ * treadmill speed read off the machine, a rowing distance, a rep count — or
+ * measured by a device. Kept apart in the schema from the first row that
+ * stores them, so a declared distance never sums into a measured total: the
+ * first personal record would be false otherwise, and the flag cannot be
+ * added afterwards without rewriting history. Everything from GPS samples
+ * is measured by construction; everything the app writes today is declared.
+ */
+export type ValueOrigin = "declared" | "measured";
+
+/**
+ * The fields a block can carry, by sport (ADR 0011, §2, as accepted):
+ * rowing in metres, with the split the machine showed as an optional
+ * extra (the app derives its own split from metres and time); treadmill in
+ * km/h or distance, the other derived from the block's time; exercises in
+ * repetitions and load. Sports with GPS have no declared fields — their
+ * distance is measured — and neither has pool swimming yet.
+ */
+export const VALUE_FIELDS = ["meters", "splitS", "speedKmh", "reps", "loadKg"] as const;
+
+export type ValueField = (typeof VALUE_FIELDS)[number];
+
+export const VALUE_FIELDS_BY_SPORT: Record<Sport, readonly ValueField[]> = {
+  run: [],
+  bike: [],
+  walk: [],
+  transition: [],
+  strength: ["reps", "loadKg"],
+  rowing_indoor: ["meters", "splitS"],
+  treadmill: ["speedKmh", "meters"],
+  swimming_pool: [],
+};
+
+/** What a `recorded` event carries per field: a number, or `null` to clear it. */
+export type RecordedValues = Partial<Record<ValueField, number | null>>;
+
+/** One field of a block after replay: the last value recorded, and its origin. */
+export type RecordedValue = { value: number; origin: ValueOrigin; at: number };
+
+/**
+ * A block's values after replaying every `recorded` event that names it
+ * (ADR 0011, §5): per field, the last one written wins; earlier ones stay
+ * in the log. `exercise` is the last identity given, or null.
+ */
+export type BlockRecord = {
+  exercise: string | null;
+  values: Partial<Record<ValueField, RecordedValue>>;
+};
+
+/**
+ * A round (ADR 0011, §1), derived from `round_started` markers. It runs to
+ * the next marker, or to `stopped`; `endAt` is null only while it is open.
+ * Blocks before the first marker belong to no round (a warm-up run before
+ * the circuit, as in the founder's second workout).
+ */
+export type Round = {
+  index: number;
+  startAt: number;
+  endAt: number | null;
+};
 
 export type Sample = {
   t: number;
@@ -118,6 +214,12 @@ export type Block = {
   sport: Sport;
   startAt: number;
   endAt: number | null;
+  /**
+   * Index of the round this block sits in (ADR 0011), or null before the
+   * first `round_started`. Derived, like everything else here: the number
+   * of round markers at or before `startAt`, minus one.
+   */
+  round: number | null;
 };
 
 export type SegmentMetrics = {

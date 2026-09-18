@@ -1,0 +1,525 @@
+{
+ "nota": "Sessão 24: as leituras humanas, feitas nas folhas de revisão (73, 48 e 24 px nos dois temas, 24 ×6, o recorte e o desfoque). Uma variante passa a leitura quando responde às duas perguntas — que forma é? que letra ou ideia é? — com duas respostas diferentes, como a P2122 (dois tijolos; L). 'lista_negra' diz o controlo de interface que se lê, e marca-se também quando o controlo não está na lista escrita do brief, dizendo-o. As notas dizem o que se investigou quando uma variante lembrava outra marca. 'lembra' regista uma marca fora das doze que a variante reproduz, e elimina como a semelhança.",
+ "criterios": {
+  "passa_leitura": "forma e letra ou ideia, as duas, a 24 px",
+  "lista_negra": "lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro — e outros controlos de interface, assinalados"
+ },
+ "leituras": {
+  "LE11": {
+   "forma": "um laço de um traço só",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a 24 px a volta fecha-se; o que resta é uma letra escrita à mão, não uma forma"
+  },
+  "LE12": {
+   "forma": "um laço de um traço só",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a 24 px a volta fecha-se; o que resta é uma letra escrita à mão, não uma forma"
+  },
+  "LE21": {
+   "forma": "um laço de um traço só, mais pesado",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a volta fecha-se já a 48 px"
+  },
+  "LE22": {
+   "forma": "um laço de um traço só, mais pesado",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a volta fecha-se já a 48 px"
+  },
+  "BP11": {
+   "forma": "nenhuma além da letra: a pista lê-se como um bojo achatado",
+   "ideia": "b minúsculo",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "é um glifo, como a ligadura da sessão 23: responde à letra, não à forma"
+  },
+  "BP12": {
+   "forma": "nenhuma além da letra: a pista lê-se como um bojo achatado",
+   "ideia": "b minúsculo",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "é um glifo, como a ligadura da sessão 23: responde à letra, não à forma"
+  },
+  "BP21": {
+   "forma": "nenhuma além da letra",
+   "ideia": "b minúsculo",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "no campo vermelho do ícone é um b branco dentro de um círculo vermelho — a marca da Beats by Dre, que não está na lista das doze mas é uma marca registada e conhecida. Investigado antes de apresentar: chumba também por isso",
+   "lembra": "Beats by Dre (b branco num círculo vermelho, no campo do ícone)"
+  },
+  "BP22": {
+   "forma": "nenhuma além da letra",
+   "ideia": "b minúsculo",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "no campo vermelho do ícone é um b branco dentro de um círculo vermelho — a marca da Beats by Dre, que não está na lista das doze mas é uma marca registada e conhecida. Investigado antes de apresentar: chumba também por isso",
+   "lembra": "Beats by Dre (b branco num círculo vermelho, no campo do ícone)"
+  },
+  "LZ11": {
+   "forma": "dois tijolos, um de pé e inclinado, outro deitado",
+   "ideia": "L em itálico — a P2122 em andamento",
+   "passa_leitura": true,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a única ideia da sessão que mantém a leitura dupla da P2122; chumba só na semelhança (Replit), numa régua em que a própria P2122 também chumba"
+  },
+  "LZ12": {
+   "forma": "dois tijolos, um de pé e inclinado, outro deitado",
+   "ideia": "L em itálico — a P2122 em andamento",
+   "passa_leitura": true,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a única ideia da sessão que mantém a leitura dupla da P2122; chumba só na semelhança (Replit), numa régua em que a própria P2122 também chumba"
+  },
+  "LZ21": {
+   "forma": "uma haste sobre um pé abaulado",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "o arco lê-se como um pé deformado, não como a curva de uma pista; perde o tijolo e não ganha a pista"
+  },
+  "LZ22": {
+   "forma": "uma haste sobre um pé abaulado",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "o arco lê-se como um pé deformado, não como a curva de uma pista; perde o tijolo e não ganha a pista"
+  },
+  "CN11": {
+   "forma": "um L gordo com um chanfro",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a silhueta do 3D lê-se como um L mal desenhado, não como uma esquina de parede"
+  },
+  "CN12": {
+   "forma": "uma bota ou meia de perfil",
+   "ideia": "L deformado",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a profundidade do prisma engorda o canto até virar calçado"
+  },
+  "CN21": {
+   "forma": "um visto (✓) torto",
+   "ideia": "V",
+   "passa_leitura": false,
+   "lista_negra": "visto de confirmação — controlo de interface, fora da lista escrita",
+   "perde_24": null,
+   "nota": null
+  },
+  "CN22": {
+   "forma": "um triângulo a apontar para a direita, com um entalhe",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "botão de reprodução",
+   "perde_24": null,
+   "nota": null
+  },
+  "ES11": {
+   "forma": "um disco com um quarto destacado",
+   "ideia": "relógio às três, ou gráfico circular",
+   "passa_leitura": false,
+   "lista_negra": "cronómetro (mostrador com ponteiros)",
+   "perde_24": null,
+   "nota": null
+  },
+  "ES12": {
+   "forma": "um mostrador com dois ponteiros",
+   "ideia": "relógio às três",
+   "passa_leitura": false,
+   "lista_negra": "cronómetro (mostrador com ponteiros)",
+   "perde_24": null,
+   "nota": null
+  },
+  "ES21": {
+   "forma": "uma pastilha com um canto recortado em L",
+   "ideia": "L dentro de um cartão",
+   "passa_leitura": false,
+   "lista_negra": "painel",
+   "perde_24": null,
+   "nota": null
+  },
+  "ES22": {
+   "forma": "uma tecla ou etiqueta com a letra L",
+   "ideia": "L fechado num recipiente",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "com o recipiente curvo, a letra no vazio volta a ser uma letra dentro de uma moldura (a M de cantos redondos)"
+  },
+  "AR11": {
+   "forma": "um semicírculo aos segmentos",
+   "ideia": "conta-rotações ou nível por segmentos; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (progresso aos segmentos)",
+   "perde_24": null,
+   "nota": null
+  },
+  "AR21": {
+   "forma": "um semicírculo aos segmentos",
+   "ideia": "conta-rotações ou nível por segmentos; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (progresso aos segmentos)",
+   "perde_24": null,
+   "nota": null
+  },
+  "AR12": {
+   "forma": "um arco de tijolos, um portal",
+   "ideia": "∩ ou n; a 24 px um íman",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a 73 px lê-se arco de tijolos — é a melhor leitura de tijolo da sessão —, mas a 24 px as aduelas colam e fica um n"
+  },
+  "AR22": {
+   "forma": "um arco de tijolos, um portal",
+   "ideia": "∩ ou n; a 24 px um íman",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a 73 px lê-se arco de tijolos — é a melhor leitura de tijolo da sessão —, mas a 24 px as aduelas colam e fica um n"
+  },
+  "TJ11": {
+   "forma": "uma fatia de anel",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "sem letra e sem ideia: um tijolo dobrado não se lê como tijolo nem como volta"
+  },
+  "TJ12": {
+   "forma": "um arco partido em dois",
+   "ideia": "nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (arco aos segmentos)",
+   "perde_24": null,
+   "nota": null
+  },
+  "TJ22": {
+   "forma": "um arco partido em dois",
+   "ideia": "nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (arco aos segmentos)",
+   "perde_24": null,
+   "nota": null
+  },
+  "TJ21": {
+   "forma": "um C grosso, aberto",
+   "ideia": "C",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (arco aberto)",
+   "perde_24": null,
+   "nota": null
+  },
+  "GI11": {
+   "forma": "uma elipse fina a torcer — uma órbita",
+   "ideia": "órbita; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "lembra a órbita da Decathlon (0,35 e 0,39); a fita parte-se a 24 px"
+  },
+  "GI12": {
+   "forma": "uma elipse fina a torcer — uma órbita",
+   "ideia": "órbita; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "lembra a órbita da Decathlon (0,35 e 0,39); a fita parte-se a 24 px"
+  },
+  "GI21": {
+   "forma": "um anel oval",
+   "ideia": "O",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "perde_24": null,
+   "nota": null
+  },
+  "GI22": {
+   "forma": "um anel oval",
+   "ideia": "O",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "perde_24": null,
+   "nota": null
+  },
+  "PI11": {
+   "forma": "uma pilha de três tijolos desalinhados",
+   "ideia": "pilha; a 24 px uma mancha",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a pilha só se lê a 73 px; a 24 px é um bloco"
+  },
+  "PI12": {
+   "forma": "um bloco com um entalhe em Z",
+   "ideia": "Z ou 2",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "PI21": {
+   "forma": "uma pilha com topo — pagode ou farol",
+   "ideia": "nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "PI22": {
+   "forma": "um bloco com dois entalhes",
+   "ideia": "Σ ou ampulheta",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "CU11": {
+   "forma": "um L de cantos redondos",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a curva da pista não se lê: é um L de fonte arredondada"
+  },
+  "CU12": {
+   "forma": "um gancho",
+   "ideia": "L ou J deitado",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "CU21": {
+   "forma": "dois L concêntricos",
+   "ideia": "L duplo",
+   "passa_leitura": false,
+   "lista_negra": "marca de corte (o canto de enquadramento)",
+   "perde_24": null,
+   "nota": null
+  },
+  "CU22": {
+   "forma": "dois L concêntricos",
+   "ideia": "L duplo",
+   "passa_leitura": false,
+   "lista_negra": "marca de corte (o canto de enquadramento)",
+   "perde_24": null,
+   "nota": null
+  },
+  "KB11": {
+   "forma": "um cadeado ou um saco",
+   "ideia": "nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": "cadeado — ícone de bloqueio, fora da lista escrita",
+   "perde_24": null,
+   "nota": null
+  },
+  "KB12": {
+   "forma": "uma bola com uma fenda",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "KB21": {
+   "forma": "um kettlebell",
+   "ideia": "kettlebell; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a forma lê-se, e é o ícone literal do objeto (nível 1, cliché do fitness); o corpo de tijolo não se lê como tijolo"
+  },
+  "KB22": {
+   "forma": "um kettlebell",
+   "ideia": "kettlebell; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a forma lê-se, e é o ícone literal do objeto (nível 1, cliché do fitness); o corpo de tijolo não se lê como tijolo"
+  },
+  "SO11": {
+   "forma": "um ponto de exclamação",
+   "ideia": "!",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a pegada sozinha, a 24 px, é pontuação"
+  },
+  "SO12": {
+   "forma": "um ponto de exclamação",
+   "ideia": "!",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a pegada sozinha, a 24 px, é pontuação"
+  },
+  "SO21": {
+   "forma": "pegadas",
+   "ideia": "caminhar; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "o ícone genérico das apps de passos"
+  },
+  "SO22": {
+   "forma": "pegadas",
+   "ideia": "caminhar; nenhuma letra",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "o ícone genérico das apps de passos"
+  },
+  "PE11": {
+   "forma": "arcos concêntricos",
+   "ideia": "sinal de rede",
+   "passa_leitura": false,
+   "lista_negra": "sinal de wi-fi ou RSS — ícone de interface, fora da lista escrita",
+   "perde_24": null,
+   "nota": null
+  },
+  "PE12": {
+   "forma": "arcos concêntricos",
+   "ideia": "sinal de rede",
+   "passa_leitura": false,
+   "lista_negra": "sinal de wi-fi ou RSS — ícone de interface, fora da lista escrita",
+   "perde_24": null,
+   "nota": null
+  },
+  "PE21": {
+   "forma": "arcos concêntricos",
+   "ideia": "sinal de rede",
+   "passa_leitura": false,
+   "lista_negra": "sinal de wi-fi ou RSS — ícone de interface, fora da lista escrita",
+   "perde_24": null,
+   "nota": null
+  },
+  "PE22": {
+   "forma": "arcos concêntricos",
+   "ideia": "sinal de rede",
+   "passa_leitura": false,
+   "lista_negra": "sinal de wi-fi ou RSS — ícone de interface, fora da lista escrita",
+   "perde_24": null,
+   "nota": null
+  },
+  "LA11": {
+   "forma": "um laço aberto de um traço",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "passa a semelhança (0,37) e os 24 px, com a volta aberta; mas a volta lê-se como a maneira de escrever um l, não como uma volta de pista. Só letra, e letra de caligrafia: é texto, como o B itálico do Canva na sessão 23"
+  },
+  "LA12": {
+   "forma": "um laço aberto de um traço",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "passa a semelhança (0,37) e os 24 px, com a volta aberta; mas a volta lê-se como a maneira de escrever um l, não como uma volta de pista. Só letra, e letra de caligrafia: é texto, como o B itálico do Canva na sessão 23"
+  },
+  "LA21": {
+   "forma": "um laço aberto de um traço, mais pesado",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "LA22": {
+   "forma": "um laço aberto de um traço, mais pesado",
+   "ideia": "ℓ manuscrito — o símbolo do litro",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": null
+  },
+  "BF11": {
+   "forma": "nenhuma além da letra",
+   "ideia": "b minúsculo de fonte geométrica",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "passa a semelhança e os 24 px; é um glifo sem forma"
+  },
+  "BF12": {
+   "forma": "nenhuma além da letra",
+   "ideia": "b minúsculo de fonte geométrica",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "passa a semelhança e os 24 px; é um glifo sem forma"
+  },
+  "BF21": {
+   "forma": "nenhuma além da letra",
+   "ideia": "b minúsculo de fonte geométrica",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "no campo do ícone é a marca da Beats by Dre (b branco num círculo vermelho); investigado antes de apresentar",
+   "lembra": "Beats by Dre (b branco num círculo vermelho, no campo do ícone)"
+  },
+  "BF22": {
+   "forma": "nenhuma além da letra",
+   "ideia": "b minúsculo de fonte geométrica",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "no campo do ícone é a marca da Beats by Dre (b branco num círculo vermelho); investigado antes de apresentar",
+   "lembra": "Beats by Dre (b branco num círculo vermelho, no campo do ícone)"
+  },
+  "CF11": {
+   "forma": "um canto de traço fino",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": "marca de corte (o canto de enquadramento)",
+   "perde_24": null,
+   "nota": "passa a semelhança e os 24 px; um L fino de uma pista só é o canto de recorte das ferramentas de imagem"
+  },
+  "CF12": {
+   "forma": "um canto de traço fino",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": "marca de corte (o canto de enquadramento)",
+   "perde_24": null,
+   "nota": "passa a semelhança e os 24 px; um L fino de uma pista só é o canto de recorte das ferramentas de imagem"
+  },
+  "CF21": {
+   "forma": "um L de traço médio e cantos redondos",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a curva da pista não se lê: é um L de fonte arredondada"
+  },
+  "CF22": {
+   "forma": "um L de traço médio e cantos redondos",
+   "ideia": "L",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "perde_24": null,
+   "nota": "a curva da pista não se lê: é um L de fonte arredondada"
+  }
+ }
+}

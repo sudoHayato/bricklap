@@ -4,6 +4,17 @@ Escolhida pelo fundador e desenhada na sessão 15. Uma **moldura quadrada vazada
 
 ![A marca nos sete tamanhos, nos dois temas](folha-de-contacto.png)
 
+## Regras para desenhar a marca — decisão do fundador, 2026-09-15 (sessão 24)
+
+**As regras abaixo nesta página foram escritas na sessão 15, antes de haver medições.** Com elas, as sessões 18, 19 e 19b geraram e mediram 200 variantes que convergiram sempre para tijolos empilhados, e a leitura dupla que o fundador quer — uma forma que é também uma letra ou uma ideia — ficou impossível por construção (o espaço negativo precisava de curvas ou de uma moldura, e a moldura já tinha morrido: [DECISOES-DESCARTADAS](../DECISOES-DESCARTADAS.md), entradas 2 e 3). **O fundador decidiu abri-las.** O texto completo, com a tabela das regras substituídas, está no [DESIGN.md §8b](../DESIGN.md#regras-de-desenho-de-uma-marca-nova--decisão-do-fundador-2026-09-15-sessão-24).
+
+- **Passa a ser legal:** curvas verdadeiras; inclinação; uma cor só (as duas tonalidades deixam de ser obrigatórias); qualquer número de peças, ou uma só; o 3D **como método** — modelar, rodar e ficar com a silhueta plana.
+- **Continua proibido, por medição:** o **resultado** parecer 3D — volume, sombreado, gradiente, perspetiva visível. A 24 px um cubo é uma mancha (as faces têm luminâncias diferentes e o antisserrilhado mistura-as), e a notificação é monocromática: um volume sem sombreado deixa de ser volume.
+- **Não se tocam:** legível a 24 px; sobrevive ao recorte circular do ícone adaptativo; funciona a uma cor; não se lê como controlo de interface (lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro — e, desde a sessão 25, o visto, o cadeado e o sinal de wi-fi; e, desde a sessão 26 (decisão do fundador), o olho, o ícone de mostrar e ocultar; um controlo fora da lista também chumba).
+- **Originalidade:** a silhueta compara-se com 35 símbolos de marcas existentes, do fitness e de fora dele. Desde a sessão 25 a régua é **relativa**: sinaliza-se quando a semelhança com uma marca excede em mais de 0,20 a semelhança com um disco ou um quadrado cheios (o corte absoluto de 0,40 da sessão 24 ficou suspenso: eliminava a própria P2122). A leitura humana continua a decidir.
+
+**O que isto não muda:** a marca de trabalho que está hoje na app (a moldura e as três peças, abaixo) continua a ser a que se usa, com as suas regras de uso, até o fundador escolher outra. As regras que caíram estão anotadas onde aparecem, e não foram apagadas.
+
 ## Cor
 
 | Papel | Hex | Onde |
@@ -15,6 +26,8 @@ Escolhida pelo fundador e desenhada na sessão 15. Uma **moldura quadrada vazada
 | Branco | `#FFFFFF` | fundos difíceis e o ícone de notificação |
 
 ### A regra da cor
+
+> **Substituída como regra de desenho em 2026-09-15** (decisão do fundador, sessão 24): uma marca nova pode ser a uma cor, e as duas tonalidades deixam de ser obrigatórias. As medições que já a tinham partido estão nas [DECISOES-DESCARTADAS](../DECISOES-DESCARTADAS.md), entrada 5. Para a marca de trabalho que está na app, o texto abaixo continua a descrever o que ela é.
 
 **A distinção entre o B (`#C0402C`) e o L (`#E89478`) é a alma da marca e mantém-se em todas as aplicações visíveis** — ícone da app, ecrã de arranque, cabeçalho, documentos. Decisão do fundador, e é uma **regra, não uma preferência**: a versão a uma cor não é uma alternativa estética entre duas, é o que se usa quando a técnica não deixa usar duas.
 
@@ -70,10 +83,10 @@ A palavra da versão horizontal é **Archivo Expanded Bold (700)**, a mesma fam�
 
 - **Deformar.** A marca é quadrada; escala-se sempre com as duas dimensões iguais.
 - **Mudar as cores**, inverter o B e o L, ou pintar cada peça de uma cor.
-- **Rodar** ou inclinar, em qualquer ângulo.
-- **Sombras, brilhos, gradientes, contornos duplos.** A marca é plana, como o resto do sistema visual.
+- ~~**Rodar** ou inclinar, em qualquer ângulo.~~ **Saiu em 2026-09-15** (decisão do fundador, sessão 24): a inclinação passa a ser legal no desenho da marca. Rodar a marca de trabalho que já existe continua a ser deformá-la; desenhar uma marca inclinada deixou de ser proibido.
+- **Sombras, brilhos, gradientes, contornos duplos.** A marca é plana, como o resto do sistema visual. *(Mantém-se desde 2026-09-15 no resultado; o 3D passou a ser legal como método de desenho, desde que o que sai seja uma silhueta plana.)*
 - **Redesenhar as peças** — mudar o vão, a espessura da moldura, o raio dos cantos. As proporções estão fixadas abaixo.
-- **Usar a uma cor** onde as duas tonalidades cabem.
+- **Usar a uma cor** onde as duas tonalidades cabem. *(Na marca de trabalho. Como regra de desenho, substituída em 2026-09-15: uma marca nova pode ser a uma cor.)*
 - **Pôr a marca sobre uma fotografia** sem ser a versão a branco ou a preto.
 - **Desenhar a moldura dentro do ícone da app.** O sistema já recorta o ícone; uma moldura lá dentro dá dois quadrados encaixados — ver *O ícone da app*.
 
@@ -117,6 +130,8 @@ Um refinamento depois da captura: em contorno, o pilar (13 de 62 do campo, 4,2 d
 A verificação é **tarefa do fundador**, quando houver alguma coisa pública para lançar.
 
 ## Marca de trabalho, congelada
+
+**Nota da sessão 26 (2026-09-18, decisão do fundador): a marca e o nome ficam em standby por tempo indeterminado.** A **P2122** é a marca de trabalho e **"Bricklap"** o nome de trabalho. As duas famílias afinadas na sessão 25 — o arco de tijolos (AR) e a volta torcida (GI) — **fecharam** nas [DECISOES-DESCARTADAS](../DECISOES-DESCARTADAS.md), entradas 8 e 9; e o olho entrou na lista negra (acima). As regras de desenho da sessão 24 ficam escritas para quando a marca reabrir. A nota do CTO abaixo continua a valer.
 
 **Nota do CTO, sessão 16.** A marca fica **congelada como marca de trabalho**: não se redesenha mais nas sessões de desenvolvimento. A recomendação é **levá-la a um designer profissional antes de a app ser mostrada a estranhos**. Este documento existe também para isso: as direções, as cores, as medidas e o raciocínio — incluindo o que falhou e porquê — já estão escritos, o que reduz o trabalho e o custo de quem pegar nela.
 

@@ -1,6 +1,6 @@
 # @bricklap/mobile
 
-Aplicação Android do Bricklap (Expo SDK 57, TypeScript, dev client). **Fase 4, parte 7a — o sistema visual de [docs/DESIGN.md](../../docs/DESIGN.md) na app**, com o evento Marca, o apagar de sessões e o ecrã de definições (sobre a Fase 3: desportos sem GPS, ritmo e precisão, gravação em segundo plano).
+Aplicação Android do Bricklap (Expo SDK 57, TypeScript, dev client). **Fase 4 — o sistema visual de [docs/DESIGN.md](../../docs/DESIGN.md) na app**, com o evento Marca, o apagar de sessões, o ecrã de definições e, desde a sessão 26, **as rondas e os valores por bloco** do [ADR 0011](../../docs/adr/0011-rondas-e-valores-registados.md) (sobre a Fase 3: desportos sem GPS, ritmo e precisão, gravação em segundo plano).
 
 ## O que é
 
@@ -9,6 +9,8 @@ Um único ecrã que percorre a ideia central do produto: uma sessão de treino �
 
 - **Iniciar** com um toque: no ecrã inicial toca-se no **tijolo do desporto** e a sessão começa aí — não há um botão "Iniciar" separado desde a Fase 4. Oito tijolos em dois grupos: **Ginásio** (força, passadeira, remo indoor, natação) e **Rua** (corrida, caminhada, bicicleta, transição).
 - **Marca** a cada bloco: fecha o bloco que acabou e abre o seguinte, **sem mudar de desporto**. É o gesto central da app — cinco séries do mesmo exercício são cinco blocos de um segmento de força, não cinco segmentos. **Dispara ao fim de 500 ms a premir**, com um anel a fechar-se; largar antes do fim não faz nada e o anel recua (o porquê está no [DESIGN.md](../../docs/DESIGN.md) §6).
+- **Nova ronda** quando um circuito recomeça (sessão 26, ADR 0011): é mais um evento no registo, e o resumo agrupa os blocos por ronda. Carregar no mesmo instante de um Mudar não cria nenhum bloco de ~0 s.
+- **Registar** os valores de um bloco — deste ou do anterior — sem sair da gravação: metros e *split* no remo, km/h **ou** distância na passadeira (a app calcula o outro com o tempo do bloco), exercício, repetições e carga nos exercícios. E **no resumo, toca-se num bloco** para completar ou corrigir. As duas portas escrevem o mesmo evento `recorded`, acrescentado à base; a correção nunca reescreve a anterior e vale o último valor. O que o atleta escreve é **declarado**; o que o GPS mede é **medido**; os dois totais nunca se somam.
 - **Mudar** de desporto quantas vezes quiseres, sem parar o relógio — também entre a rua e o ginásio. Abre uma folha com os oito, na ordem dos tijolos, o atual assinalado e não selecionável; nenhum evento se escreve até haver escolha (sessão 17 — [DESIGN.md](../../docs/DESIGN.md) §6).
 - **Parar** no fim — também a premir, 0,8 s, com a barra a encher — e ver o resumo: tempo total, distância quando há segmentos com GPS, e **a lista de blocos com o tempo de cada um**.
 - **Histórico** com **apagar**: dois toques (pedir, confirmar no próprio cartão) e é um `DELETE` real das linhas dessa sessão ([ADR 0006](../../docs/adr/0006-persistencia-sqlite-append-only.md)).

@@ -115,16 +115,19 @@ export function blocksFromEvents(events: SessionEvent[]): Block[] {
   const blocks: Block[] = [];
   let current: Block | null = null;
   let segmentIndex = -1;
+  // -1 until the first `round_started`: blocks before it are in no round.
+  let round = -1;
+  const roundOf = () => (round < 0 ? null : round);
 
   for (const event of events) {
     if (event.type === "started") {
       segmentIndex = 0;
-      current = { index: 0, segmentIndex, sport: event.sport, startAt: event.at, endAt: null };
+      current = { index: 0, segmentIndex, sport: event.sport, startAt: event.at, endAt: null, round: roundOf() };
       blocks.push(current);
     } else if (event.type === "sport_changed" && current) {
       current.endAt = event.at;
       segmentIndex++;
-      current = { index: blocks.length, segmentIndex, sport: event.sport, startAt: event.at, endAt: null };
+      current = { index: blocks.length, segmentIndex, sport: event.sport, startAt: event.at, endAt: null, round: roundOf() };
       blocks.push(current);
     } else if (event.type === "marked" && current) {
       // Same segment and same sport: only the block boundary moves. The
@@ -132,8 +135,23 @@ export function blocksFromEvents(events: SessionEvent[]): Block[] {
       // the object this feeds is assigned back to `current`.
       const sport: Sport = current.sport;
       current.endAt = event.at;
-      current = { index: blocks.length, segmentIndex, sport, startAt: event.at, endAt: null };
+      current = { index: blocks.length, segmentIndex, sport, startAt: event.at, endAt: null, round: roundOf() };
       blocks.push(current);
+    } else if (event.type === "round_started" && current) {
+      // A round boundary is a block boundary too (ADR 0011) — except when
+      // it lands on the block that just opened, typically a CHANGE written
+      // at the same instant: then that block is the first of the round and
+      // no block of ~0 s is made. The guard is here, in the derivation, so
+      // that a marker at exactly the boundary is legal to write.
+      round++;
+      if (event.at > current.startAt) {
+        const sport: Sport = current.sport;
+        current.endAt = event.at;
+        current = { index: blocks.length, segmentIndex, sport, startAt: event.at, endAt: null, round };
+        blocks.push(current);
+      } else {
+        current.round = round;
+      }
     } else if (event.type === "stopped" && current) {
       current.endAt = event.at;
     }

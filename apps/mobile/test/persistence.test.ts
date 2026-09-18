@@ -81,10 +81,10 @@ describe("replaySessions", () => {
   it("derives status and createdAt from events and attaches samples", () => {
     const stored = replaySessions(
       [
-        { seq: 1, session_id: "a", type: "started", at: T0, sport: "run", discarded: 0 },
-        { seq: 2, session_id: "a", type: "sport_changed", at: T0 + 10_000, sport: "bike", discarded: 0 },
-        { seq: 3, session_id: "b", type: "started", at: T0 + 20_000, sport: "walk", discarded: 0 },
-        { seq: 4, session_id: "a", type: "stopped", at: T0 + 30_000, sport: null, discarded: 1 },
+        { seq: 1, session_id: "a", type: "started", at: T0, sport: "run", discarded: 0, payload: null },
+        { seq: 2, session_id: "a", type: "sport_changed", at: T0 + 10_000, sport: "bike", discarded: 0, payload: null },
+        { seq: 3, session_id: "b", type: "started", at: T0 + 20_000, sport: "walk", discarded: 0, payload: null },
+        { seq: 4, session_id: "a", type: "stopped", at: T0 + 30_000, sport: null, discarded: 1, payload: null },
       ],
       [
         { session_id: "a", t: T0, lat: 1, lng: 2, speed_mps: 3, source: "sim", accuracy: null },
@@ -113,17 +113,17 @@ describe("replaySessions", () => {
 
   it("is loud about rows it does not understand", () => {
     expect(() =>
-      replaySessions([{ seq: 7, session_id: "a", type: "paused", at: T0, sport: null, discarded: 0 }], []),
+      replaySessions([{ seq: 7, session_id: "a", type: "paused", at: T0, sport: null, discarded: 0, payload: null }], []),
     ).toThrow(/seq=7: unknown type "paused"/);
     expect(() =>
-      replaySessions([{ seq: 8, session_id: "a", type: "started", at: T0, sport: "swim", discarded: 0 }], []),
+      replaySessions([{ seq: 8, session_id: "a", type: "started", at: T0, sport: "swim", discarded: 0, payload: null }], []),
     ).toThrow(/seq=8: sport "swim"/);
     expect(() =>
-      replaySessions([{ seq: 9, session_id: "a", type: "stopped", at: T0, sport: null, discarded: 0 }], []),
+      replaySessions([{ seq: 9, session_id: "a", type: "stopped", at: T0, sport: null, discarded: 0, payload: null }], []),
     ).toThrow(/begins with stopped/);
     expect(() =>
       replaySessions(
-        [{ seq: 1, session_id: "a", type: "started", at: T0, sport: "run", discarded: 0 }],
+        [{ seq: 1, session_id: "a", type: "started", at: T0, sport: "run", discarded: 0, payload: null }],
         [{ session_id: "a", t: T0, lat: 0, lng: 0, speed_mps: 0, source: "guess", accuracy: null }],
       ),
     ).toThrow(/unknown source "guess"/);
@@ -334,7 +334,7 @@ describe("SqliteSessionStore", () => {
     // The engine never sees the difference; the summary counts the samples of both contexts.
     expect(app.byId(id)!.events.map((e) => e.type)).toEqual(["started", "recovered", "recovered"]);
     expect(app.summaries()[0]!.sampleCount).toBe(2);
-    expect(() => replaySessions([{ seq: 1, session_id: id, type: "recovered_headless", at: T0, sport: null, discarded: 0 }], [])).toThrow(
+    expect(() => replaySessions([{ seq: 1, session_id: id, type: "recovered_headless", at: T0, sport: null, discarded: 0, payload: null }], [])).toThrow(
       /begins with recovered/,
     );
   });
@@ -488,8 +488,8 @@ describe("SqliteSessionStore", () => {
 });
 
 describe("migration v3 — as preferências do atleta (Fase 4)", () => {
-  it("is the current version and adds a settings table that is not session data", () => {
-    expect(SCHEMA_VERSION).toBe(3);
+  it("is a version on the way (v4 followed it in session 26) and adds a settings table that is not session data", () => {
+    expect(MIGRATIONS.map((m) => m.version)).toContain(3);
     const db = openNodeDb();
     migrate(db);
     const cols = db.raw.prepare("PRAGMA table_info(settings)").all() as { name: string; pk: number; notnull: number }[];
@@ -519,8 +519,11 @@ describe("migration v3 — as preferências do atleta (Fase 4)", () => {
     const antes = db.raw.prepare("SELECT * FROM events ORDER BY seq").all();
     const antesS = db.raw.prepare("SELECT * FROM samples ORDER BY seq").all();
 
-    expect(migrate(db)).toEqual({ from: 2, to: 3 });
-    expect(db.raw.prepare("SELECT * FROM events ORDER BY seq").all()).toEqual(antes);
+    expect(migrate(db)).toEqual({ from: 2, to: SCHEMA_VERSION });
+    // v4 adds a column to events (NULL on every old row); the rows themselves are the same.
+    expect(
+      (db.raw.prepare("SELECT * FROM events ORDER BY seq").all() as Record<string, unknown>[]).map(({ payload, ...r }) => r),
+    ).toEqual(antes);
     expect(db.raw.prepare("SELECT * FROM samples ORDER BY seq").all()).toEqual(antesS);
     expect(new SqliteSessionStore(db).byId(id)!.events).toHaveLength(3);
   });

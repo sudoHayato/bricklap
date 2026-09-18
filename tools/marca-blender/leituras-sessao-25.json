@@ -1,0 +1,247 @@
+{
+ "nota": "Sessão 25: as leituras humanas das duas famílias afinadas e da P2122 inclinada, feitas nas folhas de revisão. O critério é o da 24: passa a leitura quem responde às duas perguntas com duas respostas diferentes, como a P2122 (dois tijolos; L). A lista negra inclui, por decisão do CTO na 25, o visto, o cadeado e o sinal de wi-fi; o olho (mostrar e ocultar) marca-se pela mesma regra e fica proposto para a lista.",
+ "criterios": {
+  "passa_leitura": "forma e letra ou ideia, as duas, a 24 px",
+  "lista_negra": "lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro, visto, cadeado, sinal de wi-fi — e outros controlos de interface, assinalados"
+ },
+ "leituras": {
+  "GI1112": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI1122": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI1212": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI1222": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI2112": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI2122": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI2212": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI2222": {
+   "forma": "um anel oval, mais grosso de um lado",
+   "ideia": "O; nenhuma ideia de volta torcida",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (anel)",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. A 73 px vê-se uma amolgadela, não uma fita a torcer"
+  },
+  "GI1111": {
+   "forma": "uma lente — um olho de perfil",
+   "ideia": "olho",
+   "passa_leitura": false,
+   "lista_negra": "olho (o ícone de mostrar e ocultar) — controlo de interface, fora da lista escrita",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. Com a câmara baixa (25°), o furo fica uma fenda e a volta lê-se olho"
+  },
+  "GI1121": {
+   "forma": "uma lente — um olho de perfil",
+   "ideia": "olho",
+   "passa_leitura": false,
+   "lista_negra": "olho (o ícone de mostrar e ocultar) — controlo de interface, fora da lista escrita",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. Com a câmara baixa (25°), o furo fica uma fenda e a volta lê-se olho"
+  },
+  "GI1211": {
+   "forma": "uma lente — um olho de perfil",
+   "ideia": "olho",
+   "passa_leitura": false,
+   "lista_negra": "olho (o ícone de mostrar e ocultar) — controlo de interface, fora da lista escrita",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. Com a câmara baixa (25°), o furo fica uma fenda e a volta lê-se olho"
+  },
+  "GI1221": {
+   "forma": "uma lente — um olho de perfil",
+   "ideia": "olho",
+   "passa_leitura": false,
+   "lista_negra": "olho (o ícone de mostrar e ocultar) — controlo de interface, fora da lista escrita",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. Com a câmara baixa (25°), o furo fica uma fenda e a volta lê-se olho"
+  },
+  "GI2111": {
+   "forma": "uma lente — um olho de perfil",
+   "ideia": "olho",
+   "passa_leitura": false,
+   "lista_negra": "olho (o ícone de mostrar e ocultar) — controlo de interface, fora da lista escrita",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. Com a câmara baixa (25°), o furo fica uma fenda e a volta lê-se olho"
+  },
+  "GI2121": {
+   "forma": "uma lente — um olho de perfil",
+   "ideia": "olho",
+   "passa_leitura": false,
+   "lista_negra": "olho (o ícone de mostrar e ocultar) — controlo de interface, fora da lista escrita",
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel. Com a câmara baixa (25°), o furo fica uma fenda e a volta lê-se olho"
+  },
+  "GI2211": {
+   "forma": "uns lábios, ou um olho fechado",
+   "ideia": "boca",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel; com a fita larga e a volta inteira, o furo fica uma fenda de 1,1 a 1,35 unidades (a 24 px ainda abre, mas lê-se boca)"
+  },
+  "GI2221": {
+   "forma": "uns lábios, ou um olho fechado",
+   "ideia": "boca",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "a torção não se vê: com a fita a pelo menos 2 unidades onde fica de perfil, a cintura é só um lado mais fino do anel; com a fita larga e a volta inteira, o furo fica uma fenda de 1,1 a 1,35 unidades (a 24 px ainda abre, mas lê-se boca)"
+  },
+  "AR1111": {
+   "forma": "três blocos num semicírculo",
+   "ideia": "mostrador de três segmentos",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (progresso aos segmentos)",
+   "nota": "sem pés, o arco deita-se e volta a ser mostrador, como na 24"
+  },
+  "AR1112": {
+   "forma": "três blocos num semicírculo",
+   "ideia": "mostrador de três segmentos",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (progresso aos segmentos)",
+   "nota": "sem pés, o arco deita-se e volta a ser mostrador, como na 24"
+  },
+  "AR1121": {
+   "forma": "três pedras num semicírculo, a do meio mais alta",
+   "ideia": "coroa baixa",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "o fecho saliente tira-o do mostrador, mas sem pés lê-se coroa, não arco"
+  },
+  "AR1122": {
+   "forma": "três pedras num semicírculo, a do meio mais alta",
+   "ideia": "coroa baixa",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "o fecho saliente tira-o do mostrador, mas sem pés lê-se coroa, não arco"
+  },
+  "AR1211": {
+   "forma": "um arco sobre dois pés",
+   "ideia": "∩, ou um íman (os pés soltos são os polos)",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "com pés e sem fecho, as duas pontas separadas por juntas leem-se como os polos de um íman"
+  },
+  "AR1212": {
+   "forma": "um arco sobre dois pés",
+   "ideia": "∩, ou um íman (os pés soltos são os polos)",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "com pés e sem fecho, as duas pontas separadas por juntas leem-se como os polos de um íman"
+  },
+  "AR1221": {
+   "forma": "um arco de tijolos: três aduelas, pedra de fecho e dois pés-direitos",
+   "ideia": "alvenaria — e só isso: nem letra, nem volta",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "o objetivo do brief cumprido: passa a lista negra e lê-se arco de tijolos a 24 px, nos dois temas e no recorte. Chumba na regra das duas perguntas como se aplica desde a 19: a forma e a ideia são a mesma coisa (um arco de tijolos é um objeto); a segunda leitura, a volta da pista, não aparece. É a mais perto de uma candidata nova"
+  },
+  "AR1222": {
+   "forma": "um arco de tijolos: três aduelas, pedra de fecho e dois pés-direitos",
+   "ideia": "alvenaria — e só isso: nem letra, nem volta",
+   "passa_leitura": false,
+   "lista_negra": null,
+   "nota": "o objetivo do brief cumprido: passa a lista negra e lê-se arco de tijolos a 24 px, nos dois temas e no recorte. Chumba na regra das duas perguntas como se aplica desde a 19: a forma e a ideia são a mesma coisa (um arco de tijolos é um objeto); a segunda leitura, a volta da pista, não aparece. É a mais perto de uma candidata nova"
+  },
+  "AR2111": {
+   "forma": "cinco pontos num semicírculo",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "com 5 aduelas e juntas de 2, o anel só pode ter 2,6 a 3,3 unidades de espessura: as aduelas ficam pontos, e o peso cai para metade da P2122 ou menos"
+  },
+  "AR2112": {
+   "forma": "cinco pontos num semicírculo",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "com 5 aduelas e juntas de 2, o anel só pode ter 2,6 a 3,3 unidades de espessura: as aduelas ficam pontos, e o peso cai para metade da P2122 ou menos"
+  },
+  "AR2121": {
+   "forma": "cinco pontos num semicírculo",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "com 5 aduelas e juntas de 2, o anel só pode ter 2,6 a 3,3 unidades de espessura: as aduelas ficam pontos, e o peso cai para metade da P2122 ou menos"
+  },
+  "AR2122": {
+   "forma": "cinco pontos num semicírculo",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "com 5 aduelas e juntas de 2, o anel só pode ter 2,6 a 3,3 unidades de espessura: as aduelas ficam pontos, e o peso cai para metade da P2122 ou menos"
+  },
+  "AR2211": {
+   "forma": "pontos em arco sobre dois pés",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "os pés não salvam as aduelas finas: a 24 px o arco é pontilhado"
+  },
+  "AR2212": {
+   "forma": "pontos em arco sobre dois pés",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "os pés não salvam as aduelas finas: a 24 px o arco é pontilhado"
+  },
+  "AR2221": {
+   "forma": "pontos em arco sobre dois pés",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "os pés não salvam as aduelas finas: a 24 px o arco é pontilhado"
+  },
+  "AR2222": {
+   "forma": "pontos em arco sobre dois pés",
+   "ideia": "nenhuma",
+   "passa_leitura": false,
+   "lista_negra": "indicador de carregamento (pontos em arco)",
+   "nota": "os pés não salvam as aduelas finas: a 24 px o arco é pontilhado"
+  },
+  "LZ11": {
+   "forma": "dois tijolos, um de pé e inclinado, outro deitado",
+   "ideia": "L em itálico — a P2122 em andamento",
+   "passa_leitura": true,
+   "lista_negra": null,
+   "nota": "a rede de segurança: com a régua relativa deixa de ser sinalizada (excesso 0,067 e 0,118) e passa em tudo; é a P2122 inclinada, com o mesmo desfoque, não uma ideia nova"
+  },
+  "LZ12": {
+   "forma": "dois tijolos, um de pé e inclinado, outro deitado",
+   "ideia": "L em itálico — a P2122 em andamento",
+   "passa_leitura": true,
+   "lista_negra": null,
+   "nota": "a rede de segurança: com a régua relativa deixa de ser sinalizada (excesso 0,067 e 0,118) e passa em tudo; é a P2122 inclinada, com o mesmo desfoque, não uma ideia nova"
+  }
+ }
+}

@@ -1,4 +1,14 @@
-import { SPORTS, type Sample, type Session, type SessionEvent, type Sport } from "@bricklap/engine";
+import {
+  SPORTS,
+  VALUE_FIELDS,
+  type RecordedValues,
+  type Sample,
+  type Session,
+  type SessionEvent,
+  type Sport,
+  type ValueField,
+  type ValueOrigin,
+} from "@bricklap/engine";
 
 /** One row of `events`, as SELECTed. */
 export type EventRow = {
@@ -8,7 +18,60 @@ export type EventRow = {
   at: number;
   sport: string | null;
   discarded: number;
+  /** JSON of a `recorded` event's fields (schema v4); NULL on every other row and on rows older than v4. */
+  payload: string | null;
 };
+
+/** What goes into `events.payload` for a `recorded` event, and comes back out. */
+export type RecordedPayload = {
+  block: number;
+  origin: ValueOrigin;
+  exercise?: string;
+  values: RecordedValues;
+};
+
+export function payloadOf(event: SessionEvent): string | null {
+  if (event.type !== "recorded") return null;
+  const payload: RecordedPayload = {
+    block: event.block,
+    origin: event.origin,
+    ...(event.exercise === undefined ? {} : { exercise: event.exercise }),
+    values: event.values,
+  };
+  return JSON.stringify(payload);
+}
+
+/** Parse and check a `recorded` payload. Loud on any shape the engine would not have written. */
+export function parseRecordedPayload(payload: string | null, seq: number): RecordedPayload {
+  const bad = (why: string): never => {
+    throw new Error(`events.seq=${seq}: recorded payload ${why}`);
+  };
+  if (payload === null) return bad("is missing");
+  let raw: unknown;
+  try {
+    raw = JSON.parse(payload);
+  } catch {
+    return bad("is not JSON");
+  }
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return bad("is not an object");
+  const o = raw as Record<string, unknown>;
+  if (typeof o["block"] !== "number" || !Number.isInteger(o["block"]) || o["block"] < 0) return bad("has no block index");
+  if (o["origin"] !== "declared" && o["origin"] !== "measured") return bad(`has origin ${JSON.stringify(o["origin"])}`);
+  if (o["exercise"] !== undefined && typeof o["exercise"] !== "string") return bad("has a non-string exercise");
+  if (typeof o["values"] !== "object" || o["values"] === null || Array.isArray(o["values"])) return bad("has no values");
+  const values: RecordedValues = {};
+  for (const [field, v] of Object.entries(o["values"] as Record<string, unknown>)) {
+    if (!(VALUE_FIELDS as readonly string[]).includes(field)) return bad(`has unknown field ${JSON.stringify(field)}`);
+    if (v !== null && (typeof v !== "number" || !Number.isFinite(v))) return bad(`has a non-numeric ${field}`);
+    values[field as ValueField] = v as number | null;
+  }
+  return {
+    block: o["block"],
+    origin: o["origin"],
+    ...(o["exercise"] === undefined ? {} : { exercise: o["exercise"] as string }),
+    values,
+  };
+}
 
 /** One row of `samples`, as SELECTed. */
 export type SampleRow = {
@@ -52,6 +115,10 @@ export function eventFromRow(row: EventRow): SessionEvent {
       return { type: "sport_changed", at: row.at, sport: asSport(row.sport, row.seq) };
     case "marked":
       return { type: "marked", at: row.at };
+    case "round_started":
+      return { type: "round_started", at: row.at };
+    case "recorded":
+      return { type: "recorded", at: row.at, ...parseRecordedPayload(row.payload, row.seq) };
     case "stopped":
       return { type: "stopped", at: row.at };
     case "recovered":
