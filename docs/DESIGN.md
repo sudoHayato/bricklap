@@ -241,7 +241,7 @@ O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) �
 
 ### Regras de desenho de uma marca nova — decisão do fundador, 2026-09-15 (sessão 24)
 
-**O que mudou e porquê.** As regras com que a marca se explorou desde a sessão 15 — plana, cortes a 90°, duas tonalidades, nunca inclinar — foram escritas antes de haver medições. Deram **200 variantes** nas sessões 18, 19 e 19b que convergiram sempre para tijolos empilhados, e mataram **por construção** a leitura dupla que o fundador quer: o espaço negativo precisava de uma forma que contivesse, e sem curvas a forma que contém é a moldura ([DECISOES-DESCARTADAS](DECISOES-DESCARTADAS.md), entradas 2, 3 e 6). O fundador decidiu abri-las. **Isto governa o desenho de uma marca nova; a marca de trabalho que está na app não muda por esta decisão** (nada entra na app sem decisão própria).
+**O que mudou e porquê.** As regras com que a marca se explorou desde a sessão 15 — plana, cortes a 90°, duas tonalidades, nunca inclinar — foram escritas antes de haver medições. Deram **200 variantes** nas sessões 18, 19 e 19b que convergiram sempre para tijolos empilhados, e mataram **por construção** a leitura dupla que o fundador quer: o espaço negativo precisava de uma forma que contivesse, e sem curvas a forma que contém é a moldura ([DECISOES-DESCARTADAS](DECISOES-DESCARTADAS.md), entradas 2, 3 e 6). O fundador decidiu abri-las. **Isto governa o desenho de uma marca nova; a marca de trabalho que está na app não muda por esta decisão** (nada entra na app sem decisão própria). **Desde a sessão 26 (decisão do fundador, 2026-09-18) a marca e o nome estão em standby por tempo indeterminado**: a P2122 é a marca de trabalho e "Bricklap" o nome de trabalho; as famílias AR e GI da sessão 25 fecharam ([DECISOES-DESCARTADAS](DECISOES-DESCARTADAS.md), entradas 8 e 9); estas regras ficam escritas para quando a marca reabrir.
 
 **Passa a ser legal:**
 
@@ -258,7 +258,7 @@ O logótipo tem documento próprio — [docs/marca/README.md](marca/README.md) �
 1. **Legível a 24 px.**
 2. **Sobrevive ao recorte circular** do ícone adaptativo (janela de 72 dp, círculo de 66 dp).
 3. **Funciona a uma cor.**
-4. **Não se lê como controlo de interface** — lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro, **e, desde a sessão 25 (decisão do CTO), o visto (✓), o cadeado e o sinal de wi-fi**. A leitura é a estrita: um controlo de interface fora desta lista também chumba, e diz-se qual.
+4. **Não se lê como controlo de interface** — lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro, **e, desde a sessão 25 (decisão do CTO), o visto (✓), o cadeado e o sinal de wi-fi — e, desde a sessão 26 (decisão do fundador), o olho (o ícone de mostrar e ocultar)**. A leitura é a estrita: um controlo de interface fora desta lista também chumba, e diz-se qual.
 
 **E uma restrição nova, de originalidade:** cada candidato compara-se, por sobreposição de silhuetas, com marcas existentes. Não se reproduz nem adapta nenhuma marca existente.
 

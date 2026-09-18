@@ -10,7 +10,7 @@ Escolhida pelo fundador e desenhada na sessão 15. Uma **moldura quadrada vazada
 
 - **Passa a ser legal:** curvas verdadeiras; inclinação; uma cor só (as duas tonalidades deixam de ser obrigatórias); qualquer número de peças, ou uma só; o 3D **como método** — modelar, rodar e ficar com a silhueta plana.
 - **Continua proibido, por medição:** o **resultado** parecer 3D — volume, sombreado, gradiente, perspetiva visível. A 24 px um cubo é uma mancha (as faces têm luminâncias diferentes e o antisserrilhado mistura-as), e a notificação é monocromática: um volume sem sombreado deixa de ser volume.
-- **Não se tocam:** legível a 24 px; sobrevive ao recorte circular do ícone adaptativo; funciona a uma cor; não se lê como controlo de interface (lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro — e, desde a sessão 25, o visto, o cadeado e o sinal de wi-fi; um controlo fora da lista também chumba).
+- **Não se tocam:** legível a 24 px; sobrevive ao recorte circular do ícone adaptativo; funciona a uma cor; não se lê como controlo de interface (lista, menu, barra lateral, painel, indicador de carregamento, marca de corte, botão de reprodução, pasta, gráfico de barras, cronómetro — e, desde a sessão 25, o visto, o cadeado e o sinal de wi-fi; e, desde a sessão 26 (decisão do fundador), o olho, o ícone de mostrar e ocultar; um controlo fora da lista também chumba).
 - **Originalidade:** a silhueta compara-se com 35 símbolos de marcas existentes, do fitness e de fora dele. Desde a sessão 25 a régua é **relativa**: sinaliza-se quando a semelhança com uma marca excede em mais de 0,20 a semelhança com um disco ou um quadrado cheios (o corte absoluto de 0,40 da sessão 24 ficou suspenso: eliminava a própria P2122). A leitura humana continua a decidir.
 
 **O que isto não muda:** a marca de trabalho que está hoje na app (a moldura e as três peças, abaixo) continua a ser a que se usa, com as suas regras de uso, até o fundador escolher outra. As regras que caíram estão anotadas onde aparecem, e não foram apagadas.
@@ -130,6 +130,8 @@ Um refinamento depois da captura: em contorno, o pilar (13 de 62 do campo, 4,2 d
 A verificação é **tarefa do fundador**, quando houver alguma coisa pública para lançar.
 
 ## Marca de trabalho, congelada
+
+**Nota da sessão 26 (2026-09-18, decisão do fundador): a marca e o nome ficam em standby por tempo indeterminado.** A **P2122** é a marca de trabalho e **"Bricklap"** o nome de trabalho. As duas famílias afinadas na sessão 25 — o arco de tijolos (AR) e a volta torcida (GI) — **fecharam** nas [DECISOES-DESCARTADAS](../DECISOES-DESCARTADAS.md), entradas 8 e 9; e o olho entrou na lista negra (acima). As regras de desenho da sessão 24 ficam escritas para quando a marca reabrir. A nota do CTO abaixo continua a valer.
 
 **Nota do CTO, sessão 16.** A marca fica **congelada como marca de trabalho**: não se redesenha mais nas sessões de desenvolvimento. A recomendação é **levá-la a um designer profissional antes de a app ser mostrada a estranhos**. Este documento existe também para isso: as direções, as cores, as medidas e o raciocínio — incluindo o que falhou e porquê — já estão escritos, o que reduz o trabalho e o custo de quem pegar nela.
 
