@@ -21,6 +21,10 @@
 - **Ligado por USB**, com o **`adb.exe` do Windows chamado a partir da WSL**: a firewall bloqueia a ponte para um `adb` dentro da WSL, e a depuração sem fios exige Wi-Fi, quando o fundador trabalha muitas vezes em hotspot.
 - O Metro da WSL chega ao telemóvel por `adb reverse` através de um relé IPv4 (o Metro só se expõe em IPv6 local). Procedimento no README da app.
 - O telemóvel **tem PIN**: os testes de dispositivo precisam dele desbloqueado antes de correr.
+- **O telemóvel é o do fundador e anda com ele.** Regras desde a sessão 26 (2026-09-18, decisão do fundador, depois de um agente iniciar uma sessão de Corrida por `adb` enquanto o telemóvel ia de carro, e de os toques seguintes caírem noutra aplicação que estava à frente):
+  - **Nenhum agente inicia uma sessão com GPS sem perguntar primeiro ao fundador.** Uma Corrida gravada em movimento contamina o histórico do dogfooding e deixa o trajeto na base. O que se puder testar indoor testa-se indoor: Força, Remo indoor e Passadeira não ligam a localização (ADR 0008).
+  - **Antes de cada toque por `adb`, confirmar que o Bricklap está à frente** (`dumpsys activity activities | grep topResumedActivity`). **Se outra aplicação estiver à frente, parar logo e avisar** — nunca continuar. Uma captura de ecrã que apanhe outra aplicação apaga-se de imediato e nada do seu conteúdo se regista em lado nenhum.
+  - **Pedir ao fundador uma janela** — uns minutos com o ecrã desbloqueado e o telemóvel pousado — antes de conduzir a interface, e tratar tudo o que a app gravar como dados reais do dogfooding: uma sessão de teste apaga-se no histórico no fim, e diz-se no relatório.
 
 ## Relógio
 
