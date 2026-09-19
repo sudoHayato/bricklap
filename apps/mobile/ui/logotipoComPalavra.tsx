@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { Texto } from "./texto";
 import { Logotipo } from "./logotipo";
 import type { Tokens } from "./tokens";
 
@@ -74,7 +75,7 @@ export function LogotipoComPalavra(props: { tokens: Tokens; tratamento?: Tratame
       style={{ flexDirection: "row", alignItems: "center", gap: tr.vao }}
     >
       <Logotipo tamanho={tr.simbolo} />
-      <Text
+      <Texto
         style={{
           fontFamily: FAMILIA[tr.peso],
           fontSize: tr.texto,
@@ -84,7 +85,7 @@ export function LogotipoComPalavra(props: { tokens: Tokens; tratamento?: Tratame
         }}
       >
         Bricklap
-      </Text>
+      </Texto>
     </View>
   );
 }

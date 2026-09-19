@@ -225,14 +225,19 @@ describe("recovery on the device", () => {
 
   it("lists the discarded session in the history and comes back clean after a restart", async () => {
     await tapText("Histórico");
-    // "Histórico" is also the tab label, so it proves nothing about which
-    // screen is up, and "Descartada" is not a node of its own: since Fase 4
-    // it sits inside the card's meta line ("1 bloco · Descartada"), which an
-    // exact match never finds. Anchor on "Apagar", which only the history
-    // cards have, and keep the substring assertion below. The newest session
-    // is at the top and the tabs are outside the scroll view, so nothing
-    // needs scrolling.
-    await waitForText("Apagar");
+    // "Histórico" is also the tab label, so ONE node with that text proves
+    // nothing about which screen is up; the history screen has TWO — the
+    // title and the tab. (Until session 28 the anchor was the "Apagar" row
+    // every card had; it is now a corner icon with no text node.)
+    // "Descartada" is not a node of its own: it sits inside the card's meta
+    // line ("1 bloco · Descartada"), hence the substring assertion below.
+    // The newest session is at the top and the tabs are outside the scroll
+    // view, so nothing needs scrolling.
+    const limite = Date.now() + 20_000;
+    while (dumpUi().filter((n) => n.text === "Histórico").length < 2) {
+      if (Date.now() > limite) throw new Error("history screen did not show up");
+      await new Promise((r) => setTimeout(r, 500));
+    }
     const nodes = dumpUi();
     expect(nodes.some((n) => n.text.includes("Descartada"))).toBe(true);
     await tapText("Início");

@@ -1,13 +1,7 @@
 import { useRef, type ReactNode } from "react";
-import {
-  Animated,
-  Easing,
-  Pressable,
-  StatusBar as RNStatusBar,
-  Text,
-  View,
-  type ViewStyle,
-} from "react-native";
+import { Animated, Easing, Pressable, View, type ViewStyle } from "react-native";
+import { useMargens } from "./margens";
+import { Texto, TextoJusto } from "./texto";
 import { Icone, type NomeIcone } from "./icones";
 import { LogotipoComPalavra } from "./logotipoComPalavra";
 import { kicker, numero, texto } from "./tipografia";
@@ -17,13 +11,10 @@ import { E, R, TOQUE, TOQUE_CONSULTA, type Tokens } from "./tokens";
  * A estrutura dos ecrãs: cabeçalho, separadores de fundo, a linha de um
  * bloco e o botão que só dispara ao fim de um premir.
  *
- * Edge-to-edge é obrigatório no Android 16 e o `SafeAreaView` do react-native
- * está descontinuado (e é inerte no Android), por isso as margens do sistema
- * são calculadas à mão, como já eram.
+ * Edge-to-edge é obrigatório no Android 16. As margens do sistema vêm de
+ * `useMargens` (`ui/margens.ts`), lidas da janela e não supostas — até à
+ * sessão 27 eram duas constantes aqui, e as folhas nem essas usavam.
  */
-export const TOPO = (RNStatusBar.currentHeight ?? 0) + 8;
-/** A barra de navegação de três botões tem 48 dp; o último alvo fica livre dela. */
-export const FUNDO = 48 + 8;
 
 /** Botão redondo de 40 px do canto do ecrã (definições, voltar). */
 export function Redondo(props: { tokens: Tokens; icone: NomeIcone; rotulo: string; testID?: string; onPress: () => void }) {
@@ -68,22 +59,31 @@ export function Cabeca(props: {
             accessibilityRole="button"
             accessibilityLabel={props.voltar.rotulo}
             onPress={props.voltar.onPress}
-            style={{ flexDirection: "row", alignItems: "center", gap: 2, paddingVertical: 6, paddingRight: E.e2 }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 2,
+              minHeight: TOQUE_CONSULTA,
+              paddingVertical: 6,
+              paddingRight: E.e3,
+            }}
           >
             <Icone nome="voltar" cor={props.tokens.acentoTinta} tamanho={18} />
-            <Text style={texto(15, 700, props.tokens.acentoTinta)}>{props.voltar.rotulo}</Text>
+            <Texto style={texto(15, 700, props.tokens.acentoTinta)}>{props.voltar.rotulo}</Texto>
           </Pressable>
         ) : props.logotipo ? (
           <LogotipoComPalavra tokens={props.tokens} />
         ) : (
-          <Text style={kicker(props.tokens.tinta3)}>{props.rotulo ?? ""}</Text>
+          <Texto style={kicker(props.tokens.tinta3)}>{props.rotulo ?? ""}</Texto>
         )}
         {props.direita ?? null}
       </View>
       {props.titulo ? (
-        <Text style={texto(27, 800, props.tokens.tinta, { letterSpacing: -0.6 })}>{props.titulo}</Text>
+        <Texto style={texto(27, 800, props.tokens.tinta, { letterSpacing: -0.6 })}>
+          {props.titulo}
+        </Texto>
       ) : null}
-      {props.sub ? <Text style={texto(13.5, 400, props.tokens.tinta2)}>{props.sub}</Text> : null}
+      {props.sub ? <Texto style={texto(13.5, 400, props.tokens.tinta2)}>{props.sub}</Texto> : null}
     </View>
   );
 }
@@ -113,13 +113,22 @@ export function Tabs(props: {
         accessibilityLabel={rotulo}
         accessibilityState={{ selected: ativo }}
         onPress={onPress}
-        style={{ flex: 1, alignItems: "center", gap: 3, paddingTop: E.e2, paddingBottom: E.e1 }}
+        style={{
+          flex: 1,
+          minHeight: TOQUE_CONSULTA,
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 3,
+          paddingTop: E.e2,
+          paddingBottom: E.e1,
+        }}
       >
         <Icone nome={icone} cor={cor} tamanho={22} />
-        <Text style={texto(11.5, 700, cor)}>{rotulo}</Text>
+        <Texto style={texto(11.5, 700, cor)}>{rotulo}</Texto>
       </Pressable>
     );
   };
+  const { fundo } = useMargens();
   return (
     <View
       style={{
@@ -128,7 +137,7 @@ export function Tabs(props: {
         borderTopColor: props.tokens.linha,
         backgroundColor: props.tokens.sup,
         paddingTop: 6,
-        paddingBottom: FUNDO,
+        paddingBottom: fundo,
         paddingHorizontal: E.e2,
       }}
     >
@@ -148,13 +157,13 @@ export function Tabs(props: {
  */
 export function SeloDeclarado(props: { tokens: Tokens; rotulo: string; descricao: string }) {
   return (
-    <Text
+    <Texto
       testID="selo-declarado"
       accessibilityLabel={props.descricao}
       style={texto(10.5, 700, props.tokens.tinta2, { letterSpacing: 0.6, textTransform: "uppercase" })}
     >
       {props.rotulo}
-    </Text>
+    </Texto>
   );
 }
 
@@ -178,29 +187,44 @@ export function LinhaBloco(props: {
   testID?: string;
   onPress?: () => void;
 }) {
+  // Duas linhas desde a sessão 28: nome e tempo em cima, o valor por baixo
+  // do nome. Numa linha só, "500 m · 1:10/500 DECL." deixava o nome em "Re…"
+  // no telemóvel real — e o nome é o que diz que bloco é.
   const conteudo = (
     <>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 7, flex: 1, minWidth: 0 }}>
-        <Icone nome={props.icone} cor={props.corDoIcone} tamanho={18} />
-        <Text numberOfLines={1} style={texto(14, 600, props.tokens.tinta, { flexShrink: 1 })}>
-          {props.nome}
-        </Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: E.e2 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 7, flex: 1, minWidth: 0 }}>
+          <Icone nome={props.icone} cor={props.corDoIcone} tamanho={18} />
+          <Texto numberOfLines={1} style={texto(14, 600, props.tokens.tinta, { flexShrink: 1 })}>
+            {props.nome}
+          </Texto>
+        </View>
+        {!props.valor && props.porPreencher ? (
+          <Texto style={texto(12.5, 700, props.tokens.acentoTinta)}>{props.porPreencher}</Texto>
+        ) : null}
+        <Texto style={numero(13, 600, props.tokens.tinta2, { minWidth: 52, textAlign: "right" })}>
+          {props.tempo}
+        </Texto>
       </View>
       {props.valor ? (
-        <View style={{ flexDirection: "row", alignItems: "baseline", gap: 5 }}>
-          <Text style={numero(14.5, 800, props.tokens.tinta)}>{props.valor}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "baseline",
+            flexWrap: "wrap",
+            gap: 5,
+            paddingLeft: 25,
+          }}
+        >
+          <Texto style={numero(14.5, 800, props.tokens.tinta)}>{props.valor}</Texto>
           {props.declarado ? <SeloDeclarado tokens={props.tokens} {...props.declarado} /> : null}
         </View>
-      ) : props.porPreencher ? (
-        <Text style={texto(12.5, 700, props.tokens.acentoTinta)}>{props.porPreencher}</Text>
       ) : null}
-      <Text style={numero(13, 600, props.tokens.tinta2, { width: 52, textAlign: "right" })}>{props.tempo}</Text>
     </>
   );
   const estilo = {
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    gap: E.e2,
+    gap: 2,
+    justifyContent: "center" as const,
     paddingVertical: 10,
     paddingHorizontal: E.e3,
     borderTopWidth: props.primeira ? 0 : 1,
@@ -236,8 +260,8 @@ export function LinhaRonda(props: { tokens: Tokens; rotulo: string; lado?: strin
         backgroundColor: props.tokens.sup2,
       }}
     >
-      <Text style={{ ...kicker(props.tokens.tinta2), fontSize: 11.5 }}>{props.rotulo}</Text>
-      {props.lado ? <Text style={texto(12, 500, props.tokens.tinta3)}>{props.lado}</Text> : null}
+      <Texto style={{ ...kicker(props.tokens.tinta2), fontSize: 11.5 }}>{props.rotulo}</Texto>
+      {props.lado ? <Texto style={texto(12, 500, props.tokens.tinta3)}>{props.lado}</Texto> : null}
     </View>
   );
 }
@@ -315,7 +339,7 @@ export function BotaoPremir(props: {
         pointerEvents="none"
       />
       <Icone nome={props.icone} cor={cor} tamanho={22} />
-      <Text style={texto(17, 700, cor)}>{props.rotulo}</Text>
+      <TextoJusto style={texto(17, 700, cor, { flexShrink: 1 })}>{props.rotulo}</TextoJusto>
     </Pressable>
   );
 }

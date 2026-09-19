@@ -153,7 +153,9 @@ export type Dictionary = {
      */
     startTitle: string;
     startSubtitle: string;
-    gymGroup: string;
+    indoorGroup: string;
+    blockOngoing: string;
+    closedBlocks: string;
     streetGroup: string;
     tabHome: string;
     tabHistory: string;
@@ -165,7 +167,6 @@ export type Dictionary = {
     sessionsOther: string;
     since: string;
     blocksSection: string;
-    currentBlock: string;
     lap: string;
     /** A escolha do Mudar (sessão 17): o desporto que já está a decorrer, não selecionável. */
     currentSportTag: string;

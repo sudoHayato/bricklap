@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { Animated, Easing, Pressable, Text, View, type LayoutChangeEvent } from "react-native";
+import { Animated, Easing, Pressable, View, type LayoutChangeEvent } from "react-native";
+import { Texto } from "./texto";
 import { Icone } from "./icones";
 import { numero } from "./tipografia";
 import type { Tokens } from "./tokens";
@@ -150,7 +151,9 @@ export function BotaoMarca(props: { tokens: Tokens; rotulo: string; onMarca: () 
           />
         </Animated.View>
         <Icone nome="marca" cor={tokens.sobreAcento} tamanho={22} />
-        <Text style={numero(22, 800, tokens.sobreAcento, { letterSpacing: -0.22 })}>{props.rotulo}</Text>
+        <Texto style={numero(22, 800, tokens.sobreAcento, { letterSpacing: -0.22 })}>
+          {props.rotulo}
+        </Texto>
       </Animated.View>
     </Pressable>
   );

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { Pressable, Text, View, type ViewStyle } from "react-native";
+import { Pressable, View, type ViewStyle } from "react-native";
+import { Texto, TextoJusto } from "./texto";
 import { Icone, type NomeIcone } from "./icones";
 import { kicker, texto } from "./tipografia";
 import { E, R, TOQUE, TOQUE_CONSULTA, type Tokens } from "./tokens";
@@ -70,8 +71,16 @@ export function Botao(props: {
         opacity: props.desativado ? 0.45 : 1,
       })}
     >
-      {props.icone ? <Icone nome={props.icone} cor={corTexto} tamanho={props.pequeno ? 18 : 22} /> : null}
-      <Text style={texto(props.pequeno ? 15 : 17, tipo === "fantasma" ? 600 : 700, corTexto)}>{props.rotulo}</Text>
+      {props.icone ? (
+        <Icone nome={props.icone} cor={corTexto} tamanho={props.pequeno ? 18 : 22} />
+      ) : null}
+      <TextoJusto
+        style={texto(props.pequeno ? 15 : 17, tipo === "fantasma" ? 600 : 700, corTexto, {
+          flexShrink: 1,
+        })}
+      >
+        {props.rotulo}
+      </TextoJusto>
     </Pressable>
   );
 }
@@ -129,7 +138,7 @@ export function Tijolo(props: {
       })}
     >
       <Icone nome={props.icone} cor={props.corDoIcone} tamanho={18} />
-      <Text style={texto(15.5, 700, props.tokens.tinta, { flexShrink: 1 })}>{props.rotulo}</Text>
+      <Texto style={texto(15.5, 700, props.tokens.tinta, { flexShrink: 1 })}>{props.rotulo}</Texto>
     </Pressable>
   );
 }
@@ -144,22 +153,26 @@ export function Pilula(props: { tokens: Tokens; rotulo: string }) {
         backgroundColor: props.tokens.sup2,
       }}
     >
-      <Text style={texto(12, 700, props.tokens.tinta2)}>{props.rotulo}</Text>
+      <Texto style={texto(12, 700, props.tokens.tinta2)}>{props.rotulo}</Texto>
     </View>
   );
 }
 
 export function Kicker(props: { tokens: Tokens; children: string }) {
-  return <Text style={kicker(props.tokens.tinta3)}>{props.children}</Text>;
+  return <Texto style={kicker(props.tokens.tinta3)}>{props.children}</Texto>;
 }
 
 /** Título de secção: 11,5/700 em maiúsculas, com um contador opcional à direita. */
 export function Seccao(props: { tokens: Tokens; titulo: string; lado?: string; children: ReactNode }) {
   return (
     <View style={{ marginTop: E.e6, gap: E.e2 }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}>
-        <Text style={{ ...kicker(props.tokens.tinta3), fontSize: 11.5 }}>{props.titulo}</Text>
-        {props.lado ? <Text style={texto(12.5, 500, props.tokens.tinta3)}>{props.lado}</Text> : null}
+      <View
+        style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}
+      >
+        <Texto style={{ ...kicker(props.tokens.tinta3), fontSize: 11.5 }}>{props.titulo}</Texto>
+        {props.lado ? (
+          <Texto style={texto(12.5, 500, props.tokens.tinta3)}>{props.lado}</Texto>
+        ) : null}
       </View>
       {props.children}
     </View>

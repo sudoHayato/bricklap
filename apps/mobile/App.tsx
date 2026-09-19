@@ -37,7 +37,9 @@
  */
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AppState, Linking, ScrollView, Text, View } from "react-native";
+import { AppState, Linking, ScrollView, View } from "react-native";
+import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context";
+import { Texto } from "./ui/texto";
 import {
   createSim,
   currentSport,
@@ -484,7 +486,10 @@ export default function App() {
     <View style={{ gap: E.e2, marginTop: E.e4 }}>
       {precisaGps && permission !== null && permission !== "granted" && !simEnabled ? (
         <Cartao tokens={tokens}>
-          <Text testID="location-problem" style={texto(14, 400, tokens.acentoTinta, { lineHeight: 20 })}>
+          <Texto
+            testID="location-problem"
+            style={texto(14, 400, tokens.acentoTinta, { lineHeight: 20 })}
+          >
             {t(
               permission === "denied"
                 ? "mobile.locationDenied"
@@ -492,7 +497,7 @@ export default function App() {
                   ? "mobile.locationBlocked"
                   : "mobile.locationServicesOff",
             )}
-          </Text>
+          </Texto>
           {permission === "blocked" ? (
             <Botao
               tokens={tokens}
@@ -505,9 +510,12 @@ export default function App() {
       ) : null}
       {precisaGps && batteryOptimised === true && !simEnabled ? (
         <Cartao tokens={tokens}>
-          <Text testID="battery-problem" style={texto(14, 400, tokens.acentoTinta, { lineHeight: 20 })}>
+          <Texto
+            testID="battery-problem"
+            style={texto(14, 400, tokens.acentoTinta, { lineHeight: 20 })}
+          >
             {t("mobile.batteryExemptionCopy")}
-          </Text>
+          </Texto>
           <Botao
             tokens={tokens}
             testID="btn-battery-exemption"
@@ -518,9 +526,12 @@ export default function App() {
       ) : null}
       {notifications !== null && notifications !== "granted" ? (
         <Cartao tokens={tokens}>
-          <Text testID="notifications-problem" style={texto(14, 400, tokens.acentoTinta, { lineHeight: 20 })}>
+          <Texto
+            testID="notifications-problem"
+            style={texto(14, 400, tokens.acentoTinta, { lineHeight: 20 })}
+          >
             {t("mobile.notificationsCopy")}
-          </Text>
+          </Texto>
           <Botao
             tokens={tokens}
             testID="btn-notifications"
@@ -545,104 +556,106 @@ export default function App() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: tokens.fundo }}>
-      <StatusBar style={tema === "escuro" ? "light" : "dark"} />
-      {screen.kind === "opening" ? (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          <Text style={texto(15, 400, tokens.tinta3)}>{t("mobile.opening")}</Text>
-        </View>
-      ) : screen.kind === "inicio" ? (
-        <EcraInicio
-          tokens={tokens}
-          tema={tema}
-          onIniciar={(s) => void start(s)}
-          onDefinicoes={() => setScreen({ kind: "definicoes", voltarPara: "inicio" })}
-          onHistorico={abrirHistorico}
-          simEnabled={simEnabled}
-          onSimEnabled={setSimEnabled}
-          avisos={avisosDe(true)}
-        />
-      ) : screen.kind === "retoma" && session ? (
-        <EcraRetoma
-          tokens={tokens}
-          tema={tema}
-          session={session}
-          now={now}
-          onContinuar={continuar}
-          onDescartar={descartar}
-        />
-      ) : screen.kind === "gravacao" && session ? (
-        <EcraGravacao
-          tokens={tokens}
-          tema={tema}
-          session={session}
-          now={now}
-          gpsLinha={linhaGps()}
-          avisos={avisosDe(feedWanted)}
-          onMarca={marcar}
-          onNovaRonda={novaRonda}
-          catalogo={catalogo}
-          onRegistar={(block, input) => registar(session.id, block, input)}
-          onMudarPara={mudarPara}
-          onParar={parar}
-        />
-      ) : screen.kind === "resumo" ? (
-        <EcraResumo
-          tokens={tokens}
-          tema={tema}
-          session={screen.session}
-          voltar={screen.doHistorico ? abrirHistorico : undefined}
-          onConcluir={screen.doHistorico ? undefined : irInicio}
-          onRegistar={(block, input) => registar(screen.session.id, block, input)}
-          catalogo={catalogo}
-        />
-      ) : screen.kind === "historico" ? (
-        <EcraHistorico
-          tokens={tokens}
-          tema={tema}
-          sessoes={screen.sessions}
-          now={now}
-          aConfirmar={aConfirmar}
-          onAbrir={(s) => {
-            const cheia = getStore().byId(s.id);
-            if (cheia) setScreen({ kind: "resumo", session: cheia, doHistorico: true });
-          }}
-          onPedirApagar={setAConfirmar}
-          onCancelarApagar={() => setAConfirmar(null)}
-          onApagar={apagar}
-          onDefinicoes={() => setScreen({ kind: "definicoes", voltarPara: "historico" })}
-          onInicio={irInicio}
-          rodape={
-            <View style={{ marginTop: E.e6, gap: E.e2 }}>
-              <Botao
-                tokens={tokens}
-                testID="btn-export"
-                rotulo={t("mobile.exportData")}
-                desativado={exportState.kind === "busy"}
-                onPress={doExport}
-              />
-              {exportState.kind === "error" ? (
-                <Text testID="export-problem" style={texto(13, 400, tokens.acentoTinta)}>
-                  {t("mobile.exportFailed")} · {exportState.message}
-                </Text>
-              ) : exportState.kind === "done" ? (
-                <Text testID="export-done" style={texto(13, 400, tokens.tinta3)}>
-                  {exportState.files.join(" · ")}
-                </Text>
-              ) : null}
-            </View>
-          }
-        />
-      ) : screen.kind === "definicoes" ? (
-        <EcraDefinicoes
-          tokens={tokens}
-          preset={preset}
-          onPreset={escolherPreset}
-          onVoltar={() => (screen.voltarPara === "historico" ? abrirHistorico() : irInicio())}
-        />
-      ) : (
-        <ScrollView />
-      )}
-    </View>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <View style={{ flex: 1, backgroundColor: tokens.fundo }}>
+        <StatusBar style={tema === "escuro" ? "light" : "dark"} />
+        {screen.kind === "opening" ? (
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Texto style={texto(15, 400, tokens.tinta3)}>{t("mobile.opening")}</Texto>
+          </View>
+        ) : screen.kind === "inicio" ? (
+          <EcraInicio
+            tokens={tokens}
+            tema={tema}
+            onIniciar={(s) => void start(s)}
+            onDefinicoes={() => setScreen({ kind: "definicoes", voltarPara: "inicio" })}
+            onHistorico={abrirHistorico}
+            simEnabled={simEnabled}
+            onSimEnabled={setSimEnabled}
+            avisos={avisosDe(true)}
+          />
+        ) : screen.kind === "retoma" && session ? (
+          <EcraRetoma
+            tokens={tokens}
+            tema={tema}
+            session={session}
+            now={now}
+            onContinuar={continuar}
+            onDescartar={descartar}
+          />
+        ) : screen.kind === "gravacao" && session ? (
+          <EcraGravacao
+            tokens={tokens}
+            tema={tema}
+            session={session}
+            now={now}
+            gpsLinha={linhaGps()}
+            avisos={avisosDe(feedWanted)}
+            onMarca={marcar}
+            onNovaRonda={novaRonda}
+            catalogo={catalogo}
+            onRegistar={(block, input) => registar(session.id, block, input)}
+            onMudarPara={mudarPara}
+            onParar={parar}
+          />
+        ) : screen.kind === "resumo" ? (
+          <EcraResumo
+            tokens={tokens}
+            tema={tema}
+            session={screen.session}
+            voltar={screen.doHistorico ? abrirHistorico : undefined}
+            onConcluir={screen.doHistorico ? undefined : irInicio}
+            onRegistar={(block, input) => registar(screen.session.id, block, input)}
+            catalogo={catalogo}
+          />
+        ) : screen.kind === "historico" ? (
+          <EcraHistorico
+            tokens={tokens}
+            tema={tema}
+            sessoes={screen.sessions}
+            now={now}
+            aConfirmar={aConfirmar}
+            onAbrir={(s) => {
+              const cheia = getStore().byId(s.id);
+              if (cheia) setScreen({ kind: "resumo", session: cheia, doHistorico: true });
+            }}
+            onPedirApagar={setAConfirmar}
+            onCancelarApagar={() => setAConfirmar(null)}
+            onApagar={apagar}
+            onDefinicoes={() => setScreen({ kind: "definicoes", voltarPara: "historico" })}
+            onInicio={irInicio}
+            rodape={
+              <View style={{ marginTop: E.e6, gap: E.e2 }}>
+                <Botao
+                  tokens={tokens}
+                  testID="btn-export"
+                  rotulo={t("mobile.exportData")}
+                  desativado={exportState.kind === "busy"}
+                  onPress={doExport}
+                />
+                {exportState.kind === "error" ? (
+                  <Texto testID="export-problem" style={texto(13, 400, tokens.acentoTinta)}>
+                    {t("mobile.exportFailed")} · {exportState.message}
+                  </Texto>
+                ) : exportState.kind === "done" ? (
+                  <Texto testID="export-done" style={texto(13, 400, tokens.tinta3)}>
+                    {exportState.files.join(" · ")}
+                  </Texto>
+                ) : null}
+              </View>
+            }
+          />
+        ) : screen.kind === "definicoes" ? (
+          <EcraDefinicoes
+            tokens={tokens}
+            preset={preset}
+            onPreset={escolherPreset}
+            onVoltar={() => (screen.voltarPara === "historico" ? abrirHistorico() : irInicio())}
+          />
+        ) : (
+          <ScrollView />
+        )}
+      </View>
+    </SafeAreaProvider>
   );
 }

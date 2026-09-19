@@ -335,6 +335,9 @@ apps/mobile/
                    tipografia.ts (Inter + Archivo Expanded, embebidas), icones.tsx (SVG originais),
                    componentes.tsx e estrutura.tsx (botões, cartões, cabeçalho, separadores),
                    marca.tsx (o botão Marca), escolhaDesporto.tsx (a folha do Mudar), fiada.tsx (a fiada),
+                   folha.tsx (a folha que sobe do fundo: não é um Modal, assenta em cima do teclado),
+                   ficha.tsx (a ficha de valores), margens.ts (as margens do sistema e o teclado, lidos da janela),
+                   texto.tsx (Texto/TextoJusto/Escrita: a letra do sistema até 1,3×; nenhum ecrã importa Text),
                    logotipo.tsx e coresDoLogotipo.ts (o símbolo, a duas tonalidades),
                    logotipoComPalavra.tsx (o símbolo com "Bricklap" ao lado, no cabeçalho)
   store.ts         uma instância do adaptador de persistência por processo

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { Texto, TextoJusto } from "./ui/texto";
 import {
   SPORT_PACE_KIND,
   VALUE_FIELDS_BY_SPORT,
@@ -34,10 +35,19 @@ import { locale, t } from "./i18n";
 import type { SessionSummary } from "./persistence";
 import { Botao, Cartao, Kicker, Pilula, Seccao, Tijolo } from "./ui/componentes";
 import { EscolhaDesporto } from "./ui/escolhaDesporto";
-import { BotaoPremir, Cabeca, FUNDO, LinhaBloco, LinhaRonda, Redondo, SeloDeclarado, TOPO, Tabs } from "./ui/estrutura";
+import {
+  BotaoPremir,
+  Cabeca,
+  LinhaBloco,
+  LinhaRonda,
+  Redondo,
+  SeloDeclarado,
+  Tabs,
+} from "./ui/estrutura";
 import { FichaValores, formatarCampo, resumoDosValores, valoresDeclarados } from "./ui/ficha";
 import { Fiada, type TrocoFiada } from "./ui/fiada";
 import { Icone } from "./ui/icones";
+import { useMargens } from "./ui/margens";
 import { BotaoMarca } from "./ui/marca";
 import { kicker, numero, texto } from "./ui/tipografia";
 import { COR_DESPORTO, E, ORDEM_GINASIO, ORDEM_RUA, PRESETS, R, type Preset, type Superficie, type Tokens } from "./ui/tokens";
@@ -133,6 +143,7 @@ export function EcraInicio(props: {
   avisos: React.ReactNode;
 }) {
   const { tokens, tema } = props;
+  const { topo } = useMargens();
   const grelha = (desportos: Sport[]) => (
     <View style={{ gap: E.e2 }}>
       {[desportos.slice(0, 2), desportos.slice(2, 4)].map((par, i) => (
@@ -153,7 +164,7 @@ export function EcraInicio(props: {
     </View>
   );
   return (
-    <View style={{ flex: 1, paddingTop: TOPO }}>
+    <View style={{ flex: 1, paddingTop: topo }}>
       <Cabeca
         tokens={tokens}
         logotipo
@@ -192,7 +203,7 @@ export function EcraInicio(props: {
             </View>
           </Seccao>
         ) : null}
-        <Seccao tokens={tokens} titulo={t("mobile.gymGroup")}>
+        <Seccao tokens={tokens} titulo={t("mobile.indoorGroup")}>
           {grelha(ORDEM_GINASIO)}
         </Seccao>
         <Seccao tokens={tokens} titulo={t("mobile.streetGroup")}>
@@ -232,6 +243,7 @@ export function EcraGravacao(props: {
   onParar: () => void;
 }) {
   const { tokens, tema, session, now } = props;
+  const { topo, fundo } = useMargens();
   const [aEscolherDesporto, setAEscolherDesporto] = useState(false);
   const [aRegistar, setARegistar] = useState(false);
   const sport = currentSport(session.events) ?? "run";
@@ -249,142 +261,223 @@ export function EcraGravacao(props: {
   const rAtual = segmentoAtual && temGps ? ritmo(sport, recentMetrics(session, segmentoAtual, now)) : null;
 
   return (
-    <View style={{ flex: 1, paddingTop: TOPO }}>
+    <View style={{ flex: 1 }}>
+      {/* Com uma folha aberta, o que está por baixo cala-se para os leitores de ecrã. */}
       <View
-        style={{
-          paddingHorizontal: E.e5,
-          paddingTop: E.e2,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: E.e2,
-        }}
+        style={{ flex: 1, paddingTop: topo }}
+        importantForAccessibility={aEscolherDesporto || aRegistar ? "no-hide-descendants" : "auto"}
       >
-        <Text style={texto(14.5, 700, tokens.tinta)}>{t(`sport.${sport}.label`)}</Text>
-        <View style={{ flexDirection: "row", gap: E.e1 }}>
-          {rondas.length > 0 ? <Pilula tokens={tokens} rotulo={t("mobile.roundN", { n: String(rondas.length) })} /> : null}
-          <Pilula tokens={tokens} rotulo={t("mobile.currentBlock", { n: String(blocos.length) })} />
-        </View>
-      </View>
-
-      <View style={{ paddingHorizontal: E.e5, paddingTop: E.e4 }}>
-        <Text testID="chrono" style={numero(84, 800, tokens.tinta, { lineHeight: 84 * 0.92, letterSpacing: -2.94 })}>
-          {formatDuration(durationMs(session, now))}
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 7, marginTop: E.e2 }}>
-          <Icone nome="relogio" cor={tokens.tinta2} tamanho={18} />
-          <Text style={texto(13, 500, tokens.tinta2)}>
-            {t("mobile.since", { startedAt: formatClock(session.createdAt, locale) })} ·{" "}
-            {plural(fechados.length, t("mobile.marksOne"), t("mobile.marksOther"))}
-          </Text>
-        </View>
-        <Fiada blocos={trocos(session, fechados, now)} tema={tema} alta estilo={{ marginTop: E.e3 }} />
-      </View>
-
-      <Cartao tokens={tokens} estilo={{ marginHorizontal: E.e5, marginTop: E.e4 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: E.e2 }}>
-          <Icone nome={sport} cor={COR_DESPORTO[tema][sport]} tamanho={18} />
-          <Text style={kicker(COR_DESPORTO[tema][sport])}>{t(`sport.${sport}.live`)}</Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", gap: E.e2 }}>
-          <Text style={texto(28, 800, tokens.tinta, { letterSpacing: -0.56 })}>{t(`sport.${sport}.label`)}</Text>
-          <Text style={numero(38, 700, tokens.tinta, { letterSpacing: -1.14 })}>
-            {formatDuration(mAtual?.durationMs ?? 0)}
-          </Text>
-        </View>
-        {temGps && mSegmento ? (
-          <View style={{ flexDirection: "row", gap: E.e6, marginTop: E.e3 }}>
-            <View>
-              <Text style={{ ...texto(11.5, 600, tokens.tinta3), textTransform: "uppercase", letterSpacing: 0.5 }}>
-                {t("common.distance")}
-              </Text>
-              <Text style={numero(22, 800, tokens.tinta, { letterSpacing: -0.44 })}>
-                {formatDistanceForUnit(mSegmento.distanceM)}
-              </Text>
-            </View>
-            {rAtual ? (
-              <View>
-                <Text style={{ ...texto(11.5, 600, tokens.tinta3), textTransform: "uppercase", letterSpacing: 0.5 }}>
-                  {SPORT_PACE_KIND[sport] === "pace" ? t("mobile.currentPace") : t("mobile.currentSpeed")}
-                </Text>
-                <Text style={numero(22, 800, tokens.tinta, { letterSpacing: -0.44 })}>{rAtual}</Text>
-              </View>
+        <View
+          style={{
+            paddingHorizontal: E.e5,
+            paddingTop: E.e2,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: E.e2,
+          }}
+        >
+          <Texto style={texto(14.5, 700, tokens.tinta)}>{t(`sport.${sport}.label`)}</Texto>
+          <View style={{ flexDirection: "row", gap: E.e1 }}>
+            {rondas.length > 0 ? (
+              <Pilula tokens={tokens} rotulo={t("mobile.roundN", { n: String(rondas.length) })} />
             ) : null}
           </View>
-        ) : null}
-        {props.gpsLinha ? (
-          <Text testID="gps-line" style={numero(12, 600, tokens.tinta3)}>
-            {props.gpsLinha}
-          </Text>
-        ) : null}
-      </Cartao>
+        </View>
 
-      <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e3 }}>
-        {hasGpsSegment(session.events) ? (
-          <Text style={texto(13, 500, tokens.tinta2, { marginBottom: E.e2 })}>
-            {t("mobile.totalDistanceLabel")} ·{" "}
-            <Text style={numero(13, 700, tokens.tinta)}>{formatDistanceForUnit(total.distanceM)}</Text>
-          </Text>
-        ) : null}
-        {fechados
-          .slice(-3)
-          .reverse()
-          .map((b, i) => (
-            <LinhaBloco
-              key={b.index}
-              tokens={tokens}
-              primeira={i === 0}
-              icone={b.sport}
-              corDoIcone={COR_DESPORTO[tema][b.sport]}
-              nome={nomeDoBloco(session, b)}
-              valor={valorDoBloco(session, b, now)}
-              declarado={marcaDeclarado(session, b, now)}
-              tempo={formatDuration(blockMetrics(session, b, now).durationMs)}
-            />
-          ))}
-        {props.avisos}
-      </ScrollView>
-
-      <View style={{ paddingHorizontal: E.e5, paddingTop: E.e3, paddingBottom: FUNDO, gap: E.e2 }}>
-        <View style={{ flexDirection: "row", gap: E.e2 }}>
-          <Botao
-            tokens={tokens}
-            testID="btn-round"
-            rotulo={t("mobile.newRoundN", { n: String(rondas.length + 1) })}
-            estilo={{ flex: 1 }}
-            onPress={props.onNovaRonda}
-          />
-          <Botao
-            tokens={tokens}
-            testID="btn-record"
-            rotulo={t("mobile.record")}
-            estilo={{ flex: 1 }}
-            onPress={() => setARegistar(true)}
+        <View style={{ paddingHorizontal: E.e5, paddingTop: E.e4 }}>
+          <TextoJusto
+            testID="chrono"
+            minimo={0.5}
+            style={numero(84, 800, tokens.tinta, { lineHeight: 84 * 0.92, letterSpacing: -2.94 })}
+          >
+            {formatDuration(durationMs(session, now))}
+          </TextoJusto>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 7, marginTop: E.e2 }}>
+            <Icone nome="relogio" cor={tokens.tinta2} tamanho={18} />
+            <Texto style={texto(13, 500, tokens.tinta2)}>
+              {t("mobile.since", { startedAt: formatClock(session.createdAt, locale) })} ·{" "}
+              {plural(fechados.length, t("mobile.marksOne"), t("mobile.marksOther"))}
+            </Texto>
+          </View>
+          {/* A fiada conta o bloco aberto (sessão 28): sem marcas era uma barra vazia, e o último troço a crescer é o treino a acontecer. */}
+          <Fiada
+            blocos={trocos(session, blocos, now)}
+            tema={tema}
+            alta
+            estilo={{ marginTop: E.e3 }}
           />
         </View>
-        <BotaoMarca tokens={tokens} rotulo={t("common.mark")} onMarca={props.onMarca} />
-        <View style={{ flexDirection: "row", gap: E.e2 }}>
-          <Botao
-            tokens={tokens}
-            testID="btn-change"
-            rotulo={t("common.change")}
-            icone="mudar"
-            estilo={undefined}
-            onPress={() => setAEscolherDesporto(true)}
-          />
-          <BotaoPremir
-            tokens={tokens}
-            testID="btn-stop"
-            rotulo={t("common.stop")}
-            icone="parar"
-            ms={800}
-            perigo
-            estilo={{ flex: 1 }}
-            onCompleto={props.onParar}
-          />
+
+        <Cartao tokens={tokens} estilo={{ marginHorizontal: E.e5, marginTop: E.e4 }}>
+          {/* O cartão É o bloco aberto, a cabeça da lista de blocos (sessão 28): diz
+            que bloco é, mostra o exercício e os valores mal se registam — antes
+            registava-se e nada mudava no ecrã até o bloco fechar. */}
+          <View style={{ flexDirection: "row", alignItems: "center", gap: E.e2 }}>
+            <Icone nome={sport} cor={COR_DESPORTO[tema][sport]} tamanho={18} />
+            <Texto testID="open-block-kicker" style={kicker(COR_DESPORTO[tema][sport])}>
+              {t("mobile.blockOngoing", { n: String(blocos.length) })}
+            </Texto>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: E.e2,
+            }}
+          >
+            <TextoJusto
+              testID="open-block-name"
+              style={texto(28, 800, tokens.tinta, { letterSpacing: -0.56, flex: 1 })}
+            >
+              {atual ? nomeDoBloco(session, atual) : t(`sport.${sport}.label`)}
+            </TextoJusto>
+            <Texto style={numero(38, 700, tokens.tinta, { letterSpacing: -1.14 })}>
+              {formatDuration(mAtual?.durationMs ?? 0)}
+            </Texto>
+          </View>
+          {atual && !temGps && valorDoBloco(session, atual, now) ? (
+            <View
+              testID="open-block-values"
+              style={{ flexDirection: "row", alignItems: "baseline", flexWrap: "wrap", gap: 5 }}
+            >
+              <Texto style={numero(22, 800, tokens.tinta, { letterSpacing: -0.44 })}>
+                {valorDoBloco(session, atual, now)}
+              </Texto>
+              {marcaDeclarado(session, atual, now) ? (
+                <SeloDeclarado tokens={tokens} {...marcaDeclarado(session, atual, now)!} />
+              ) : null}
+            </View>
+          ) : null}
+          {temGps && mSegmento ? (
+            <View style={{ flexDirection: "row", gap: E.e6, marginTop: E.e3 }}>
+              <View>
+                <Texto
+                  style={{
+                    ...texto(11.5, 600, tokens.tinta3),
+                    textTransform: "uppercase",
+                    letterSpacing: 0.5,
+                  }}
+                >
+                  {t("common.distance")}
+                </Texto>
+                <Texto style={numero(22, 800, tokens.tinta, { letterSpacing: -0.44 })}>
+                  {formatDistanceForUnit(mSegmento.distanceM)}
+                </Texto>
+              </View>
+              {rAtual ? (
+                <View>
+                  <Texto
+                    style={{
+                      ...texto(11.5, 600, tokens.tinta3),
+                      textTransform: "uppercase",
+                      letterSpacing: 0.5,
+                    }}
+                  >
+                    {SPORT_PACE_KIND[sport] === "pace"
+                      ? t("mobile.currentPace")
+                      : t("mobile.currentSpeed")}
+                  </Texto>
+                  <Texto style={numero(22, 800, tokens.tinta, { letterSpacing: -0.44 })}>
+                    {rAtual}
+                  </Texto>
+                </View>
+              ) : null}
+            </View>
+          ) : null}
+          {props.gpsLinha ? (
+            <Texto testID="gps-line" style={numero(12, 600, tokens.tinta3)}>
+              {props.gpsLinha}
+            </Texto>
+          ) : null}
+        </Cartao>
+
+        <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e3 }}>
+          {hasGpsSegment(session.events) ? (
+            <Texto style={texto(13, 500, tokens.tinta2, { marginBottom: E.e2 })}>
+              {t("mobile.totalDistanceLabel")} ·{" "}
+              <Texto style={numero(13, 700, tokens.tinta)}>
+                {formatDistanceForUnit(total.distanceM)}
+              </Texto>
+            </Texto>
+          ) : null}
+          {fechados.length > 0 ? (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "baseline",
+                paddingBottom: E.e1,
+              }}
+            >
+              <Texto style={{ ...kicker(tokens.tinta3), fontSize: 11.5 }}>
+                {t("mobile.closedBlocks")}
+              </Texto>
+              <Texto style={numero(12.5, 600, tokens.tinta3)}>{String(fechados.length)}</Texto>
+            </View>
+          ) : null}
+          {fechados
+            .slice(-3)
+            .reverse()
+            .map((b, i) => (
+              <LinhaBloco
+                key={b.index}
+                tokens={tokens}
+                primeira={i === 0}
+                icone={b.sport}
+                corDoIcone={COR_DESPORTO[tema][b.sport]}
+                nome={nomeDoBloco(session, b)}
+                valor={valorDoBloco(session, b, now)}
+                declarado={marcaDeclarado(session, b, now)}
+                tempo={formatDuration(blockMetrics(session, b, now).durationMs)}
+              />
+            ))}
+          {props.avisos}
+        </ScrollView>
+
+        <View
+          style={{ paddingHorizontal: E.e5, paddingTop: E.e3, paddingBottom: fundo, gap: E.e2 }}
+        >
+          <View style={{ flexDirection: "row", gap: E.e2 }}>
+            <Botao
+              tokens={tokens}
+              testID="btn-round"
+              rotulo={t("mobile.newRoundN", { n: String(rondas.length + 1) })}
+              estilo={{ flex: 1 }}
+              onPress={props.onNovaRonda}
+            />
+            <Botao
+              tokens={tokens}
+              testID="btn-record"
+              rotulo={t("mobile.record")}
+              estilo={{ flex: 1 }}
+              onPress={() => setARegistar(true)}
+            />
+          </View>
+          <BotaoMarca tokens={tokens} rotulo={t("common.mark")} onMarca={props.onMarca} />
+          <View style={{ flexDirection: "row", gap: E.e2 }}>
+            <Botao
+              tokens={tokens}
+              testID="btn-change"
+              rotulo={t("common.change")}
+              icone="mudar"
+              estilo={undefined}
+              onPress={() => setAEscolherDesporto(true)}
+            />
+            <BotaoPremir
+              tokens={tokens}
+              testID="btn-stop"
+              rotulo={t("common.stop")}
+              icone="parar"
+              ms={800}
+              perigo
+              estilo={{ flex: 1 }}
+              onCompleto={props.onParar}
+            />
+          </View>
         </View>
       </View>
-
       <EscolhaDesporto
         tokens={tokens}
         tema={tema}
@@ -429,17 +522,44 @@ export function EcraRetoma(props: {
   onDescartar: () => void;
 }) {
   const { tokens, tema, session, now } = props;
+  const { topo, fundo } = useMargens();
   const blocos = blocksFromEvents(session.events);
   return (
-    <View style={{ flex: 1, paddingTop: TOPO }}>
-      <Cabeca tokens={tokens} logotipo titulo={t("mobile.resumeTitle")} sub={t("mobile.resumeCopy")} />
-      <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e4, paddingBottom: E.e6 }}>
-        <Text style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}>
+    <View style={{ flex: 1, paddingTop: topo }}>
+      <Cabeca
+        tokens={tokens}
+        logotipo
+        titulo={t("mobile.resumeTitle")}
+        sub={t("mobile.resumeCopy")}
+      />
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e4, paddingBottom: E.e6 }}
+      >
+        <TextoJusto
+          minimo={0.5}
+          style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}
+        >
           {formatDuration(durationMs(session, now))}
-        </Text>
-        <Fiada blocos={trocos(session, blocos, now)} tema={tema} alta estilo={{ marginTop: E.e3 }} />
-        <Seccao tokens={tokens} titulo={t("mobile.blocksSection")} lado={plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}>
-          <View style={{ backgroundColor: tokens.sup, borderWidth: 1, borderColor: tokens.linha, borderRadius: R.m }}>
+        </TextoJusto>
+        <Fiada
+          blocos={trocos(session, blocos, now)}
+          tema={tema}
+          alta
+          estilo={{ marginTop: E.e3 }}
+        />
+        <Seccao
+          tokens={tokens}
+          titulo={t("mobile.blocksSection")}
+          lado={plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}
+        >
+          <View
+            style={{
+              backgroundColor: tokens.sup,
+              borderWidth: 1,
+              borderColor: tokens.linha,
+              borderRadius: R.m,
+            }}
+          >
             {blocos.map((b, i) => (
               <LinhaBloco
                 key={b.index}
@@ -455,9 +575,23 @@ export function EcraRetoma(props: {
           </View>
         </Seccao>
       </ScrollView>
-      <View style={{ paddingHorizontal: E.e5, paddingBottom: FUNDO, gap: E.e2 }}>
-        <Botao tokens={tokens} testID="btn-continue" rotulo={t("common.continue")} tipo="acento" largo onPress={props.onContinuar} />
-        <Botao tokens={tokens} testID="btn-discard" rotulo={t("common.discard")} tipo="perigo" largo onPress={props.onDescartar} />
+      <View style={{ paddingHorizontal: E.e5, paddingBottom: fundo, gap: E.e2 }}>
+        <Botao
+          tokens={tokens}
+          testID="btn-continue"
+          rotulo={t("common.continue")}
+          tipo="acento"
+          largo
+          onPress={props.onContinuar}
+        />
+        <Botao
+          tokens={tokens}
+          testID="btn-discard"
+          rotulo={t("common.discard")}
+          tipo="perigo"
+          largo
+          onPress={props.onDescartar}
+        />
       </View>
     </View>
   );
@@ -479,6 +613,7 @@ export function EcraResumo(props: {
   catalogo: readonly CatalogExercise[];
 }) {
   const { tokens, tema, session } = props;
+  const { topo, fundo } = useMargens();
   const [blocoAEditar, setBlocoAEditar] = useState<Block | null>(null);
   const fim = Date.now();
   const blocos = blocksFromEvents(session.events);
@@ -511,123 +646,201 @@ export function EcraResumo(props: {
   const haDeclarados = blocos.some((b) => valoresDeclarados(session, b, fim));
   const misto = comGps && totais.declaredM >= 1;
   return (
-    <View style={{ flex: 1, paddingTop: TOPO }}>
-      <Cabeca
-        tokens={tokens}
-        rotulo={props.voltar ? undefined : t("common.summary")}
-        voltar={props.voltar ? { rotulo: t("mobile.tabHistory"), onPress: props.voltar } : undefined}
-        direita={<Pilula tokens={tokens} rotulo={formatClock(session.createdAt, locale)} />}
-        titulo={nomeDaSessao(session)}
-        sub={`${plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}${
-          segmentos.length > 1 ? ` · ${plural(segmentos.length, t("common.segments").toLowerCase(), t("common.segments").toLowerCase())}` : ""
-        }`}
-      />
-      <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e3, paddingBottom: E.e6 }}>
-        <Text style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}>
-          {formatDuration(durationMs(session))}
-        </Text>
-        {comGps ? (
-          <Text style={texto(13, 500, tokens.tinta2, { marginTop: 6 })}>
-            <Text style={numero(16, 800, tokens.tinta)}>{formatDistanceForUnit(total.distanceM)}</Text>{" "}
-            {misto ? t("mobile.measuredDistance") : t("common.distance").toLowerCase()}
-          </Text>
-        ) : null}
-        {totais.declaredM >= 1 ? (
-          <Text testID="declared-distance" style={texto(13, 500, tokens.tinta2, { marginTop: 4 })}>
-            <Text style={numero(16, 800, tokens.tinta)}>{formatDistanceForUnit(totais.declaredM)}</Text>{" "}
-            {t("mobile.declaredDistance")}
-          </Text>
-        ) : null}
-        <Fiada blocos={trocos(session, blocos, fim)} tema={tema} alta estilo={{ marginTop: E.e3 }} />
-        <Seccao
+    <View style={{ flex: 1 }}>
+      <View
+        style={{ flex: 1, paddingTop: topo }}
+        importantForAccessibility={blocoAEditar ? "no-hide-descendants" : "auto"}
+      >
+        <Cabeca
           tokens={tokens}
-          titulo={t("mobile.blocksSection")}
-          lado={`${plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}${
-            comRondas ? ` · ${rondas.length} ${t("mobile.round").toLowerCase()}${rondas.length === 1 ? "" : "s"}` : ""
+          rotulo={props.voltar ? undefined : t("common.summary")}
+          voltar={
+            props.voltar ? { rotulo: t("mobile.tabHistory"), onPress: props.voltar } : undefined
+          }
+          direita={<Pilula tokens={tokens} rotulo={formatClock(session.createdAt, locale)} />}
+          titulo={nomeDaSessao(session)}
+          sub={`${plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}${
+            segmentos.length > 1
+              ? ` · ${plural(segmentos.length, t("common.segments").toLowerCase(), t("common.segments").toLowerCase())}`
+              : ""
           }`}
+        />
+        <ScrollView
+          contentContainerStyle={{
+            paddingHorizontal: E.e5,
+            paddingTop: E.e3,
+            paddingBottom: fundo + E.e4,
+          }}
         >
-          {props.onRegistar && aPreencher > 0 ? (
-            <Text style={texto(12.5, 400, tokens.tinta2)}>{t("mobile.tapToRecord")}</Text>
+          <TextoJusto
+            minimo={0.5}
+            style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}
+          >
+            {formatDuration(durationMs(session))}
+          </TextoJusto>
+          {comGps ? (
+            <Texto style={texto(13, 500, tokens.tinta2, { marginTop: 6 })}>
+              <Texto style={numero(16, 800, tokens.tinta)}>
+                {formatDistanceForUnit(total.distanceM)}
+              </Texto>{" "}
+              {misto ? t("mobile.measuredDistance") : t("common.distance").toLowerCase()}
+            </Texto>
           ) : null}
-          <View style={{ backgroundColor: tokens.sup, borderWidth: 1, borderColor: tokens.linha, borderRadius: R.m, overflow: "hidden" }}>
-            {blocos.map((b, i) => {
-              const abreRonda = comRondas && (i === 0 || b.round !== blocos[i - 1]!.round);
-              return (
-                <View key={b.index}>
-                  {abreRonda ? (
-                    <LinhaRonda
+          {totais.declaredM >= 1 ? (
+            <Texto
+              testID="declared-distance"
+              style={texto(13, 500, tokens.tinta2, { marginTop: 4 })}
+            >
+              <Texto style={numero(16, 800, tokens.tinta)}>
+                {formatDistanceForUnit(totais.declaredM)}
+              </Texto>{" "}
+              {t("mobile.declaredDistance")}
+            </Texto>
+          ) : null}
+          <Fiada
+            blocos={trocos(session, blocos, fim)}
+            tema={tema}
+            alta
+            estilo={{ marginTop: E.e3 }}
+          />
+          <Seccao
+            tokens={tokens}
+            titulo={t("mobile.blocksSection")}
+            lado={`${plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}${
+              comRondas
+                ? ` · ${rondas.length} ${t("mobile.round").toLowerCase()}${rondas.length === 1 ? "" : "s"}`
+                : ""
+            }`}
+          >
+            {props.onRegistar && aPreencher > 0 ? (
+              <Texto style={texto(12.5, 400, tokens.tinta2)}>{t("mobile.tapToRecord")}</Texto>
+            ) : null}
+            <View
+              style={{
+                backgroundColor: tokens.sup,
+                borderWidth: 1,
+                borderColor: tokens.linha,
+                borderRadius: R.m,
+                overflow: "hidden",
+              }}
+            >
+              {blocos.map((b, i) => {
+                const abreRonda = comRondas && (i === 0 || b.round !== blocos[i - 1]!.round);
+                return (
+                  <View key={b.index}>
+                    {abreRonda ? (
+                      <LinhaRonda
+                        tokens={tokens}
+                        primeira={i === 0}
+                        rotulo={
+                          b.round === null
+                            ? t("mobile.noRound")
+                            : t("mobile.roundN", { n: String(b.round + 1) })
+                        }
+                      />
+                    ) : null}
+                    <LinhaBloco
                       tokens={tokens}
-                      primeira={i === 0}
-                      rotulo={b.round === null ? t("mobile.noRound") : t("mobile.roundN", { n: String(b.round + 1) })}
+                      primeira={i === 0 || abreRonda}
+                      icone={b.sport}
+                      corDoIcone={COR_DESPORTO[tema][b.sport]}
+                      nome={nomeDoBloco(session, b)}
+                      valor={valorDoBloco(session, b, fim)}
+                      declarado={marcaDeclarado(session, b, fim)}
+                      porPreencher={
+                        editavel(b) && porPreencher(session, b, fim)
+                          ? t("mobile.record")
+                          : undefined
+                      }
+                      tempo={formatDuration(blockMetrics(session, b, fim).durationMs)}
+                      testID={`block-${b.index}`}
+                      onPress={editavel(b) ? () => setBlocoAEditar(b) : undefined}
                     />
-                  ) : null}
-                  <LinhaBloco
-                    tokens={tokens}
-                    primeira={i === 0 || abreRonda}
-                    icone={b.sport}
-                    corDoIcone={COR_DESPORTO[tema][b.sport]}
-                    nome={nomeDoBloco(session, b)}
-                    valor={valorDoBloco(session, b, fim)}
-                    declarado={marcaDeclarado(session, b, fim)}
-                    porPreencher={editavel(b) && porPreencher(session, b, fim) ? t("mobile.record") : undefined}
-                    tempo={formatDuration(blockMetrics(session, b, fim).durationMs)}
-                    testID={`block-${b.index}`}
-                    onPress={editavel(b) ? () => setBlocoAEditar(b) : undefined}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        </Seccao>
-        {porDesporto.length > 1 || porDesporto.some((a) => a.declared.meters >= 1) ? (
-          <Seccao tokens={tokens} titulo={t("mobile.perSport")}>
-            <View style={{ backgroundColor: tokens.sup, borderWidth: 1, borderColor: tokens.linha, borderRadius: R.m }}>
-              {porDesporto.map((a, i) => (
-                <View
-                  key={a.sport}
-                  testID={`per-sport-${a.sport}`}
-                  style={{ paddingVertical: 10, paddingHorizontal: E.e3, borderTopWidth: i === 0 ? 0 : 1, borderTopColor: tokens.linha, gap: 2 }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center", gap: 7 }}>
-                    <Icone nome={a.sport} cor={COR_DESPORTO[tema][a.sport]} tamanho={18} />
-                    <Text style={texto(14, 600, tokens.tinta)}>{t(`sport.${a.sport}.label`)}</Text>
                   </View>
-                  <Text style={numero(12.5, 600, tokens.tinta2)}>{linhaDesporto(a).base}</Text>
-                  {linhaDesporto(a).medido ? (
-                    <Text testID={`per-sport-${a.sport}-measured`} style={numero(12.5, 600, tokens.tinta2)}>
-                      {linhaDesporto(a).medido}
-                    </Text>
-                  ) : null}
-                  {linhaDesporto(a).declarado ? (
-                    <View testID={`per-sport-${a.sport}-declared`} style={{ flexDirection: "row", alignItems: "baseline", gap: 5 }}>
-                      <Text style={numero(12.5, 600, tokens.tinta2)}>{linhaDesporto(a).declarado}</Text>
-                      <SeloDeclarado tokens={tokens} rotulo={t("mobile.declaredShort")} descricao={t("mobile.declaredTag")} />
-                    </View>
-                  ) : null}
-                </View>
-              ))}
+                );
+              })}
             </View>
           </Seccao>
-        ) : null}
-        {haDeclarados ? (
-          <Text testID="declared-legend" style={texto(12, 400, tokens.tinta3, { marginTop: E.e4 })}>
-            {t("mobile.declaredLegend")}
-          </Text>
-        ) : null}
-        {props.onConcluir ? (
-          <View style={{ marginTop: E.e6 }}>
-            <Botao
-              tokens={tokens}
-              testID="btn-new-session"
-              rotulo={t("common.done")}
-              icone="certo"
-              tipo="acento"
-              largo
-              onPress={props.onConcluir}
-            />
-          </View>
-        ) : null}
-      </ScrollView>
+          {porDesporto.length > 1 || porDesporto.some((a) => a.declared.meters >= 1) ? (
+            <Seccao tokens={tokens} titulo={t("mobile.perSport")}>
+              <View
+                style={{
+                  backgroundColor: tokens.sup,
+                  borderWidth: 1,
+                  borderColor: tokens.linha,
+                  borderRadius: R.m,
+                }}
+              >
+                {porDesporto.map((a, i) => (
+                  <View
+                    key={a.sport}
+                    testID={`per-sport-${a.sport}`}
+                    style={{
+                      paddingVertical: 10,
+                      paddingHorizontal: E.e3,
+                      borderTopWidth: i === 0 ? 0 : 1,
+                      borderTopColor: tokens.linha,
+                      gap: 2,
+                    }}
+                  >
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 7 }}>
+                      <Icone nome={a.sport} cor={COR_DESPORTO[tema][a.sport]} tamanho={18} />
+                      <Texto style={texto(14, 600, tokens.tinta)}>
+                        {t(`sport.${a.sport}.label`)}
+                      </Texto>
+                    </View>
+                    <Texto style={numero(12.5, 600, tokens.tinta2)}>{linhaDesporto(a).base}</Texto>
+                    {linhaDesporto(a).medido ? (
+                      <Texto
+                        testID={`per-sport-${a.sport}-measured`}
+                        style={numero(12.5, 600, tokens.tinta2)}
+                      >
+                        {linhaDesporto(a).medido}
+                      </Texto>
+                    ) : null}
+                    {linhaDesporto(a).declarado ? (
+                      <View
+                        testID={`per-sport-${a.sport}-declared`}
+                        style={{ flexDirection: "row", alignItems: "baseline", gap: 5 }}
+                      >
+                        <Texto style={numero(12.5, 600, tokens.tinta2)}>
+                          {linhaDesporto(a).declarado}
+                        </Texto>
+                        <SeloDeclarado
+                          tokens={tokens}
+                          rotulo={t("mobile.declaredShort")}
+                          descricao={t("mobile.declaredTag")}
+                        />
+                      </View>
+                    ) : null}
+                  </View>
+                ))}
+              </View>
+            </Seccao>
+          ) : null}
+          {haDeclarados ? (
+            <Texto
+              testID="declared-legend"
+              style={texto(12, 400, tokens.tinta3, { marginTop: E.e4 })}
+            >
+              {t("mobile.declaredLegend")}
+            </Texto>
+          ) : null}
+          {props.onConcluir ? (
+            <View style={{ marginTop: E.e6 }}>
+              <Botao
+                tokens={tokens}
+                testID="btn-new-session"
+                rotulo={t("common.done")}
+                icone="certo"
+                tipo="acento"
+                largo
+                onPress={props.onConcluir}
+              />
+            </View>
+          ) : null}
+        </ScrollView>
+      </View>
       {blocoAEditar && props.onRegistar ? (
         <FichaValores
           tokens={tokens}
@@ -667,9 +880,10 @@ export function EcraHistorico(props: {
   rodape: React.ReactNode;
 }) {
   const { tokens, tema } = props;
+  const { topo } = useMargens();
   const linhas = [...props.sessoes].reverse();
   return (
-    <View style={{ flex: 1, paddingTop: TOPO }}>
+    <View style={{ flex: 1, paddingTop: topo }}>
       <Cabeca
         tokens={tokens}
         logotipo
@@ -681,9 +895,11 @@ export function EcraHistorico(props: {
       />
       <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e4, paddingBottom: E.e6, gap: E.e2 }}>
         {linhas.length === 0 ? (
-          <Text style={texto(15, 400, tokens.tinta3, { textAlign: "center", paddingVertical: E.e7 })}>
+          <Texto
+            style={texto(15, 400, tokens.tinta3, { textAlign: "center", paddingVertical: E.e7 })}
+          >
             {t("mobile.noSessions")}
-          </Text>
+          </Texto>
         ) : null}
         {linhas.map(({ session, discarded }) => {
           const blocos = blocksFromEvents(session.events);
@@ -699,39 +915,75 @@ export function EcraHistorico(props: {
             .join(" · ");
           const confirmar = props.aConfirmar === session.id;
           return (
-            <View
+            <Pressable
               key={session.id}
-              style={{
-                backgroundColor: tokens.sup,
+              testID={`session-${session.id}`}
+              accessibilityRole="button"
+              accessibilityLabel={nomeDaSessao(session)}
+              onPress={() => props.onAbrir(session)}
+              style={({ pressed }) => ({
+                backgroundColor: pressed ? tokens.sup2 : tokens.sup,
                 borderWidth: 1,
                 borderColor: tokens.linha,
                 borderRadius: R.g,
-                paddingHorizontal: E.e4,
-                paddingVertical: E.e3,
-              }}
+                paddingLeft: E.e4,
+                paddingRight: E.e2,
+                paddingTop: E.e1,
+                paddingBottom: E.e3,
+              })}
             >
-              <Text
-                accessibilityRole="button"
-                onPress={() => props.onAbrir(session)}
-                style={{ ...kicker(tokens.tinta3), fontSize: 11 }}
+              {/* Sessão 28: o cartão inteiro abre a sessão (eram só as duas linhas de
+                  texto), e o Apagar é o caixote do canto, com 44 px de alvo — uma
+                  linha "Apagar" por cartão era um terço da altura de cada um, dada à
+                  ação destrutiva. A confirmação continua a ser em duas etapas. */}
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", minHeight: 44 }}>
+                <Texto style={{ ...kicker(tokens.tinta3), fontSize: 11, flexShrink: 1 }}>
+                  {`${formatDay(session.createdAt, locale)} · ${formatClock(session.createdAt, locale)}`}
+                </Texto>
+                {confirmar ? null : (
+                  <Pressable
+                    testID={`btn-delete-${session.id}`}
+                    accessibilityRole="button"
+                    accessibilityLabel={t("common.delete")}
+                    onPress={() => props.onPedirApagar(session.id)}
+                    style={({ pressed }) => ({
+                      width: 44,
+                      height: 44,
+                      borderRadius: R.pill,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: pressed ? tokens.sup2 : "transparent",
+                    })}
+                  >
+                    <Icone nome="apagar" cor={tokens.tinta3} tamanho={18} />
+                  </Pressable>
+                )}
+              </View>
+              <View style={{ paddingRight: E.e2 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: E.e2,
+                }}
               >
-                {`${formatDay(session.createdAt, locale)} · ${formatClock(session.createdAt, locale)}`}
-              </Text>
-              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: E.e2 }}>
-                <Text
-                  accessibilityRole="button"
-                  onPress={() => props.onAbrir(session)}
+                <Texto
                   numberOfLines={1}
                   style={texto(17, 800, tokens.tinta, { flex: 1, letterSpacing: -0.26, marginTop: 2 })}
                 >
                   {nomeDaSessao(session)}
-                </Text>
-                <Text style={numero(19, 800, tokens.tinta, { letterSpacing: -0.38 })}>
+                </Texto>
+                <Texto style={numero(19, 800, tokens.tinta, { letterSpacing: -0.38 })}>
                   {formatDuration(durationMs(session, fim ?? props.now))}
-                </Text>
+                </Texto>
               </View>
-              <Text style={texto(13, 400, tokens.tinta2)}>{meta}</Text>
-              <Fiada blocos={trocos(session, blocos, props.now)} tema={tema} estilo={{ marginTop: E.e3 }} />
+              <Texto style={texto(13, 400, tokens.tinta2)}>{meta}</Texto>
+              <Fiada
+                blocos={trocos(session, blocos, props.now)}
+                tema={tema}
+                estilo={{ marginTop: E.e3 }}
+              />
               {confirmar ? (
                 <View
                   style={{
@@ -746,8 +998,15 @@ export function EcraHistorico(props: {
                     gap: E.e2,
                   }}
                 >
-                  <Text style={texto(13, 700, tokens.acentoTinta, { flex: 1 })}>{t("mobile.deleteAsk")}</Text>
-                  <Botao tokens={tokens} rotulo={t("common.keep")} pequeno onPress={props.onCancelarApagar} />
+                  <Texto style={texto(13, 700, tokens.acentoTinta, { flex: 1 })}>
+                    {t("mobile.deleteAsk")}
+                  </Texto>
+                  <Botao
+                    tokens={tokens}
+                    rotulo={t("common.keep")}
+                    pequeno
+                    onPress={props.onCancelarApagar}
+                  />
                   <Botao
                     tokens={tokens}
                     testID="btn-delete-confirm"
@@ -758,19 +1017,9 @@ export function EcraHistorico(props: {
                     onPress={() => props.onApagar(session.id)}
                   />
                 </View>
-              ) : (
-                <View style={{ flexDirection: "row", justifyContent: "flex-end", marginTop: E.e2 }}>
-                  <Botao
-                    tokens={tokens}
-                    rotulo={t("common.delete")}
-                    icone="apagar"
-                    tipo="fantasma"
-                    pequeno
-                    onPress={() => props.onPedirApagar(session.id)}
-                  />
-                </View>
-              )}
-            </View>
+              ) : null}
+              </View>
+            </Pressable>
           );
         })}
         {props.rodape}
@@ -808,6 +1057,7 @@ function textoDoPreset(p: Preset): { nome: string; exp: string } {
 
 export function EcraDefinicoes(props: { tokens: Tokens; preset: Preset; onPreset: (p: Preset) => void; onVoltar: () => void }) {
   const { tokens } = props;
+  const { topo, fundo } = useMargens();
   const amostra = (s: Superficie) => (
     <View
       style={{
@@ -821,20 +1071,20 @@ export function EcraDefinicoes(props: { tokens: Tokens; preset: Preset; onPreset
     />
   );
   return (
-    <View style={{ flex: 1, paddingTop: TOPO }}>
+    <View style={{ flex: 1, paddingTop: topo }}>
       <Cabeca
         tokens={tokens}
         voltar={{ rotulo: t("common.home"), onPress: props.onVoltar }}
         titulo={t("common.settings")}
       />
-      <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingBottom: FUNDO }}>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: E.e5, paddingBottom: fundo }}>
         <Seccao tokens={tokens} titulo={t("mobile.themeTitle")}>
           <View style={{ gap: E.e2 }}>
             {PRESETS.map((p) => {
               const ativa = props.preset === p;
               const { nome, exp } = textoDoPreset(p);
               return (
-                <Text
+                <Texto
                   key={p}
                   accessibilityRole="radio"
                   accessibilityState={{ selected: ativa }}
@@ -862,35 +1112,43 @@ export function EcraDefinicoes(props: { tokens: Tokens; preset: Preset; onPreset
                       {amostra(AMOSTRAS[p][1])}
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={texto(16, 800, tokens.tinta)}>
+                      <Texto style={texto(16, 800, tokens.tinta)}>
                         {nome}
                         {p === "hibrido" ? (
-                          <Text style={{ ...kicker(tokens.acentoTinta), fontSize: 11 }}> {t("mobile.themeDefault")}</Text>
+                          <Texto style={{ ...kicker(tokens.acentoTinta), fontSize: 11 }}>
+                            {" "}
+                            {t("mobile.themeDefault")}
+                          </Texto>
                         ) : null}
-                      </Text>
-                      <Text style={texto(12.5, 400, tokens.tinta2, { marginTop: 2 })}>
-                        {exp}
-                      </Text>
+                      </Texto>
+                      <Texto style={texto(12.5, 400, tokens.tinta2, { marginTop: 2 })}>{exp}</Texto>
                     </View>
                     <Icone nome="certo" cor={ativa ? tokens.acentoTinta : tokens.linha} tamanho={18} />
                   </View>
-                </Text>
+                </Texto>
               );
             })}
           </View>
-          <Text style={texto(12, 400, tokens.tinta3, { marginTop: E.e2, lineHeight: 17 })}>{t("mobile.themeNote")}</Text>
+          <Texto style={texto(12, 400, tokens.tinta3, { marginTop: E.e2, lineHeight: 17 })}>
+            {t("mobile.themeNote")}
+          </Texto>
         </Seccao>
 
         <Seccao tokens={tokens} titulo={t("mobile.unitsTitle")}>
-          <Cartao tokens={tokens} estilo={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            <Text style={texto(15, 700, tokens.tinta)}>{t("mobile.unitsMetric")}</Text>
-            <Text style={texto(13, 400, tokens.tinta3)}>{t("mobile.unitsMetricDetail")}</Text>
+          <Cartao
+            tokens={tokens}
+            estilo={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}
+          >
+            <Texto style={texto(15, 700, tokens.tinta)}>{t("mobile.unitsMetric")}</Texto>
+            <Texto style={texto(13, 400, tokens.tinta3)}>{t("mobile.unitsMetricDetail")}</Texto>
           </Cartao>
         </Seccao>
 
         <Seccao tokens={tokens} titulo={t("mobile.aboutTitle")}>
           <Cartao tokens={tokens}>
-            <Text style={texto(14, 400, tokens.tinta2, { lineHeight: 21 })}>{t("mobile.aboutCopy")}</Text>
+            <Texto style={texto(14, 400, tokens.tinta2, { lineHeight: 21 })}>
+              {t("mobile.aboutCopy")}
+            </Texto>
           </Cartao>
         </Seccao>
       </ScrollView>
