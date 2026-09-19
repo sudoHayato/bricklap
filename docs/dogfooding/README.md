@@ -5,6 +5,7 @@ Os treinos reais do fundador com a app instalada, um ficheiro por treino. É a e
 - [2026-09-14 — treino 01](2026-09-14-treino-01.md): HIIT de 4 rondas; a app gravou o tempo do treino, não o treino.
 - [2026-09-16 — treino 02](2026-09-16-treino-02.md): corrida na rua e circuito no ginásio na mesma sessão; auditado na base na sessão 26 — a fronteira rua/ginásio certa ao milissegundo, o circuito inteiro num bloco só.
 - [2026-09-18 — treino 03](2026-09-18-treino-03.md): HIIT de passadeira e circuito, cinco rondas em dez blocos; auditado na base na sessão 26 — sem velocidade, sem exercícios, sem rondas.
+- [2026-09-19 — registo 04](2026-09-19-treino-04.md): **não foi um treino** — uma sessão parada de 1:24 em Transição, sem valores nem rondas; auditada na base na sessão 27. Ficou por confirmar pelo fundador se houve treino e onde.
 
 ## Que desportos a app tem mesmo de servir
 
