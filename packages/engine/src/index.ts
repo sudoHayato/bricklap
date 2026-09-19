@@ -8,4 +8,5 @@ export * from "./types";
 export * from "./engine";
 export * from "./geo";
 export * from "./seed";
+export * from "./exercises";
 export * from "./records";

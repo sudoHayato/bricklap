@@ -13,13 +13,16 @@ import {
 import { makeSession, sampleAt } from "./helpers";
 
 describe("createLiveSession", () => {
-  it("creates a live session with a single 'started' event and no samples", () => {
+  it("creates a live session with 'started' and the round 1 it opens, and no samples", () => {
     const s = createLiveSession("bike", 1_000, "fixed-id");
     expect(s).toEqual({
       id: "fixed-id",
       createdAt: 1_000,
       status: "live",
-      events: [{ type: "started", at: 1_000, sport: "bike" }],
+      events: [
+        { type: "started", at: 1_000, sport: "bike" },
+        { type: "round_started", at: 1_000 },
+      ],
       samples: [],
     });
   });
@@ -80,7 +83,7 @@ describe("applyChange", () => {
   it("does not mutate the input", () => {
     const s = createLiveSession("run", 0, "a");
     applyChange(s, "walk", 1);
-    expect(s.events).toHaveLength(1);
+    expect(s.events).toHaveLength(2);
   });
 
   it("uses the current time by default", () => {

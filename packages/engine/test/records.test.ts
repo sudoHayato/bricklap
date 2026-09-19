@@ -63,7 +63,7 @@ describe("applyRecord — a única escrita das duas portas", () => {
       origin: "declared",
       values: { meters: 500, splitS: 112 },
     });
-    expect(s.events).toHaveLength(1);
+    expect(s.events).toHaveLength(2);
   });
 
   it("drops fields the sport does not carry — reps on a rowing block are a typo — and is a no-op when nothing remains", () => {
@@ -103,7 +103,7 @@ describe("applyRecord — a única escrita das duas portas", () => {
     const next = applyRecord(s, { block: 0, origin: "declared", values: { speedKmh: 10 } }, 20 * MIN);
     expect(next).not.toBe(s);
     expect(next.status).toBe("stopped");
-    expect(next.events.map((e) => e.type)).toEqual(["started", "stopped", "recorded"]);
+    expect(next.events.map((e) => e.type)).toEqual(["started", "round_started", "stopped", "recorded"]);
     // And it changes nothing the session already derived.
     expect(segmentsFromEvents(next.events)).toEqual(segmentsFromEvents(s.events));
     expect(blocksFromEvents(next.events)).toEqual(blocksFromEvents(s.events));
@@ -127,6 +127,7 @@ describe("blockRecords — vale o último valor registado", () => {
     expect(s.events.filter((e) => e.type === "recorded")).toHaveLength(2); // nothing rewritten
     expect(blockRecord(s.events, 0)).toEqual({
       exercise: null,
+      kind: null,
       values: {
         meters: { value: 500, origin: "declared", at: 10 * MIN },
         splitS: { value: 115, origin: "declared", at: MIN },
@@ -155,7 +156,7 @@ describe("blockRecords — vale o último valor registado", () => {
   it("a block nobody recorded is absent from the map and empty on its own", () => {
     const s = applyMark(createLiveSession("strength", 0), MIN);
     expect(blockRecords(s.events).size).toBe(0);
-    expect(blockRecord(s.events, 1)).toEqual({ exercise: null, values: {} });
+    expect(blockRecord(s.events, 1)).toEqual({ exercise: null, kind: null, values: {} });
   });
 
   it("keeps each block's origin apart: a measured value and a declared one on different blocks", () => {
@@ -308,17 +309,22 @@ describe("o treino real: bloco com GPS e bloco declarado na mesma sessão", () =
     s = applyStop(s, 24 * MIN);
     s = applyRecord(s, { block: 3, origin: "declared", values: { meters: 500 } }, 60 * MIN); // the end door
     const blocks = blocksFromEvents(s.events);
+    // Round 1 opens with the session (session 27): the run is round 1, the circuit round 2.
     expect(blocks.map((b) => [b.sport, b.round])).toEqual([
-      ["run", null],
-      ["strength", 0],
-      ["strength", 0],
-      ["rowing_indoor", 0],
+      ["run", 0],
+      ["strength", 1],
+      ["strength", 1],
+      ["rowing_indoor", 1],
     ]);
     // A declared value never lands on the GPS block, and the GPS block has no figures.
     expect(applyRecord(s, { block: 0, origin: "declared", values: { meters: 3000 } }, 61 * MIN)).toBe(s);
     expect(blockFigures(s, blocks[0]!)).toEqual({});
     expect(blockFigures(s, blocks[3]!).meters!.value).toBe(500);
-    expect(blockRecord(s.events, 1)).toEqual({ exercise: "flexões", values: { reps: { value: 10, origin: "declared", at: 21 * MIN } } });
+    expect(blockRecord(s.events, 1)).toEqual({
+      exercise: "flexões",
+      kind: null,
+      values: { reps: { value: 10, origin: "declared", at: 21 * MIN } },
+    });
     expect(s.events.filter((e) => e.type === "recorded")).toHaveLength(3);
   });
 

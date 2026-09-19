@@ -52,6 +52,33 @@ describe("roundsFromEvents — as rondas derivadas dos eventos", () => {
     ]);
   });
 
+  it("a marker that is not after the round already open is that round said twice: it opens nothing", () => {
+    const events: SessionEvent[] = [
+      { type: "started", at: 0, sport: "strength" },
+      { type: "round_started", at: 0 },
+      { type: "round_started", at: 0 }, // the same instant, written twice
+      { type: "round_started", at: 5 * MIN },
+      { type: "round_started", at: 4 * MIN }, // out of order: not after the open round
+      { type: "stopped", at: 9 * MIN },
+    ];
+    expect(roundsFromEvents(events)).toEqual([
+      { index: 0, startAt: 0, endAt: 5 * MIN },
+      { index: 1, startAt: 5 * MIN, endAt: 9 * MIN },
+    ]);
+    expect(blocksFromEvents(events).map((b) => [b.startAt, b.endAt, b.round])).toEqual([
+      [0, 5 * MIN, 0],
+      [5 * MIN, 9 * MIN, 1],
+    ]);
+  });
+
+  it("a marker before any `started` is not a round, for the rounds as for the blocks", () => {
+    const events: SessionEvent[] = [
+      { type: "round_started", at: 0 },
+      { type: "started", at: MIN, sport: "strength" },
+    ];
+    expect(roundsFromEvents(events)).toEqual([]);
+  });
+
   it("the open round of a live session has no end", () => {
     const events: SessionEvent[] = [
       { type: "started", at: 0, sport: "strength" },
@@ -160,7 +187,7 @@ describe("applyRoundStart — a transição", () => {
     const next = applyRoundStart(s, MIN);
     expect(next).not.toBe(s);
     expect(next.events.at(-1)).toEqual({ type: "round_started", at: MIN });
-    expect(s.events).toHaveLength(1); // input untouched
+    expect(s.events).toHaveLength(2); // input untouched: `started` and the round 1 it opens
   });
 
   it("is a no-op on a stopped session", () => {
@@ -178,7 +205,7 @@ describe("applyRoundStart — a transição", () => {
     expect(applyRoundStart(s, MIN + ROUND_DEDUPE_MS - 1)).toBe(s);
     const later = applyRoundStart(s, MIN + ROUND_DEDUPE_MS);
     expect(later).not.toBe(s);
-    expect(roundsFromEvents(later.events)).toHaveLength(2);
+    expect(roundsFromEvents(later.events)).toHaveLength(3); // round 1 from the start, then the two pressed
   });
 
   it("a round start at the instant of a CHANGE is legal and makes no ~0 s block", () => {
@@ -188,10 +215,15 @@ describe("applyRoundStart — a transição", () => {
     s = applyMark(s, 4 * MIN);
     const blocks = blocksFromEvents(s.events);
     expect(blocks.map((b) => [b.sport, b.startAt, b.endAt, b.round])).toEqual([
-      ["rowing_indoor", 0, 3 * MIN, null],
-      ["strength", 3 * MIN, 4 * MIN, 0],
-      ["strength", 4 * MIN, null, 0],
+      ["rowing_indoor", 0, 3 * MIN, 0],
+      ["strength", 3 * MIN, 4 * MIN, 1],
+      ["strength", 4 * MIN, null, 1],
     ]);
+  });
+
+  it("is a no-op for a time before the open block began: a round cannot start in a block that is already closed", () => {
+    const s = applyChange(createLiveSession("rowing_indoor", 0), "strength", 3 * MIN);
+    expect(applyRoundStart(s, 3 * MIN - 1)).toBe(s);
   });
 
   it("uses the current time by default", () => {
@@ -200,5 +232,102 @@ describe("applyRoundStart — a transição", () => {
     const at = (next.events.at(-1) as { at: number }).at;
     expect(at).toBeGreaterThanOrEqual(before);
     expect(at).toBeLessThanOrEqual(Date.now());
+  });
+});
+
+/**
+ * Session 27 (CTO): round 1 opens with "Iniciar". The founder's test of
+ * session 26 pressed "Nova ronda" 6 s after starting, because round 1 had
+ * to be opened by hand, and that left a 6 s block in no round. The fix is
+ * not a duration threshold that swallows short blocks — a legitimate 4 s
+ * block would vanish one day — but a session that is in round 1 from its
+ * first instant, with no edge cases: nothing to press, nothing to absorb.
+ */
+describe("a ronda 1 abre com o Iniciar", () => {
+  it("a new session is in round 1 from its first millisecond, with one block and nothing of ~0 s", () => {
+    const s = createLiveSession("rowing_indoor", 1_000);
+    expect(s.events).toEqual([
+      { type: "started", at: 1_000, sport: "rowing_indoor" },
+      { type: "round_started", at: 1_000 },
+    ]);
+    expect(roundsFromEvents(s.events)).toEqual([{ index: 0, startAt: 1_000, endAt: null }]);
+    expect(blocksFromEvents(s.events)).toEqual([
+      { index: 0, segmentIndex: 0, sport: "rowing_indoor", startAt: 1_000, endAt: null, round: 0 },
+    ]);
+  });
+
+  it("'Nova ronda' right on top of 'Iniciar' writes nothing: round 1 is not said twice and no round is left empty", () => {
+    const s = createLiveSession("strength", 0);
+    expect(applyRoundStart(s, 0)).toBe(s);
+    expect(applyRoundStart(s, 1)).toBe(s);
+    expect(applyRoundStart(s, ROUND_DEDUPE_MS - 1)).toBe(s);
+    expect(roundsFromEvents(s.events)).toHaveLength(1);
+  });
+
+  it("'Nova ronda' pressed later is round 2, by the athlete's hand — and nothing is dropped for being short", () => {
+    // 6 s after the start, as in the founder's test. It is a real press with
+    // "Ronda 1" already on the screen: the log says what happened, and the
+    // 6 s stay where they were lived, in round 1.
+    const s = applyStop(applyRoundStart(createLiveSession("rowing_indoor", 0), 6_000), MIN);
+    expect(roundsFromEvents(s.events)).toEqual([
+      { index: 0, startAt: 0, endAt: 6_000 },
+      { index: 1, startAt: 6_000, endAt: MIN },
+    ]);
+    expect(blocksFromEvents(s.events).map((b) => [b.startAt, b.endAt, b.round])).toEqual([
+      [0, 6_000, 0],
+      [6_000, MIN, 1],
+    ]);
+  });
+
+  it("a whole circuit: every block is in a round, and the rounds are numbered from the start", () => {
+    let s = createLiveSession("rowing_indoor", 0);
+    s = applyChange(s, "strength", 2 * MIN);
+    s = applyChange(s, "rowing_indoor", 5 * MIN);
+    s = applyRoundStart(s, 5 * MIN); // on the block the Mudar just opened: tags it, splits nothing
+    s = applyChange(s, "strength", 7 * MIN);
+    s = applyStop(s, 10 * MIN);
+    expect(blocksFromEvents(s.events).map((b) => [b.sport, b.round])).toEqual([
+      ["rowing_indoor", 0],
+      ["strength", 0],
+      ["rowing_indoor", 1],
+      ["strength", 1],
+    ]);
+    expect(blocksFromEvents(s.events).filter((b) => b.endAt === b.startAt)).toHaveLength(0);
+  });
+
+  it("no sequence of presses leaves a round without a block, a block of ~0 s from a round, or two rounds at one instant", () => {
+    // A small deterministic generator: the property has to hold for every
+    // order of Mudar, Marca and Nova ronda, at any spacing, including 0 ms.
+    let seed = 20260919;
+    const next = (n: number) => {
+      seed = (seed * 1_103_515_245 + 12_345) % 2_147_483_648;
+      return seed % n;
+    };
+    const sports = ["strength", "rowing_indoor", "treadmill", "run"] as const;
+    for (let run = 0; run < 300; run++) {
+      let at = next(5) * 1_000;
+      let s = createLiveSession(sports[next(4)]!, at);
+      const steps = 1 + next(12);
+      for (let i = 0; i < steps; i++) {
+        at += [0, 0, 1, 500, 1_999, 2_000, 6_000, 90_000][next(8)]!;
+        const action = next(3);
+        if (action === 0) s = applyRoundStart(s, at);
+        else if (action === 1) s = applyMark(s, at);
+        else s = applyChange(s, sports[next(4)]!, at);
+      }
+      if (next(2) === 0) s = applyStop(s, at + next(3) * 1_000);
+      const rounds = roundsFromEvents(s.events);
+      const blocks = blocksFromEvents(s.events);
+      expect(rounds[0]?.startAt).toBe(s.createdAt);
+      for (let r = 1; r < rounds.length; r++) expect(rounds[r]!.startAt).toBeGreaterThan(rounds[r - 1]!.startAt);
+      // every block is in a round, and every round has at least one block
+      expect(blocks.every((b) => b.round !== null)).toBe(true);
+      expect([...new Set(blocks.map((b) => b.round))]).toEqual(rounds.map((r) => r.index));
+      // a round marker never closes a block of 0 ms by itself: the only one
+      // that can is a Mudar at the very instant the block opened, as before rounds existed
+      // (or a Parar at that instant, which closes whatever is open)
+      const closers = s.events.filter((e) => e.type === "sport_changed" || e.type === "stopped").map((e) => e.at);
+      expect(blocks.filter((b) => b.endAt === b.startAt && !closers.includes(b.startAt))).toEqual([]);
+    }
   });
 });
