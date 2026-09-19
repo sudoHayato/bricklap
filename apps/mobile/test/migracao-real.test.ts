@@ -28,6 +28,12 @@ describe.skipIf(!source || !existsSync(source))("migração v3 → v4 sobre a ba
     // Before: read the rows with the old SELECTs (no payload column yet).
     const db = openNodeDb(copy);
     const from = readSchemaVersion(db);
+    if (from >= 4) {
+      // A base pulled after session 26 is already v4: there is nothing to cross, and this proof is about crossing.
+      // `leitura-real` and `taxonomia-real` are the ones that read a v4 base.
+      console.log(`BRICKLAP_MIGRACAO ${JSON.stringify({ schema: `${from} (already migrated)` })}`);
+      return;
+    }
     const eventsBefore = db.raw.prepare("SELECT seq, session_id, type, at, sport, discarded FROM events ORDER BY seq").all() as Omit<EventRow, "payload">[];
     const samplesBefore = db.raw.prepare("SELECT seq, session_id, t, lat, lng, speed_mps, source, accuracy FROM samples ORDER BY seq").all() as (SampleRow & { seq: number })[];
     const sessionsBefore = replaySessions(

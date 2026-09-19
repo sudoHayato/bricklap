@@ -117,6 +117,20 @@ describe("payload — ida e volta, e barulho no que não se reconhece", () => {
     ).toEqual({ type: "recorded", at: T0, block: 1, origin: "declared", exercise: "flexões", values: { reps: 12 } });
   });
 
+  it("the kind of exercise (ADR 0012) travels in the payload, and only when the athlete chose one", () => {
+    const withKind = { type: "recorded", at: T0, block: 0, origin: "declared", exercise: "burpees", kind: "bodyweight", values: { reps: 15 } } as const;
+    expect(payloadOf(withKind)).toBe('{"block":0,"origin":"declared","exercise":"burpees","kind":"bodyweight","values":{"reps":15}}');
+    expect(parseRecordedPayload(payloadOf(withKind), 1)).toEqual({ block: 0, origin: "declared", exercise: "burpees", kind: "bodyweight", values: { reps: 15 } });
+    // A payload written before session 27 has no kind, and reads back without one.
+    expect(parseRecordedPayload('{"block":3,"origin":"declared","exercise":"bicep","values":{"reps":8,"loadKg":22.5}}', 265)).toEqual({
+      block: 3,
+      origin: "declared",
+      exercise: "bicep",
+      values: { reps: 8, loadKg: 22.5 },
+    });
+    expect(() => parseRecordedPayload('{"block":0,"origin":"declared","kind":"machine","values":{}}', 9)).toThrow(/seq=9: recorded payload has kind "machine"/);
+  });
+
   it("is loud about a recorded row whose payload the engine would never have written", () => {
     const bad = (payload: string | null) => () => parseRecordedPayload(payload, 9);
     expect(bad(null)).toThrow(/seq=9: recorded payload is missing/);
@@ -144,6 +158,49 @@ describe("payload — ida e volta, e barulho no que não se reconhece", () => {
   });
 });
 
+describe("SqliteSessionStore — o catálogo de exercícios sai do registo (ADR 0012)", () => {
+  it("is the seed on an empty base; a name the athlete types, with its kind, is an entry from then on — in every later session", () => {
+    const db = openNodeDb();
+    const store = new SqliteSessionStore(db, { flushIntervalMs: 0, now: () => T0 });
+    store.hydrate(T0);
+    expect(store.exerciseCatalog().map((e) => e.id)).toEqual(["flexoes", "push_ups", "bicep_haltere", "rdl"]);
+
+    const first = store.start("strength", T0);
+    store.record(first, { block: 0, origin: "declared", exercise: "Kettlebell swing", kind: "free_weight", values: { reps: 12, loadKg: 16 } }, T0 + MIN);
+    store.mark(T0 + 2 * MIN);
+    store.record(first, { block: 1, origin: "declared", exercise: "bicep", values: { reps: 8, loadKg: 22.5 } }, T0 + 3 * MIN);
+    store.stop(T0 + 4 * MIN);
+
+    const catalog = store.exerciseCatalog();
+    expect(catalog.map((e) => [e.id, e.kind, e.seed])).toEqual([
+      ["bicep_haltere", "free_weight", true], // used last
+      ["name:kettlebell swing", "free_weight", false],
+      ["flexoes", "bodyweight", true],
+      ["push_ups", "bodyweight", true],
+      ["rdl", "free_weight", true],
+    ]);
+    // What was written stays what was written: "bicep", not the catalogue's name and not an id.
+    expect(db.raw.prepare("SELECT payload FROM events WHERE type = 'recorded' ORDER BY seq").all()).toEqual([
+      { payload: '{"block":0,"origin":"declared","exercise":"Kettlebell swing","kind":"free_weight","values":{"reps":12,"loadKg":16}}' },
+      { payload: '{"block":1,"origin":"declared","exercise":"bicep","values":{"reps":8,"loadKg":22.5}}' },
+    ]);
+
+    // A second session, days later: the athlete's own exercise brings its kind, and the kind decides the fields.
+    const second = store.start("strength", T0 + 100 * MIN);
+    store.record(second, { block: 0, origin: "declared", exercise: "burpees", kind: "bodyweight", values: { reps: 15 } }, T0 + 101 * MIN);
+    store.mark(T0 + 102 * MIN);
+    expect(store.record(second, { block: 1, origin: "declared", exercise: "BURPEES", values: { reps: 12, loadKg: 10 } }, T0 + 103 * MIN)).toBe(true);
+    expect(blockRecord(store.live()!.events, 1).values).toEqual({ reps: { value: 12, origin: "declared", at: T0 + 103 * MIN } });
+    store.stop(T0 + 104 * MIN);
+    expect(store.exerciseCatalog()[0]).toMatchObject({ id: "name:burpees", kind: "bodyweight" });
+
+    // Delete the session that introduced it and the entry goes with it: nothing is stored apart from the log.
+    store.deleteSession(second);
+    expect(store.exerciseCatalog().some((e) => e.id === "name:burpees")).toBe(false);
+    expect(store.exerciseCatalog().some((e) => e.id === "name:kettlebell swing")).toBe(true);
+  });
+});
+
 describe("SqliteSessionStore — as duas portas", () => {
   function fresh() {
     const db = openNodeDb();
@@ -152,12 +209,13 @@ describe("SqliteSessionStore — as duas portas", () => {
     return { db, store };
   }
 
-  it("startRound writes one round_started row; the engine's refusals write nothing", () => {
+  it("start writes round 1 with the session; startRound writes one row per round after it; the engine's refusals write nothing", () => {
     const { db, store } = fresh();
     store.startRound(T0); // no live session: nothing
     expect(countRows(db, "events")).toBe(0);
     const id = store.start("rowing_indoor", T0);
-    store.startRound(T0);
+    expect(countRows(db, "events")).toBe(2); // started + the round 1 it opens (session 27)
+    store.startRound(T0); // "Nova ronda" on top of "Iniciar": round 1 is not said twice
     expect(countRows(db, "events")).toBe(2);
     store.startRound(T0 + 500); // within the dedupe window: nothing
     expect(countRows(db, "events")).toBe(2);
@@ -177,7 +235,7 @@ describe("SqliteSessionStore — as duas portas", () => {
     const { db, store } = fresh();
     const id = store.start("rowing_indoor", T0);
     expect(store.record(id, { block: 0, origin: "declared", values: { meters: 500 } }, T0 + 2 * MIN)).toBe(true);
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
     expect(blockRecord(store.live()!.events, 0).values.meters!.value).toBe(500);
     expect(store.byId(id)!.events).toEqual(store.live()!.events);
     // Nothing to record → nothing written, and the live copy is the same reference.
@@ -185,7 +243,7 @@ describe("SqliteSessionStore — as duas portas", () => {
     expect(store.record(id, { block: 0, origin: "declared", values: { reps: 10 } }, T0 + 3 * MIN)).toBe(false);
     expect(store.record(id, { block: 5, origin: "declared", values: { meters: 10 } }, T0 + 3 * MIN)).toBe(false);
     expect(store.live()).toBe(live);
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
   });
 
   it("record after the end writes to a stopped session by id, appending — never rewriting — and replays the last value", () => {
@@ -199,6 +257,7 @@ describe("SqliteSessionStore — as duas portas", () => {
     const rows = db.raw.prepare("SELECT type, payload FROM events ORDER BY seq").all();
     expect(rows).toEqual([
       { type: "started", payload: null },
+      { type: "round_started", payload: null },
       { type: "recorded", payload: '{"block":0,"origin":"declared","values":{"speedKmh":9.5}}' },
       { type: "stopped", payload: null },
       { type: "recorded", payload: '{"block":0,"origin":"declared","values":{"speedKmh":10}}' },

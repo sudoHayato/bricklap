@@ -6,18 +6,21 @@ import {
   applyRecovered,
   applyRoundStart,
   applyStop,
+  catalogFromMentions,
   createLiveSession,
   currentSport,
+  exerciseMentions,
   isLive,
   newId,
   nowMs,
+  type CatalogExercise,
   type RecordInput,
   type Sample,
   type Session,
   type SessionEvent,
   type Sport,
 } from "@bricklap/engine";
-import { RECOVERED_HEADLESS_TYPE, payloadOf, replaySessions, type EventRow, type SampleRow, type StoredSession } from "./replay";
+import { RECOVERED_HEADLESS_TYPE, eventFromRow, payloadOf, replaySessions, type EventRow, type SampleRow, type StoredSession } from "./replay";
 import { migrate } from "./schema";
 import type { SqlDb } from "./sql";
 
@@ -57,6 +60,8 @@ export interface SessionStore {
    * nothing to record (unknown session or block, no applicable field).
    */
   record(sessionId: string, input: RecordInput, at?: number): boolean;
+  /** The seed exercises plus the ones this athlete's own log names, most recently used first (ADR 0012). */
+  exerciseCatalog(): CatalogExercise[];
   stop(at?: number): string | null;
   pushSample(sample: Sample): void;
   discardLive(at?: number): void;
@@ -166,8 +171,10 @@ export class SqliteSessionStore implements SessionStore {
 
   start(sport: Sport, at = this.now()): string {
     if (this.liveSession) return this.liveSession.id;
+    // `started` and the round 1 it opens (session 27), in ONE transaction:
+    // a session is never on disk with one and not the other.
     const session = createLiveSession(sport, at, newId());
-    this.writeEvent(session.id, session.events[0]!, false);
+    this.writeEvents(session.id, session.events, false);
     this.liveSession = session;
     return session.id;
   }
@@ -214,11 +221,33 @@ export class SqliteSessionStore implements SessionStore {
     // do not need the samples, and a stopped session's log is complete.
     const session = live?.id === sessionId ? live : this.eventsOnly(sessionId);
     if (!session) return false;
-    const next = applyRecord(session, input, at);
+    const next = applyRecord(session, input, at, this.exerciseCatalog());
     if (next === session) return false;
     this.writeEvent(sessionId, next.events[next.events.length - 1]!, false);
     if (live?.id === sessionId) this.liveSession = next;
     return true;
+  }
+
+  /**
+   * The exercise catalogue as this athlete's log extends it (ADR 0012): the
+   * seed, plus every name ever recorded, with the kind last chosen for it,
+   * most recently used first. Derived on demand from the `recorded` rows —
+   * there is no exercises table: an exercise enters by being used, and one
+   * that is in no session any more is in no catalogue either.
+   */
+  exerciseCatalog(): CatalogExercise[] {
+    this.ensureMigrated();
+    const rows = this.db.getAllSync<EventRow>(`${SELECT_EVENTS} WHERE type = 'recorded' ORDER BY seq`, []);
+    const bySession = new Map<string, SessionEvent[]>();
+    for (const row of rows) {
+      let events = bySession.get(row.session_id);
+      if (!events) {
+        events = [];
+        bySession.set(row.session_id, events);
+      }
+      events.push(eventFromRow(row));
+    }
+    return catalogFromMentions([...bySession.values()].flatMap((events) => exerciseMentions(events)));
   }
 
   stop(at = this.now()): string | null {
@@ -376,6 +405,10 @@ export class SqliteSessionStore implements SessionStore {
    * whose row type differs from the engine's (`recovered_headless`).
    */
   private writeEvent(sessionId: string, event: SessionEvent, discarded: boolean, origin: RecoveryOrigin = "user"): void {
+    this.writeEvents(sessionId, [event], discarded, origin);
+  }
+
+  private writeEvents(sessionId: string, events: readonly SessionEvent[], discarded: boolean, origin: RecoveryOrigin = "user"): void {
     if (this.flushTimer !== null) {
       clearTimeout(this.flushTimer);
       this.flushTimer = null;
@@ -385,18 +418,20 @@ export class SqliteSessionStore implements SessionStore {
     const t0 = this.clock();
     this.db.withTransactionSync(() => {
       for (const p of batch) this.insertSample(p.sessionId, p.sample);
-      const sport = event.type === "started" || event.type === "sport_changed" ? event.sport : null;
-      const type = event.type === "recovered" && origin === "headless" ? RECOVERED_HEADLESS_TYPE : event.type;
-      this.db.runSync("INSERT INTO events (session_id, type, at, sport, discarded, payload) VALUES (?, ?, ?, ?, ?, ?)", [
-        sessionId,
-        type,
-        event.at,
-        sport,
-        discarded ? 1 : 0,
-        payloadOf(event),
-      ]);
+      for (const event of events) {
+        const sport = event.type === "started" || event.type === "sport_changed" ? event.sport : null;
+        const type = event.type === "recovered" && origin === "headless" ? RECOVERED_HEADLESS_TYPE : event.type;
+        this.db.runSync("INSERT INTO events (session_id, type, at, sport, discarded, payload) VALUES (?, ?, ?, ?, ?, ?)", [
+          sessionId,
+          type,
+          event.at,
+          sport,
+          discarded ? 1 : 0,
+          payloadOf(event),
+        ]);
+      }
     });
-    this.onTiming?.({ kind: "event", ms: this.clock() - t0, rows: batch.length + 1 });
+    this.onTiming?.({ kind: "event", ms: this.clock() - t0, rows: batch.length + events.length });
   }
 
   private insertSample(sessionId: string, s: Sample): void {
