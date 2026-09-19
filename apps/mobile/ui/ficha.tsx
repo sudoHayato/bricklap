@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { Modal, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import {
+  EXERCISE_KINDS,
   VALUE_FIELDS_BY_SPORT,
   blockFigures,
   blockMetrics,
   blockRecord,
+  exerciseIdentity,
   exerciseKey,
-  exercisesUsed,
+  fieldsOfKind,
   formatDuration,
+  resolveExercise,
   type Block,
+  type CatalogExercise,
+  type ExerciseKind,
   type RecordInput,
   type RecordedValues,
   type Session,
@@ -16,6 +21,7 @@ import {
 } from "@bricklap/engine";
 import { formatDistanceForUnit, formatSpeedForUnit } from "@bricklap/i18n";
 import { t } from "../i18n";
+import { SeloDeclarado } from "./estrutura";
 import { Icone } from "./icones";
 import { numero, texto } from "./tipografia";
 import { COR_DESPORTO, E, R, TOQUE, type Superficie, type Tokens } from "./tokens";
@@ -31,7 +37,10 @@ import { COR_DESPORTO, E, R, TOQUE, type Superficie, type Tokens } from "./token
  *
  * Campos por desporto (`VALUE_FIELDS_BY_SPORT`): remo, metros e o split da
  * máquina; passadeira, km/h ou distância, o outro calculado com o tempo do
- * bloco; exercícios, o nome, repetições e carga. Cada campo é rótulo à
+ * bloco. Num bloco de exercícios manda o TIPO (ADR 0012): peso livre mostra
+ * repetições e carga, peso do corpo só repetições; o tipo vem do catálogo
+ * pelo nome escrito, ou é o atleta que o escolhe — e é assim que um
+ * exercício novo entra, sem programador. Cada campo é rótulo à
  * esquerda e −/+ de 56 px com o valor à direita; o valor também se escreve
  * à mão. Um campo calculado mostra o valor sem controlo e diz de onde vem.
  */
@@ -112,6 +121,8 @@ export function FichaValores(props: {
   now: number;
   /** Os blocos a que a ficha pode escrever, do mais recente ao mais antigo. */
   blocos: Block[];
+  /** O catálogo de exercícios: a partida mais o que o registo deste atleta já nomeou (ADR 0012). */
+  catalogo: readonly CatalogExercise[];
   onGuardar: (block: Block, input: RecordInput) => void;
   onCancelar: () => void;
 }) {
@@ -119,6 +130,8 @@ export function FichaValores(props: {
   const [escolhido, setEscolhido] = useState(0);
   const [rascunho, setRascunho] = useState<Rascunho>({});
   const [exercicio, setExercicio] = useState("");
+  /** O tipo que o atleta escolheu à mão nesta ficha; `null` deixa o catálogo decidir pelo nome. */
+  const [tipo, setTipo] = useState<ExerciseKind | null>(null);
   const [aEditar, setAEditar] = useState<{ field: ValueField; text: string } | null>(null);
   /** Na passadeira: qual dos dois campos o atleta indica; o outro é calculado. */
   const [passadeiraPor, setPassadeiraPor] = useState<"speedKmh" | "meters">("speedKmh");
@@ -140,6 +153,7 @@ export function FichaValores(props: {
     }
     setRascunho(inicial);
     setExercicio(record.exercise ?? "");
+    setTipo(record.kind);
     setAEditar(null);
     if (block.sport === "treadmill") setPassadeiraPor(record.values.meters && !record.values.speedKmh ? "meters" : "speedKmh");
     // Só o bloco escolhido interessa: a sessão muda a cada tick e não deve repor o rascunho.
@@ -147,8 +161,16 @@ export function FichaValores(props: {
 
   if (!block) return null;
 
-  const campos = VALUE_FIELDS_BY_SPORT[block.sport];
   const record = blockRecord(session.events, block.index);
+  /** O tipo em vigor: o escolhido à mão, senão o que o catálogo sabe do nome escrito. */
+  const tipoDoNome = resolveExercise(exercicio, props.catalogo)?.kind ?? null;
+  const tipoEmVigor = block.sport === "strength" ? (tipo ?? tipoDoNome) : null;
+  const campos = fieldsOfKind(block.sport, tipoEmVigor);
+  const mudarExercicio = (nome: string) => {
+    // O tipo escolhido pertence ao exercício para que foi escolhido: outro exercício, outra escolha.
+    if (exerciseIdentity(nome, props.catalogo) !== exerciseIdentity(exercicio, props.catalogo)) setTipo(null);
+    setExercicio(nome);
+  };
   const segundos = blockMetrics(session, block, now).durationMs / 1000;
   /**
    * O valor de um campo, com o que está a ser escrito à mão já contado: no
@@ -178,11 +200,27 @@ export function FichaValores(props: {
       if (depois === null && antes === null) continue;
       values[field] = depois;
     }
+    // Um campo que o tipo novo não tem e que já tinha valor limpa-se: o
+    // bicep que passa a flexões não fica com 12,5 kg. O valor antigo
+    // continua no registo; o que muda é o que o bloco mostra.
+    for (const field of VALUE_FIELDS_BY_SPORT[block.sport]) {
+      if (!campos.includes(field) && record.values[field]) values[field] = null;
+    }
     const nomeAntes = exerciseKey(record.exercise);
     const nomeDepois = exerciseKey(exercicio);
     const input: RecordInput = { block: block.index, origin: "declared", values };
     if (nomeDepois !== null && nomeDepois !== nomeAntes) input.exercise = exercicio.trim();
-    if (Object.keys(values).length === 0 && input.exercise === undefined) {
+    // O tipo vai no evento quando foi o atleta a dizê-lo: porque o escolheu
+    // à mão e difere do que o catálogo diria, ou porque o exercício é dele
+    // (não é de partida) e cada sessão tem de se ler sozinha.
+    const mesmoExercicio = exerciseIdentity(exercicio, props.catalogo) === exerciseIdentity(record.exercise, props.catalogo);
+    const tipoJaEscrito = mesmoExercicio ? record.kind : null;
+    const dePartida = resolveExercise(exercicio, props.catalogo)?.seed === true;
+    if (block.sport === "strength" && tipoEmVigor !== null && tipoEmVigor !== tipoJaEscrito) {
+      const catalogoBasta = dePartida && tipoEmVigor === tipoDoNome;
+      if (!catalogoBasta && (nomeDepois !== null || record.exercise !== null || tipo !== null)) input.kind = tipoEmVigor;
+    }
+    if (Object.keys(values).length === 0 && input.exercise === undefined && input.kind === undefined) {
       props.onCancelar();
       return;
     }
@@ -246,9 +284,13 @@ export function FichaValores(props: {
     <View key={`${field}-calc`} style={{ paddingVertical: E.e3, borderTopWidth: 1, borderTopColor: tokens.linha, gap: 2 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", gap: E.e2 }}>
         <Text style={texto(16, 800, tokens.tinta)}>{rotuloDoCampo(field)}</Text>
-        <Text testID={`ficha-${field}-calculado`} style={numero(22, 800, tokens.tinta)}>
-          {formatarCampo(field, value)}
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "baseline", gap: 6 }}>
+          <Text testID={`ficha-${field}-calculado`} style={numero(22, 800, tokens.tinta)}>
+            {formatarCampo(field, value)}
+          </Text>
+          {/* Calculado a partir do que o atleta escreveu: declarado também (ADR 0011 §3a). */}
+          <SeloDeclarado tokens={tokens} rotulo={t("mobile.declaredShort")} descricao={t("mobile.declaredTag")} />
+        </View>
       </View>
       <Text style={texto(12.5, 400, tokens.tinta2)}>{explicacao}</Text>
     </View>
@@ -302,8 +344,8 @@ export function FichaValores(props: {
         </>
       );
     }
-    // Exercícios: o nome, e depois repetições e carga.
-    const usados = exercisesUsed(session.events);
+    // Exercícios: o nome, o tipo, e os campos que o tipo tem.
+    const sugestoes = props.catalogo.slice(0, 8);
     return (
       <>
         <View style={{ paddingTop: E.e3, gap: E.e2 }}>
@@ -312,7 +354,7 @@ export function FichaValores(props: {
             testID="ficha-exercicio"
             accessibilityLabel={t("mobile.exercise")}
             value={exercicio}
-            onChangeText={setExercicio}
+            onChangeText={mudarExercicio}
             placeholder={t("mobile.exercisePlaceholder")}
             placeholderTextColor={tokens.tinta3}
             autoCapitalize="none"
@@ -326,22 +368,37 @@ export function FichaValores(props: {
               backgroundColor: tokens.sup,
             }}
           />
-          {usados.length > 0 ? (
+          {sugestoes.length > 0 ? (
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: E.e2 }}>
-              {usados.map((nome) => (
+              {sugestoes.map((entrada) => (
                 <Chip
-                  key={nome}
+                  key={entrada.id}
                   tokens={tokens}
-                  rotulo={nome}
-                  ativo={exerciseKey(nome) === exerciseKey(exercicio)}
-                  onPress={() => setExercicio(nome)}
+                  rotulo={entrada.name}
+                  ativo={exerciseIdentity(entrada.name, props.catalogo) === exerciseIdentity(exercicio, props.catalogo)}
+                  testID={`ficha-sugestao-${entrada.id}`}
+                  onPress={() => mudarExercicio(entrada.name)}
                 />
               ))}
             </View>
           ) : null}
         </View>
-        {campo("reps")}
-        {campo("loadKg")}
+        <View style={{ paddingTop: E.e3, gap: E.e2 }}>
+          <Text style={texto(16, 800, tokens.tinta)}>{t("mobile.exerciseKind")}</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: E.e2 }}>
+            {EXERCISE_KINDS.map((k) => (
+              <Chip
+                key={k}
+                tokens={tokens}
+                rotulo={`${rotuloDoTipo(k)} · ${detalheDoTipo(k)}`}
+                ativo={tipoEmVigor === k}
+                testID={`ficha-tipo-${k}`}
+                onPress={() => setTipo(k)}
+              />
+            ))}
+          </View>
+        </View>
+        {campos.map((field) => campo(field))}
       </>
     );
   };
@@ -441,6 +498,14 @@ export function FichaValores(props: {
   );
 }
 
+export function rotuloDoTipo(kind: ExerciseKind): string {
+  return kind === "free_weight" ? t("mobile.kindFreeWeight") : t("mobile.kindBodyweight");
+}
+
+function detalheDoTipo(kind: ExerciseKind): string {
+  return kind === "free_weight" ? t("mobile.kindFreeWeightDetail") : t("mobile.kindBodyweightDetail");
+}
+
 function unidade(field: ValueField): string {
   switch (field) {
     case "meters":
@@ -505,6 +570,15 @@ export function Chip(props: { tokens: Tokens; rotulo: string; ativo: boolean; te
       </Text>
     </Pressable>
   );
+}
+
+/**
+ * Se o que o bloco mostra é declarado (ADR 0011 §3a): basta um número
+ * declarado, ou derivado de um declarado, para a linha inteira levar a
+ * marca. Um bloco com GPS nunca: a distância dele vem das amostras.
+ */
+export function valoresDeclarados(session: Session, block: Block, now: number): boolean {
+  return Object.values(blockFigures(session, block, now)).some((f) => f.origin === "declared");
 }
 
 /** O que um bloco mostra na sua linha: os valores registados e derivados, numa frase curta. */

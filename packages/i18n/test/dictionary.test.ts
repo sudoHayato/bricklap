@@ -48,8 +48,8 @@ describe("en and pt-PT dictionaries — mesmo conjunto de chaves", () => {
   });
 
   it("names the sports without GPS the way the founder asked (session 05)", () => {
-    expect(en.sport.strength.label).toBe("Strength");
-    expect(ptPT.sport.strength.label).toBe("Força");
+    expect(en.sport.strength.label).toBe("Gym");
+    expect(ptPT.sport.strength.label).toBe("Ginásio");
     expect(en.sport.rowing_indoor.label).toBe("Indoor rowing");
     expect(ptPT.sport.rowing_indoor.label).toBe("Remo indoor");
     expect(en.sport.treadmill.label).toBe("Treadmill");

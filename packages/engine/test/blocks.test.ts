@@ -144,7 +144,7 @@ describe("applyMark", () => {
     const next = applyMark(s, 5_000);
     expect(next.events.at(-1)).toEqual({ type: "marked", at: 5_000 });
     expect(next).not.toBe(s);
-    expect(s.events).toHaveLength(1);
+    expect(s.events).toHaveLength(2);
   });
 
   it("a stopped session is returned untouched", () => {
@@ -161,7 +161,7 @@ describe("applyMark", () => {
     const s = applyMark(createLiveSession("strength", 1_000, "s1"), 5_000);
     expect(applyMark(s, 5_000)).toBe(s);
     expect(applyMark(s, 4_999)).toBe(s);
-    expect(applyMark(s, 5_001).events).toHaveLength(3);
+    expect(applyMark(s, 5_001).events).toHaveLength(4);
   });
 
   it("defaults to the current time", () => {

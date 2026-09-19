@@ -116,7 +116,11 @@ export function blocksFromEvents(events: SessionEvent[]): Block[] {
   let current: Block | null = null;
   let segmentIndex = -1;
   // -1 until the first `round_started`: blocks before it are in no round.
+  // Since session 27 a new session writes that marker together with
+  // `started`, so its first block is in round 1 from the first instant;
+  // sessions recorded before that have none, and their blocks stay at null.
   let round = -1;
+  let roundStartAt = Number.NEGATIVE_INFINITY;
   const roundOf = () => (round < 0 ? null : round);
 
   for (const event of events) {
@@ -143,6 +147,14 @@ export function blocksFromEvents(events: SessionEvent[]): Block[] {
       // at the same instant: then that block is the first of the round and
       // no block of ~0 s is made. The guard is here, in the derivation, so
       // that a marker at exactly the boundary is legal to write.
+      //
+      // A marker that does not come AFTER the round already open is that
+      // same round said twice (the one `started` writes, and a "Nova ronda"
+      // at the same instant): it opens nothing. The rule is about order,
+      // not duration — no block is ever dropped for being short — and it is
+      // what keeps a round from existing with no block in it.
+      if (event.at <= roundStartAt) continue;
+      roundStartAt = event.at;
       round++;
       if (event.at > current.startAt) {
         const sport: Sport = current.sport;
@@ -506,14 +518,44 @@ export function formatDay(ts: number, locale?: string) {
   });
 }
 
+/**
+ * A new live session. Round 1 opens with it (CTO, session 27): the
+ * `round_started` at the same instant as `started` tags the first block
+ * instead of splitting it, so a session is in round 1 from its first
+ * millisecond and "Nova ronda" only ever means round 2 and up. Nobody has
+ * to press anything to open the first round — which is what used to leave
+ * a block of a few seconds before it.
+ */
 export function createLiveSession(sport: Sport, at = nowMs(), id = newId()): Session {
   return {
     id,
     createdAt: at,
     status: "live",
-    events: [{ type: "started", at, sport }],
+    events: [
+      { type: "started", at, sport },
+      { type: "round_started", at },
+    ],
     samples: [],
   };
+}
+
+/**
+ * The instants at which the rounds of a session really start, strictly
+ * increasing: a `round_started` before any `started`, or not after the
+ * round already open, is not a round. `blocksFromEvents` applies the same
+ * rule inline, so a round and the blocks tagged with it always agree.
+ */
+export function roundStartsFromEvents(events: SessionEvent[]): number[] {
+  const starts: number[] = [];
+  let open = false;
+  for (const event of events) {
+    if (event.type === "started") open = true;
+    else if (event.type === "round_started" && open) {
+      const last = starts[starts.length - 1];
+      if (last === undefined || event.at > last) starts.push(event.at);
+    }
+  }
+  return starts;
 }
 
 export function applyChange(session: Session, sport: Sport, at = nowMs()): Session {

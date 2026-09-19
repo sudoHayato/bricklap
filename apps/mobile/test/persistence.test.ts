@@ -210,21 +210,22 @@ describe("SqliteSessionStore", () => {
     const { db, store } = fresh();
     store.hydrate(T0);
     const id = store.start("run", T0);
-    expect(countRows(db, "events")).toBe(1);
-    store.changeSport("bike", T0 + 5_000);
     expect(countRows(db, "events")).toBe(2);
+    store.changeSport("bike", T0 + 5_000);
+    expect(countRows(db, "events")).toBe(3);
     // Same sport again: nothing to record, nothing written.
     store.changeSport("bike", T0 + 6_000);
-    expect(countRows(db, "events")).toBe(2);
-    expect(store.stop(T0 + 9_000)).toBe(id);
     expect(countRows(db, "events")).toBe(3);
+    expect(store.stop(T0 + 9_000)).toBe(id);
+    expect(countRows(db, "events")).toBe(4);
     expect(store.live()).toBeNull();
     // Stopping again is a no-op: there is no live session.
     expect(store.stop(T0 + 10_000)).toBeNull();
-    expect(countRows(db, "events")).toBe(3);
+    expect(countRows(db, "events")).toBe(4);
     const rows = db.raw.prepare("SELECT type, at, sport, discarded FROM events ORDER BY seq").all();
     expect(rows).toEqual([
       { type: "started", at: T0, sport: "run", discarded: 0 },
+      { type: "round_started", at: T0, sport: null, discarded: 0 },
       { type: "sport_changed", at: T0 + 5_000, sport: "bike", discarded: 0 },
       { type: "stopped", at: T0 + 9_000, sport: null, discarded: 0 },
     ]);
@@ -235,7 +236,7 @@ describe("SqliteSessionStore", () => {
     store.hydrate(T0);
     const id = store.start("run", T0);
     expect(store.start("walk", T0 + 1_000)).toBe(id);
-    expect(countRows(db, "events")).toBe(1);
+    expect(countRows(db, "events")).toBe(2);
   });
 
   it("discardLive is a STOP with the flag set, not a DELETE", () => {
@@ -245,7 +246,7 @@ describe("SqliteSessionStore", () => {
     store.pushSample(sample(T0, 0));
     store.discardLive(T0 + 3_000);
     expect(store.live()).toBeNull();
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
     expect(countRows(db, "samples")).toBe(1);
     const [summary] = store.summaries();
     expect(summary).toMatchObject({ discarded: true, sampleCount: 1 });
@@ -295,10 +296,11 @@ describe("SqliteSessionStore", () => {
     expect(isLive(live!)).toBe(true);
     expect(live!.events).toEqual([
       { type: "started", at: T0, sport: "walk" },
+      { type: "round_started", at: T0 },
       { type: "recovered", at: T0 + 60_000 },
     ]);
     expect(live!.samples).toHaveLength(2);
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
     // The recovered event is what the engine itself would append.
     const expected = applyRecovered(
       { ...createLiveSession("walk", T0, id), samples: live!.samples },
@@ -319,6 +321,7 @@ describe("SqliteSessionStore", () => {
     const live = task.hydrate(T0 + 30_000, "headless");
     expect(live!.events).toEqual([
       { type: "started", at: T0, sport: "walk" },
+      { type: "round_started", at: T0 },
       { type: "recovered", at: T0 + 30_000 },
     ]);
     task.pushSample(sample(T0 + 31_000, 1));
@@ -328,11 +331,12 @@ describe("SqliteSessionStore", () => {
     const rows = db.raw.prepare("SELECT type, at, sport FROM events WHERE session_id = ? ORDER BY seq").all(id);
     expect(rows).toEqual([
       { type: "started", at: T0, sport: "walk" },
+      { type: "round_started", at: T0, sport: null },
       { type: "recovered_headless", at: T0 + 30_000, sport: null },
       { type: "recovered", at: T0 + 90_000, sport: null },
     ]);
     // The engine never sees the difference; the summary counts the samples of both contexts.
-    expect(app.byId(id)!.events.map((e) => e.type)).toEqual(["started", "recovered", "recovered"]);
+    expect(app.byId(id)!.events.map((e) => e.type)).toEqual(["started", "round_started", "recovered", "recovered"]);
     expect(app.summaries()[0]!.sampleCount).toBe(2);
     expect(() => replaySessions([{ seq: 1, session_id: id, type: "recovered_headless", at: T0, sport: null, discarded: 0, payload: null }], [])).toThrow(
       /begins with recovered/,
@@ -360,6 +364,7 @@ describe("SqliteSessionStore", () => {
     const rows = db.raw.prepare("SELECT type, at FROM events WHERE session_id = ? ORDER BY seq").all(id);
     expect(rows).toEqual([
       { type: "started", at: T0 },
+      { type: "round_started", at: T0 },
       { type: "recovered_headless", at: T0 + 9_000 },
       { type: "recovered", at: T0 + 60_000 },
       { type: "recovered_headless", at: T0 + 120_000 },
@@ -378,7 +383,7 @@ describe("SqliteSessionStore", () => {
     expect(countRows(db, "samples")).toBe(1);
     expect(live!.id).toBe(id);
     expect(live!.samples).toHaveLength(1);
-    expect(live!.events.map((e) => e.type)).toEqual(["started", "recovered"]);
+    expect(live!.events.map((e) => e.type)).toEqual(["started", "round_started", "recovered"]);
   });
 
   it("hydrate on a stopped session returns null and writes nothing", () => {
@@ -389,7 +394,7 @@ describe("SqliteSessionStore", () => {
     first.stop(T0 + 1_000);
     const second = new SqliteSessionStore(db, { flushIntervalMs: 0 });
     expect(second.hydrate(T0 + 5_000)).toBeNull();
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
   });
 
   it("with two live sessions on disk, recovers the newest one", () => {
@@ -427,13 +432,13 @@ describe("SqliteSessionStore", () => {
         .prepare("SELECT (SELECT MAX(seq) FROM samples) AS s, (SELECT MAX(seq) FROM events) AS e")
         .get() as { s: number; e: number };
       expect(seqs.s).toBe(3);
-      expect(seqs.e).toBe(2);
+      expect(seqs.e).toBe(3);
       // No timer left behind once the event has drained the buffer.
       vi.advanceTimersByTime(10_000);
       expect(countRows(db, "samples")).toBe(3);
 
       expect(timings.map((t) => [t.kind, t.rows])).toEqual([
-        ["event", 1],
+        ["event", 2], // `started` and the round 1 it opens, one transaction
         ["batch", 2],
         ["event", 2],
       ]);
@@ -558,6 +563,7 @@ describe("Marca — o evento que fecha um bloco (Fase 4)", () => {
     const rows = db.raw.prepare("SELECT type, at, sport FROM events ORDER BY seq").all();
     expect(rows).toEqual([
       { type: "started", at: T0, sport: "strength" },
+      { type: "round_started", at: T0, sport: null },
       { type: "marked", at: T0 + 60_000, sport: null },
       { type: "marked", at: T0 + 150_000, sport: null },
       { type: "stopped", at: T0 + 200_000, sport: null },
@@ -589,10 +595,10 @@ describe("Marca — o evento que fecha um bloco (Fase 4)", () => {
     // Same instant as the block's start, and then earlier: a zero-length block.
     store.mark(T0);
     store.mark(T0 - 1);
-    expect(countRows(db, "events")).toBe(1);
+    expect(countRows(db, "events")).toBe(2);
     store.stop(T0 + 1_000);
     store.mark(T0 + 2_000);
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
   });
 
   it("a marked session survives a hydrate exactly as it was written", () => {
@@ -603,7 +609,7 @@ describe("Marca — o evento que fecha um bloco (Fase 4)", () => {
     const live = store.live()!;
     const outro = new SqliteSessionStore(db, { flushIntervalMs: 0, now: () => T0 + 40_000 });
     const recuperada = outro.hydrate(T0 + 40_000)!;
-    expect(recuperada.events.slice(0, 2)).toEqual(live.events);
+    expect(recuperada.events.slice(0, 3)).toEqual(live.events);
     expect(recuperada.events.at(-1)).toEqual({ type: "recovered", at: T0 + 40_000 });
   });
 });
@@ -624,8 +630,8 @@ describe("deleteSession — o apagar a pedido do atleta (RGPD, ADR 0006)", () =>
     const b = store.start("strength", T0 + 3_000);
     store.stop(T0 + 4_000);
 
-    expect(store.deleteSession(a)).toEqual({ events: 2, samples: 2 });
-    expect(countRows(db, "events")).toBe(2);
+    expect(store.deleteSession(a)).toEqual({ events: 3, samples: 2 });
+    expect(countRows(db, "events")).toBe(3);
     expect(countRows(db, "samples")).toBe(0);
     expect(store.byId(a)).toBeUndefined();
     expect(store.byId(b)).toBeDefined();
@@ -638,7 +644,7 @@ describe("deleteSession — o apagar a pedido do atleta (RGPD, ADR 0006)", () =>
     store.start("run", T0);
     store.stop(T0 + 1_000);
     expect(store.deleteSession("nope")).toBeNull();
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
   });
 
   it("deleting the live session ends it in memory and drops its buffered samples", () => {
@@ -647,7 +653,7 @@ describe("deleteSession — o apagar a pedido do atleta (RGPD, ADR 0006)", () =>
     store.hydrate(T0);
     const id = store.start("run", T0);
     store.pushSample(sample(T0 + 1_000, 1));
-    expect(store.deleteSession(id)).toEqual({ events: 1, samples: 0 });
+    expect(store.deleteSession(id)).toEqual({ events: 2, samples: 0 });
     expect(store.live()).toBeNull();
     // The buffered sample must not come back and recreate an orphan session.
     expect(store.flush()).toBe(0);
@@ -661,7 +667,7 @@ describe("deleteSession — o apagar a pedido do atleta (RGPD, ADR 0006)", () =>
     store.start("run", T0);
     store.discardLive(T0 + 1_000);
     // Discard keeps the rows and marks them.
-    expect(countRows(db, "events")).toBe(2);
+    expect(countRows(db, "events")).toBe(3);
     expect(store.summaries()[0]!.discarded).toBe(true);
     const id = store.summaries()[0]!.session.id;
     store.deleteSession(id);

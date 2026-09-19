@@ -139,6 +139,26 @@ export function Tabs(props: {
 }
 
 /**
+ * A marca de um valor DECLARADO (ADR 0011 §3a, DESIGN.md §6): "decl.", em
+ * Inter, maiúsculas pequenas, `tinta2`, colada ao número. Tudo o que o
+ * atleta escreveu — e tudo o que a app calculou a partir disso, o ritmo
+ * incluído — leva-a; um número medido nunca. É uma palavra e não uma cor
+ * ou um peso de letra porque tem de se ler ao sol, nos dois temas e a uma
+ * cor, e porque um leitor de ecrã lê palavras.
+ */
+export function SeloDeclarado(props: { tokens: Tokens; rotulo: string; descricao: string }) {
+  return (
+    <Text
+      testID="selo-declarado"
+      accessibilityLabel={props.descricao}
+      style={texto(10.5, 700, props.tokens.tinta2, { letterSpacing: 0.6, textTransform: "uppercase" })}
+    >
+      {props.rotulo}
+    </Text>
+  );
+}
+
+/**
  * Uma linha da lista de blocos: ícone + nome | valor | tempo. Com `onPress`
  * a linha é um botão — no resumo abre a ficha de valores desse bloco
  * (ADR 0011, a porta do fim). `porPreencher` marca, em acento, um bloco
@@ -150,6 +170,8 @@ export function LinhaBloco(props: {
   corDoIcone: string;
   nome: string;
   valor?: string | null;
+  /** O valor é declarado, ou derivado de um declarado: leva a marca (`SeloDeclarado`). */
+  declarado?: { rotulo: string; descricao: string };
   tempo: string;
   primeira?: boolean;
   porPreencher?: string;
@@ -165,7 +187,10 @@ export function LinhaBloco(props: {
         </Text>
       </View>
       {props.valor ? (
-        <Text style={numero(14.5, 800, props.tokens.tinta)}>{props.valor}</Text>
+        <View style={{ flexDirection: "row", alignItems: "baseline", gap: 5 }}>
+          <Text style={numero(14.5, 800, props.tokens.tinta)}>{props.valor}</Text>
+          {props.declarado ? <SeloDeclarado tokens={props.tokens} {...props.declarado} /> : null}
+        </View>
       ) : props.porPreencher ? (
         <Text style={texto(12.5, 700, props.tokens.acentoTinta)}>{props.porPreencher}</Text>
       ) : null}

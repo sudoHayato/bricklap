@@ -1,6 +1,8 @@
 import {
+  EXERCISE_KINDS,
   SPORTS,
   VALUE_FIELDS,
+  type ExerciseKind,
   type RecordedValues,
   type Sample,
   type Session,
@@ -27,6 +29,8 @@ export type RecordedPayload = {
   block: number;
   origin: ValueOrigin;
   exercise?: string;
+  /** The kind of exercise the athlete chose (ADR 0012). Absent on every payload written before session 27. */
+  kind?: ExerciseKind;
   values: RecordedValues;
 };
 
@@ -36,6 +40,7 @@ export function payloadOf(event: SessionEvent): string | null {
     block: event.block,
     origin: event.origin,
     ...(event.exercise === undefined ? {} : { exercise: event.exercise }),
+    ...(event.kind === undefined ? {} : { kind: event.kind }),
     values: event.values,
   };
   return JSON.stringify(payload);
@@ -58,6 +63,7 @@ export function parseRecordedPayload(payload: string | null, seq: number): Recor
   if (typeof o["block"] !== "number" || !Number.isInteger(o["block"]) || o["block"] < 0) return bad("has no block index");
   if (o["origin"] !== "declared" && o["origin"] !== "measured") return bad(`has origin ${JSON.stringify(o["origin"])}`);
   if (o["exercise"] !== undefined && typeof o["exercise"] !== "string") return bad("has a non-string exercise");
+  if (o["kind"] !== undefined && !(EXERCISE_KINDS as readonly unknown[]).includes(o["kind"])) return bad(`has kind ${JSON.stringify(o["kind"])}`);
   if (typeof o["values"] !== "object" || o["values"] === null || Array.isArray(o["values"])) return bad("has no values");
   const values: RecordedValues = {};
   for (const [field, v] of Object.entries(o["values"] as Record<string, unknown>)) {
@@ -69,6 +75,7 @@ export function parseRecordedPayload(payload: string | null, seq: number): Recor
     block: o["block"],
     origin: o["origin"],
     ...(o["exercise"] === undefined ? {} : { exercise: o["exercise"] as string }),
+    ...(o["kind"] === undefined ? {} : { kind: o["kind"] as ExerciseKind }),
     values,
   };
 }

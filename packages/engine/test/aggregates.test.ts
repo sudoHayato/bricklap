@@ -6,6 +6,9 @@ import {
   applyRecord,
   applyStop,
   createLiveSession,
+  blockFigures,
+  blocksFromEvents,
+  derivedOrigin,
   distanceTotals,
   formatPace,
   paceSecPerKm,
@@ -73,22 +76,19 @@ describe("aggregateBySport — por desporto, com a fórmula certa", () => {
       sport: "rowing_indoor",
       blocks: 3,
       durationMs: 300_000,
-      measuredM: 0,
-      declaredM: 700,
-      pacedMs: 180_000, // the 120 s block without metres is out of the pace
-      secPerKm: 180 / 0.7,
+      measured: { meters: 0, pacedMs: 0, secPerKm: null },
+      // the 120 s block without metres is out of the pace
+      declared: { meters: 700, pacedMs: 180_000, secPerKm: 180 / 0.7 },
     });
     expect(strength).toEqual({
       sport: "strength",
       blocks: 2,
       durationMs: 120_000,
-      measuredM: 0,
-      declaredM: 0,
-      pacedMs: 0,
-      secPerKm: null,
+      measured: { meters: 0, pacedMs: 0, secPerKm: null },
+      declared: { meters: 0, pacedMs: 0, secPerKm: null },
     });
     // And not the mean of the two block paces (240 and 300 s/km = 270).
-    expect(rowing!.secPerKm).not.toBe(270);
+    expect(rowing!.declared.secPerKm).not.toBe(270);
   });
 
   it("a GPS sport measures its distance from the samples, never declares it", () => {
@@ -100,14 +100,14 @@ describe("aggregateBySport — por desporto, com a fórmula certa", () => {
       track(0, 10 * MIN, 1_000, 3), // 3 m per second → 1800 m
     );
     const [run] = aggregateBySport(s);
-    expect(run!.declaredM).toBe(0);
-    expect(run!.measuredM).toBeCloseTo(sessionMetrics(s).distanceM, 6);
-    expect(run!.measuredM).toBeGreaterThan(1790);
-    expect(run!.pacedMs).toBe(10 * MIN);
-    expect(run!.secPerKm).toBeCloseTo((10 * 60) / (run!.measuredM / 1000), 6);
+    expect(run!.declared).toEqual({ meters: 0, pacedMs: 0, secPerKm: null });
+    expect(run!.measured.meters).toBeCloseTo(sessionMetrics(s).distanceM, 6);
+    expect(run!.measured.meters).toBeGreaterThan(1790);
+    expect(run!.measured.pacedMs).toBe(10 * MIN);
+    expect(run!.measured.secPerKm).toBeCloseTo((10 * 60) / (run!.measured.meters / 1000), 6);
   });
 
-  it("a declared treadmill speed becomes declared metres; a measured recorded value stays measured", () => {
+  it("a declared treadmill speed becomes declared metres; a measured value stays measured; and the two paces never blend", () => {
     let s = createLiveSession("treadmill", 0);
     s = applyMark(s, 3 * MIN); // 180 s at 12 km/h → 600 m, declared (derived)
     s = applyMark(s, 6 * MIN); // 180 s, 500 m measured (a device import, one day)
@@ -115,8 +115,13 @@ describe("aggregateBySport — por desporto, com a fórmula certa", () => {
     s = applyRecord(s, { block: 0, origin: "declared", values: { speedKmh: 12 } }, 10 * MIN);
     s = applyRecord(s, { block: 1, origin: "measured", values: { meters: 500 } }, 10 * MIN);
     const [treadmill] = aggregateBySport(s);
-    expect(treadmill).toMatchObject({ blocks: 3, durationMs: 540_000, declaredM: 600, measuredM: 500, pacedMs: 360_000 });
-    expect(treadmill!.secPerKm).toBeCloseTo(360 / 1.1, 6);
+    expect(treadmill).toMatchObject({ blocks: 3, durationMs: 540_000 });
+    expect(treadmill!.declared.meters).toBeCloseTo(600, 6);
+    expect(treadmill!.declared.pacedMs).toBe(180_000);
+    expect(treadmill!.declared.secPerKm).toBeCloseTo(180 / 0.6, 6); // the pace of a declared distance is declared
+    expect(treadmill!.measured).toEqual({ meters: 500, pacedMs: 180_000, secPerKm: 180 / 0.5 });
+    // There is no field where 600 declared and 500 measured metres are one number, or their paces one pace.
+    expect(JSON.stringify(treadmill)).not.toContain("1100");
   });
 
   it("a treadmill block whose recorded distance is 0 counts its time but not the pace", () => {
@@ -124,7 +129,11 @@ describe("aggregateBySport — por desporto, com a fórmula certa", () => {
     s = applyStop(s, 3 * MIN);
     s = applyRecord(s, { block: 0, origin: "declared", values: { meters: 0 } }, 4 * MIN);
     const [treadmill] = aggregateBySport(s);
-    expect(treadmill).toMatchObject({ durationMs: 180_000, declaredM: 0, measuredM: 0, pacedMs: 0, secPerKm: null });
+    expect(treadmill).toMatchObject({
+      durationMs: 180_000,
+      declared: { meters: 0, pacedMs: 0, secPerKm: null },
+      measured: { meters: 0, pacedMs: 0, secPerKm: null },
+    });
   });
 
   it("is empty for a session with no blocks", () => {
@@ -161,5 +170,51 @@ describe("sessionEnd", () => {
     expect(sessionEnd(applyStop(live, 60_000), 90_000)).toBe(60_000);
     const before = Date.now();
     expect(sessionEnd(createLiveSession("strength", before - 1000))).toBeGreaterThanOrEqual(before);
+  });
+});
+
+/**
+ * The rule the CTO wrote into ADR 0011 in session 27: anything derived from
+ * a declared value is declared. The pace of session 26's test came out of
+ * 450 declared metres and looked exactly like a GPS pace — silently.
+ */
+describe("derivado de declarado é declarado", () => {
+  it("one declared input is enough; only measured inputs give a measured result", () => {
+    expect(derivedOrigin("declared")).toBe("declared");
+    expect(derivedOrigin("measured")).toBe("measured");
+    expect(derivedOrigin("measured", "declared", "measured")).toBe("declared");
+    expect(derivedOrigin("measured", "measured")).toBe("measured");
+    expect(derivedOrigin()).toBe("measured");
+  });
+
+  it("every derived figure of a block carries the origin of what it was derived from", () => {
+    let s = createLiveSession("rowing_indoor", 0);
+    s = applyChange(s, "treadmill", 2 * MIN);
+    s = applyMark(s, 5 * MIN);
+    s = applyStop(s, 8 * MIN);
+    s = applyRecord(s, { block: 0, origin: "declared", values: { meters: 450 } }, 9 * MIN);
+    s = applyRecord(s, { block: 1, origin: "declared", values: { speedKmh: 12 } }, 9 * MIN);
+    s = applyRecord(s, { block: 2, origin: "measured", values: { meters: 600 } }, 9 * MIN);
+    const [rowing, declaredRun, measuredRun] = blocksFromEvents(s.events);
+    expect(blockFigures(s, rowing!).splitS).toMatchObject({ derived: true, origin: "declared" });
+    expect(blockFigures(s, declaredRun!).meters).toMatchObject({ derived: true, origin: "declared" });
+    expect(blockFigures(s, measuredRun!).speedKmh).toMatchObject({ derived: true, origin: "measured" });
+  });
+
+  it("the founder's workout 02 with values: the run's pace is measured, the rowing's is declared, and no total holds both", () => {
+    const samples = track(0, 20 * MIN, 1_000, 3); // ≈ 3600 m of GPS
+    let s = makeSession([{ type: "started", at: 0, sport: "run" }], samples);
+    s = applyChange(s, "rowing_indoor", 20 * MIN);
+    s = applyStop(s, 24 * MIN);
+    s = applyRecord(s, { block: 1, origin: "declared", values: { meters: 1000 } }, 25 * MIN);
+    const [run, rowing] = aggregateBySport(s);
+    expect(run!.measured.secPerKm).not.toBeNull();
+    expect(run!.declared).toEqual({ meters: 0, pacedMs: 0, secPerKm: null });
+    expect(rowing!.measured).toEqual({ meters: 0, pacedMs: 0, secPerKm: null });
+    expect(rowing!.declared).toEqual({ meters: 1000, pacedMs: 4 * MIN, secPerKm: 240 });
+    const totals = distanceTotals(s);
+    expect(Object.keys(totals).sort()).toEqual(["declaredM", "measuredM"]);
+    expect(totals.declaredM).toBe(1000);
+    expect(totals.measuredM).toBeCloseTo(run!.measured.meters, 6);
   });
 });

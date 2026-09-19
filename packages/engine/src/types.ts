@@ -59,6 +59,13 @@ export type SessionEvent =
    * It is also a block boundary, like a mark, unless it lands exactly on
    * one (a CHANGE at the same instant): then the block that just opened is
    * the first of the round, and nothing of ~0 s is created.
+   *
+   * Since session 27 the first one is written by `createLiveSession`, at
+   * the instant of `started`: round 1 opens with the session, and the
+   * athlete's "Nova ronda" only ever opens round 2 and up. A marker that is
+   * not after the round already open is that round said twice and opens
+   * nothing. Sessions recorded before session 27 may have none at all —
+   * they read as they always did, with no rounds.
    */
   | { type: "round_started"; at: number }
   /**
@@ -82,8 +89,17 @@ export type SessionEvent =
        * where it sat. Two blocks of different rounds are comparable when
        * they share it; position never decides that. Free text today,
        * compared as written after trimming and lowercasing (`exerciseKey`).
+       * Since ADR 0012 the name is resolved, when read, against the
+       * exercise catalogue (`exerciseIdentity`): what is stored is still
+       * what the athlete wrote, never an id.
        */
       exercise?: string;
+      /**
+       * What kind of exercise the athlete said this block was (ADR 0012) —
+       * it decides which fields the block shows. Only written when the
+       * athlete chose it; a name the catalogue knows brings its own kind.
+       */
+      kind?: ExerciseKind;
       values: RecordedValues;
     }
   | { type: "stopped"; at: number }
@@ -123,6 +139,23 @@ export const VALUE_FIELDS_BY_SPORT: Record<Sport, readonly ValueField[]> = {
   swimming_pool: [],
 };
 
+/**
+ * The kinds of exercise a `strength` block can be (ADR 0012). A kind exists
+ * for one reason: it decides which fields the block shows. Free weight is
+ * repetitions and load; body weight is repetitions and nothing else. The
+ * cardio machines are not here because they are sports already, with their
+ * own fields in `VALUE_FIELDS_BY_SPORT`. A kind is code, because fields
+ * are code; an exercise is data (`exercises.ts`).
+ */
+export const EXERCISE_KINDS = ["free_weight", "bodyweight"] as const;
+
+export type ExerciseKind = (typeof EXERCISE_KINDS)[number];
+
+export const VALUE_FIELDS_BY_KIND: Record<ExerciseKind, readonly ValueField[]> = {
+  free_weight: ["reps", "loadKg"],
+  bodyweight: ["reps"],
+};
+
 /** What a `recorded` event carries per field: a number, or `null` to clear it. */
 export type RecordedValues = Partial<Record<ValueField, number | null>>;
 
@@ -136,14 +169,16 @@ export type RecordedValue = { value: number; origin: ValueOrigin; at: number };
  */
 export type BlockRecord = {
   exercise: string | null;
+  /** The last kind the athlete chose for this block (ADR 0012), or null: then the catalogue decides. */
+  kind: ExerciseKind | null;
   values: Partial<Record<ValueField, RecordedValue>>;
 };
 
 /**
  * A round (ADR 0011, §1), derived from `round_started` markers. It runs to
  * the next marker, or to `stopped`; `endAt` is null only while it is open.
- * Blocks before the first marker belong to no round (a warm-up run before
- * the circuit, as in the founder's second workout).
+ * A session created since session 27 has round 1 from its first instant;
+ * in an older one, blocks before the first marker belong to no round.
  */
 export type Round = {
   index: number;
@@ -216,8 +251,8 @@ export type Block = {
   endAt: number | null;
   /**
    * Index of the round this block sits in (ADR 0011), or null before the
-   * first `round_started`. Derived, like everything else here: the number
-   * of round markers at or before `startAt`, minus one.
+   * first `round_started` — which, since session 27, only happens in
+   * sessions recorded before it. Derived, like everything else here.
    */
   round: number | null;
 };
