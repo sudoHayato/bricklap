@@ -37,7 +37,7 @@ export const ptPT: Dictionary = {
     bike: { label: "Bicicleta", live: "De bicicleta" },
     walk: { label: "Caminhada", live: "A caminhar" },
     transition: { label: "Transição", live: "Transição" },
-    strength: { label: "Força", live: "Força" },
+    strength: { label: "Ginásio", live: "Ginásio" },
     rowing_indoor: { label: "Remo indoor", live: "A remar" },
     treadmill: { label: "Passadeira", live: "Na passadeira" },
     swimming_pool: { label: "Natação (piscina)", live: "A nadar" },

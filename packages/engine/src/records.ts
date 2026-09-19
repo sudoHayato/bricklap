@@ -358,6 +358,58 @@ export function exerciseAcrossRounds(
   return identity === null ? [] : identityAcrossRounds(session, identity, at, catalog);
 }
 
+/** One exercise in one round, its blocks put together: what `exerciseTotalsByRound` returns. */
+export type ExerciseRoundTotal = {
+  round: number | null;
+  /** How many blocks of this exercise the round holds — 2 when the athlete wrote "flexões" and, later, "push ups". */
+  blocks: number;
+  /** Repetitions, summed over the blocks that recorded them. */
+  reps?: Figure;
+  /** The heaviest load of the blocks that recorded one: loads are never added up. */
+  loadKg?: Figure;
+};
+
+/**
+ * An exercise's blocks put together, round by round (ADR 0012). The founder
+ * writes "flexões" or "push ups" as it comes to mind, and the catalogue says
+ * they are one exercise, so the 10 and the 5 of the same round are 15 of it:
+ * repetitions add up, the load is the heaviest, and the origin is declared
+ * if any block it comes from was (`derivedOrigin`). Nothing is rewritten —
+ * this is a reading of the blocks, whichever spelling each was written in.
+ */
+export function exerciseTotalsByRound(
+  session: Session,
+  exercise: string,
+  at = nowMs(),
+  catalog: readonly CatalogExercise[] = SEED_EXERCISES,
+): ExerciseRoundTotal[] {
+  const out: ExerciseRoundTotal[] = [];
+  for (const { round, figures } of exerciseAcrossRounds(session, exercise, at, catalog)) {
+    let total = out.find((t) => t.round === round);
+    if (!total) {
+      total = { round, blocks: 0 };
+      out.push(total);
+    }
+    total.blocks += 1;
+    if (figures.reps) {
+      const prior = total.reps;
+      total.reps = {
+        value: (prior?.value ?? 0) + figures.reps.value,
+        origin: derivedOrigin(figures.reps.origin, ...(prior ? [prior.origin] : [])),
+        derived: prior !== undefined,
+      };
+    }
+    if (figures.loadKg && (!total.loadKg || figures.loadKg.value > total.loadKg.value)) {
+      total.loadKg = {
+        value: figures.loadKg.value,
+        origin: derivedOrigin(figures.loadKg.origin, ...(total.loadKg ? [total.loadKg.origin] : [])),
+        derived: total.loadKg !== undefined,
+      };
+    }
+  }
+  return out;
+}
+
 /** The distinct exercises named in a session — by identity, so two spellings are one — first spelling wins, in order of first use. */
 export function exercisesUsed(events: SessionEvent[]): string[] {
   const seen = new Map<string, string>();

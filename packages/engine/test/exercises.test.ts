@@ -17,11 +17,13 @@ import {
   exerciseAcrossRounds,
   exerciseIdentity,
   exerciseMentions,
+  exerciseTotalsByRound,
   fieldsOfBlock,
   fieldsOfKind,
   foldExerciseName,
   identityAcrossRounds,
   resolveExercise,
+  spellingsOf,
   type Session,
 } from "../src";
 
@@ -52,20 +54,47 @@ describe("foldExerciseName — o nome reduzido ao que se compara", () => {
 });
 
 describe("o catálogo de partida — os exercícios reais do fundador", () => {
-  it("holds the four exercises of workout 01 that are not a sport already, each with a kind the fields come from", () => {
+  it("holds the exercises of workout 01 that are not a sport already, and the pairs the founder is bound to write next, each with a kind the fields come from", () => {
     expect(SEED_EXERCISES.map((e) => [e.id, e.name, e.kind])).toEqual([
       ["flexoes", "Flexões", "bodyweight"],
-      ["push_ups", "Push ups", "bodyweight"],
-      ["bicep_haltere", "Bicep com haltere", "free_weight"],
+      ["barras", "Barras", "bodyweight"],
+      ["abdominais", "Abdominais", "bodyweight"],
+      ["agachamento", "Agachamento", "free_weight"],
+      ["levantamento_terra", "Levantamento-terra", "free_weight"],
       ["rdl", "RDL", "free_weight"],
+      ["bicep_haltere", "Bicep com haltere", "free_weight"],
+      ["avancos", "Avanços", "free_weight"],
+      ["supino", "Supino", "free_weight"],
+      ["press_ombros", "Press de ombros", "free_weight"],
+      ["remada_haltere", "Remada com haltere", "free_weight"],
     ]);
     expect(SEED_EXERCISES.every((e) => e.seed)).toBe(true);
     expect([...EXERCISE_KINDS]).toEqual(["free_weight", "bodyweight"]);
     expect(VALUE_FIELDS_BY_KIND).toEqual({ free_weight: ["reps", "loadKg"], bodyweight: ["reps"] });
   });
 
+  it("every entry has its spellings in both languages — the pairs are joined before the athlete writes them", () => {
+    for (const entry of SEED_EXERCISES) {
+      expect(entry.spellings.en.length, entry.id).toBeGreaterThan(0);
+    }
+    const pairs: [string, string, string][] = [
+      ["flexões", "push ups", "flexoes"],
+      ["barras", "pull ups", "barras"],
+      ["agachamento", "squat", "agachamento"],
+      ["levantamento-terra", "deadlift", "levantamento_terra"],
+      ["RDL", "romanian deadlift", "rdl"],
+      ["peso morto romeno", "RDL", "rdl"],
+      ["bicep", "dumbbell curl", "bicep_haltere"],
+    ];
+    for (const [pt, en, id] of pairs) {
+      expect(resolveExercise(pt)?.id, pt).toBe(id);
+      expect(resolveExercise(en)?.id, en).toBe(id);
+    }
+    expect(spellingsOf(resolveExercise("rdl")!)).toEqual(["peso morto romeno", "romanian deadlift"]);
+  });
+
   it("no two entries answer to the same name: a name resolves to one exercise or to none", () => {
-    const names = SEED_EXERCISES.flatMap((e) => [e.name, ...e.aliases].map((n) => foldExerciseName(n)));
+    const names = SEED_EXERCISES.flatMap((e) => [e.name, ...spellingsOf(e)].map((n) => foldExerciseName(n)));
     expect(new Set(names).size).toBe(names.length);
   });
 
@@ -75,15 +104,16 @@ describe("o catálogo de partida — os exercícios reais do fundador", () => {
     expect(resolveExercise("Bicep com haltere")?.id).toBe("bicep_haltere");
     expect(resolveExercise("Bíceps")?.id).toBe("bicep_haltere");
     expect(resolveExercise("flexoes")?.id).toBe("flexoes");
-    expect(resolveExercise("Push-ups")?.id).toBe("push_ups");
-    expect(resolveExercise("pushups")?.id).toBe("push_ups");
+    expect(resolveExercise("Push-ups")?.id).toBe("flexoes");
+    expect(resolveExercise("pushups")?.id).toBe("flexoes");
     expect(resolveExercise("rdl")?.id).toBe("rdl");
     expect(resolveExercise("Peso morto romeno")?.id).toBe("rdl");
   });
 
-  it("flexões and push ups stay two exercises until the founder says they are one", () => {
+  it("flexões and push ups are ONE exercise, said in two languages (the founder's decision)", () => {
     expect(exerciseIdentity("flexões")).toBe("ex:flexoes");
-    expect(exerciseIdentity("push ups")).toBe("ex:push_ups");
+    expect(exerciseIdentity("push ups")).toBe("ex:flexoes");
+    expect(exerciseIdentity("Push-Ups")).toBe(exerciseIdentity("FLEXOES"));
   });
 
   it("does not know what it was never told, and an empty name is nothing", () => {
@@ -118,7 +148,7 @@ describe("catalogFromMentions — um exercício novo entra sem programador", () 
 
   it("a name the catalogue never heard of becomes an entry, with the kind the athlete chose", () => {
     const catalog = catalogFromMentions([{ exercise: " Kettlebell swing ", kind: "free_weight" }]);
-    expect(catalog[0]).toEqual({ id: "name:kettlebell swing", name: "Kettlebell swing", kind: "free_weight", aliases: [], seed: false });
+    expect(catalog[0]).toEqual({ id: "name:kettlebell swing", name: "Kettlebell swing", kind: "free_weight", spellings: { pt: [], en: [] }, seed: false });
     expect(resolveExercise("KETTLEBELL SWING", catalog)?.kind).toBe("free_weight");
     expect(catalog).toHaveLength(SEED_EXERCISES.length + 1);
   });
@@ -130,7 +160,7 @@ describe("catalogFromMentions — um exercício novo entra sem programador", () 
       { exercise: "Prancha", kind: "bodyweight" },
       { exercise: "prancha", kind: null },
     ]);
-    expect(later.filter((e) => !e.seed)).toEqual([{ id: "name:prancha", name: "prancha", kind: "bodyweight", aliases: [], seed: false }]);
+    expect(later.filter((e) => !e.seed)).toEqual([{ id: "name:prancha", name: "prancha", kind: "bodyweight", spellings: { pt: [], en: [] }, seed: false }]);
   });
 
   it("the athlete's last word on a kind overrides the seed's, without touching the seed", () => {
@@ -147,7 +177,12 @@ describe("catalogFromMentions — um exercício novo entra sem programador", () 
       { exercise: "  ", kind: null },
       { exercise: "flexões", kind: null },
     ]);
-    expect(catalog.map((e) => e.id)).toEqual(["flexoes", "name:burpees", "rdl", "push_ups", "bicep_haltere"]);
+    expect(catalog.map((e) => e.id)).toEqual([
+      "flexoes",
+      "name:burpees",
+      "rdl",
+      ...SEED_EXERCISES.map((e) => e.id).filter((id) => id !== "flexoes" && id !== "rdl"),
+    ]);
   });
 });
 
@@ -308,7 +343,7 @@ describe("a identidade liga a taxonomia às rondas (ADR 0011 §1b)", () => {
       "ex:flexoes",
       "ex:bicep_haltere",
       "sport:treadmill",
-      "ex:push_ups",
+      "ex:flexoes",
       "ex:rdl",
     ]);
     const bare = applyChange(createLiveSession("strength", 0), "transition", MIN);
@@ -317,11 +352,15 @@ describe("a identidade liga a taxonomia às rondas (ADR 0011 §1b)", () => {
 
   it("the flexões of round 1 meet the flexões of round 2 by identity — two spellings, two positions, one exercise", () => {
     const s = treino01();
+    // "Flexões" and "push ups" are one exercise: the 10 and the 5 of a round are both its blocks.
     const flexoes = exerciseAcrossRounds(s, "Flexões");
     expect(flexoes.map((x) => [x.block.index, x.round, x.figures.reps?.value])).toEqual([
       [1, 0, 10],
+      [4, 0, 5],
       [7, 1, 9],
+      [9, 1, 5],
     ]);
+    expect(exerciseAcrossRounds(s, "push ups").map((x) => x.block.index)).toEqual([1, 4, 7, 9]);
     // RDL is the 6th block of round 1 and the 5th of round 2: position would have paired it with the push ups.
     expect(exerciseAcrossRounds(s, "peso morto romeno").map((x) => [x.block.index, x.round])).toEqual([
       [5, 0],
@@ -346,5 +385,45 @@ describe("a identidade liga a taxonomia às rondas (ADR 0011 §1b)", () => {
     expect(exerciseMentions(s.events).map((m) => m.exercise)).toEqual(["Flexões", "bicep", "push ups", "RDL", "flexoes", "Push-ups", "rdl"]);
     expect(exerciseMentions(s.events).every((m) => m.kind === null)).toBe(true);
     expect(exerciseMentions(createLiveSession("strength", 0).events)).toEqual([]);
+  });
+});
+
+describe("exerciseTotalsByRound — o mesmo exercício em duas grafias soma-se", () => {
+  it("the 10 flexões and the 5 push ups of a round are 15 of one exercise, and the text written is untouched", () => {
+    const s = treino01();
+    const totals = exerciseTotalsByRound(s, "flexões");
+    expect(totals.map((t) => [t.round, t.blocks, t.reps?.value, t.reps?.origin, t.reps?.derived])).toEqual([
+      [0, 2, 15, "declared", true],
+      [1, 2, 14, "declared", true],
+    ]);
+    expect(exerciseTotalsByRound(s, "Push ups")).toEqual(totals);
+    // the log still holds what was typed: nothing was merged or rewritten
+    expect(exerciseMentions(s.events).map((m) => m.exercise)).toEqual(["Flexões", "bicep", "push ups", "RDL", "flexoes", "Push-ups", "rdl"]);
+  });
+
+  it("a single block is not a sum; loads are never added, the heaviest stands", () => {
+    const s = treino01();
+    expect(exerciseTotalsByRound(s, "bicep")).toEqual([
+      { round: 0, blocks: 1, reps: { value: 10, origin: "declared", derived: false }, loadKg: { value: 12.5, origin: "declared", derived: false } },
+    ]);
+    let t = createLiveSession("strength", 0);
+    t = applyRecord(t, { block: 0, origin: "declared", exercise: "agachamento", values: { reps: 8, loadKg: 40 } }, MIN);
+    t = applyMark(t, 2 * MIN);
+    t = applyRecord(t, { block: 1, origin: "declared", exercise: "squat", values: { reps: 6, loadKg: 60 } }, 3 * MIN);
+    t = applyMark(t, 4 * MIN);
+    t = applyRecord(t, { block: 2, origin: "declared", exercise: "Agachamento", values: { reps: 5, loadKg: 50 } }, 5 * MIN);
+    t = applyMark(t, 6 * MIN);
+    t = applyRecord(t, { block: 3, origin: "declared", exercise: "agachamento" }, 7 * MIN);
+    const [total] = exerciseTotalsByRound(t, "squat");
+    expect(total).toMatchObject({ blocks: 4, reps: { value: 19, derived: true }, loadKg: { value: 60, derived: true } });
+  });
+
+  it("nothing recorded, or an unknown or empty name, is no total", () => {
+    const s = treino01();
+    expect(exerciseTotalsByRound(s, "kettlebell swing")).toEqual([]);
+    expect(exerciseTotalsByRound(s, " ")).toEqual([]);
+    let bare = applyMark(createLiveSession("strength", 0), MIN);
+    bare = applyRecord(bare, { block: 1, origin: "declared", exercise: "burpees" }, 2 * MIN);
+    expect(exerciseTotalsByRound(bare, "burpees")).toEqual([{ round: 0, blocks: 1 }]);
   });
 });

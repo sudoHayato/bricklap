@@ -88,7 +88,7 @@ Identifica, não decora, e aparece em **dois sítios apenas**: o **ícone** do d
 
 | Desporto | Claro | Escuro |
 |---|---|---|
-| Força | `#6B4E3D` | `#C49A82` |
+| Ginásio | `#6B4E3D` | `#C49A82` |
 | Passadeira | `#2F6A94` | `#7FB2D9` |
 | Remo indoor / Natação | `#1F8079` | `#5FBDB4` |
 | Rua (corrida, caminhada) | `#4E8A3C` | `#8AC176` |
@@ -177,7 +177,7 @@ Não usar ícone para: o nome de um exercício de força (o nome é o nome), o e
 
 **Ficha rápida (folha).** Sobe do fundo, raio 24 em cima, pega de 36×4, até 93 % da altura. Cabeça com ícone do desporto + nome do bloco e uma linha de contexto ("Série 3 · 1:28 · o relógio já conta a passadeira"). No máximo **três campos**; cada campo é rótulo à esquerda e −/+ de 56 px com o valor a 29/800 à direita; um campo **calculado** mostra o valor sem controlo e diz de onde vem. Rodapé: "Depois" (fantasma) e "Guardar" (acento).
 
-**Valor declarado.** Regra do CTO, sessão 27 ([ADR 0011 §3a](adr/0011-rondas-e-valores-registados.md)): **qualquer valor declarado, e qualquer valor derivado de um declarado, mostra-se como declarado** — o ritmo, a distância, o *split*, a velocidade, e o que vier a existir. Um número que o atleta escreveu nunca tem o aspeto de um número que o GPS mediu. A marca é **a palavra**: `decl.`, em Inter 10,5/700, maiúsculas, `tinta2`, colada ao número pela linha de base (`SeloDeclarado`, em `ui/estrutura.tsx`); onde há espaço escreve-se por extenso ("2,0 km declarados"). Aparece na linha de um bloco, no valor calculado da ficha, no "Por desporto" e nos totais; e o resumo de uma sessão com valores declarados fecha com uma linha de legenda em `tinta3`. **Porquê uma palavra e não uma cor, um peso de letra, um til ou um ícone:** tem de se ler ao sol, nos dois temas e a uma cor; um til diz "aproximado", e um valor declarado não é aproximado, é não verificado; um ícone novo tinha de se aprender; e um leitor de ecrã lê palavras. **Medido e declarado nunca se somam num número só**: numa sessão com os dois (corrida na rua e circuito — o treino 02), os totais são duas linhas, "medidos" e "declarados", e o "Por desporto" tem uma linha por origem. *Esta apresentação é a proposta implementada na sessão 27; as alternativas estão no [relatório](reports/2026-09-19-sessao-27.md) e a escolha final é do fundador.*
+**Valor declarado.** Regra do CTO, sessão 27 ([ADR 0011 §3a](adr/0011-rondas-e-valores-registados.md)): **qualquer valor declarado, e qualquer valor derivado de um declarado, mostra-se como declarado** — o ritmo, a distância, o *split*, a velocidade, e o que vier a existir. Um número que o atleta escreveu nunca tem o aspeto de um número que o GPS mediu. A marca é **a palavra**: `decl.` (decisão do fundador: fica assim),  em Inter 10,5/700, maiúsculas, `tinta2`, colada ao número pela linha de base (`SeloDeclarado`, em `ui/estrutura.tsx`); onde há espaço escreve-se por extenso ("2,0 km declarados"). Aparece na linha de um bloco, no valor calculado da ficha, no "Por desporto" e nos totais; e o resumo de uma sessão com valores declarados fecha com uma linha de legenda em `tinta3`. **Caso misto (GPS e declarado na mesma sessão): duas linhas, "medidos" e "declarados", sem total único** — decisão do fundador, e vale também para os totais semanais e o histórico quando existirem: **dois contadores, nunca um** ([ADR 0011 §3a](adr/0011-rondas-e-valores-registados.md)). **Porquê uma palavra e não uma cor, um peso de letra, um til ou um ícone:** tem de se ler ao sol, nos dois temas e a uma cor; um til diz "aproximado", e um valor declarado não é aproximado, é não verificado; um ícone novo tinha de se aprender; e um leitor de ecrã lê palavras. **Medido e declarado nunca se somam num número só**: numa sessão com os dois (corrida na rua e circuito — o treino 02), os totais são duas linhas, "medidos" e "declarados", e o "Por desporto" tem uma linha por origem. *Esta apresentação é a proposta implementada na sessão 27; as alternativas estão no [relatório](reports/2026-09-19-sessao-27.md) e a escolha final é do fundador.*
 
 **Rondas no resumo.** Desde a sessão 27 toda a sessão nasce na ronda 1. Os cabeçalhos de ronda só se desenham quando organizam alguma coisa — **duas ou mais rondas** (ou, numa sessão antiga, blocos antes da primeira): uma corrida de um bloco não leva "Ronda 1" por cima. Na gravação a pílula "Ronda *n*" está sempre presente e o botão diz a ronda que abre ("Nova ronda · 2"): é o que torna evidente que a primeira não precisa de toque.
 
@@ -211,7 +211,7 @@ O que faz um ecrã ser do Bricklap e de mais nenhuma app, por ordem de importân
 
      | Desporto | Fiada, claro | Fiada, escuro |
      |---|---|---|
-     | Força | `#82695A` | `#A88470` |
+     | Ginásio | `#82695A` | `#A88470` |
      | Passadeira | `#5081A3` | `#6E98B9` |
      | Remo / Natação | `#42938D` | `#53A19A` |
      | Rua | `#6A9C59` | `#77A566` |

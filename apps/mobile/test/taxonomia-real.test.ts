@@ -101,7 +101,7 @@ describe.skipIf(!source || !existsSync(source))("sessão 27 sobre a base real: a
     expect(fresh.events.map((e) => e.type)).toEqual(["started", "round_started", "recorded", "round_started", "recorded", "stopped"]);
     expect(blocksFromEvents(fresh.events).map((b) => b.round)).toEqual([0, 1]);
     expect(blockRecord(fresh.events, 0).values).toEqual({ reps: { value: 10, origin: "declared", at: t0 + 60_000 } }); // no load on a body-weight exercise
-    expect(store.exerciseCatalog().slice(0, 3).map((e) => e.id)).toEqual(["name:kettlebell swing", "flexoes", "bicep_haltere"]);
+    expect(store.exerciseCatalog().slice(0, 2).map((e) => e.id)).toEqual(["name:kettlebell swing", "flexoes"]);
 
     // 3. Every row that was there is still there, byte for byte; every old session replays the same.
     const after = db.raw.prepare(select).all() as EventRow[];

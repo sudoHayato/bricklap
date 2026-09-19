@@ -6,7 +6,7 @@
 
 Um treino HIIT/AMRAP é **uma sessão**. Não é "um treino de força" com uma corrida ao lado, nem "uma corrida" com um aquecimento no ginásio: é uma sequência de blocos, cada um com as suas métricas, tudo compactado no mesmo treino.
 
-- **Força** — exercício, repetições, carga.
+- **Ginásio** — exercício, repetições, carga.
 - **Passadeira** — ritmo × distância → tempo.
 - **Remo indoor** — metros, tempo.
 - **Corrida na rua** — GPS: distância, ritmo.

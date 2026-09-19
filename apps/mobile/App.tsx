@@ -476,7 +476,7 @@ export default function App() {
    *
    * `precisaGps` é a guarda que a versão da Fase 3 tinha e que eu perdi ao
    * unificar os três cartões num só nó: **um treino de ginásio não pode
-   * queixar-se de GPS**. Força, remo, passadeira e natação são só tempo
+   * queixar-se de GPS**. Ginásio, remo, passadeira e natação são só tempo
    * (ADR 0008) e nunca pedem localização; um aviso sobre ela ali em baixo é
    * ruído a dizer ao atleta que falta alguma coisa quando não falta nada.
    */

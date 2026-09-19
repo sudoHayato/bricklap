@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  SEED_EXERCISES,
   applyRecord,
   applyRoundStart,
   applyStop,
@@ -163,7 +164,7 @@ describe("SqliteSessionStore — o catálogo de exercícios sai do registo (ADR 
     const db = openNodeDb();
     const store = new SqliteSessionStore(db, { flushIntervalMs: 0, now: () => T0 });
     store.hydrate(T0);
-    expect(store.exerciseCatalog().map((e) => e.id)).toEqual(["flexoes", "push_ups", "bicep_haltere", "rdl"]);
+    expect(store.exerciseCatalog().map((e) => e.id)).toEqual(SEED_EXERCISES.map((e) => e.id));
 
     const first = store.start("strength", T0);
     store.record(first, { block: 0, origin: "declared", exercise: "Kettlebell swing", kind: "free_weight", values: { reps: 12, loadKg: 16 } }, T0 + MIN);
@@ -175,9 +176,7 @@ describe("SqliteSessionStore — o catálogo de exercícios sai do registo (ADR 
     expect(catalog.map((e) => [e.id, e.kind, e.seed])).toEqual([
       ["bicep_haltere", "free_weight", true], // used last
       ["name:kettlebell swing", "free_weight", false],
-      ["flexoes", "bodyweight", true],
-      ["push_ups", "bodyweight", true],
-      ["rdl", "free_weight", true],
+      ...SEED_EXERCISES.filter((e) => e.id !== "bicep_haltere").map((e) => [e.id, e.kind, true]), // the seed never used, in seed order
     ]);
     // What was written stays what was written: "bicep", not the catalogue's name and not an id.
     expect(db.raw.prepare("SELECT payload FROM events WHERE type = 'recorded' ORDER BY seq").all()).toEqual([

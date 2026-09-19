@@ -1,10 +1,10 @@
 # ADR 0012 — Taxonomia de exercícios: o tipo decide os campos, o exercício é um dado
 
-**Estado**: **proposto pela equipa de desenvolvimento e implementado na sessão 27 (2026-09-19)**, a pedido do CTO ("Escreve um ADR para isto. É decisão estrutural e vai condicionar os planos de treino da 4.5"). **À espera da aceitação do CTO e do fundador** — em particular das três perguntas do fim, que só o fundador sabe responder. Nada do que aqui está reescreve uma linha da base: se a decisão mudar, muda código e catálogo, não histórico.
+**Estado**: **aceite** pelo CTO e pelo fundador na sessão 27 (2026-09-19), depois de proposto e implementado nessa mesma sessão a pedido do CTO ("Escreve um ADR para isto. É decisão estrutural e vai condicionar os planos de treino da 4.5"). As três perguntas que ficaram em aberto foram respondidas pelo fundador e estão no fim, com a resposta. Nada do que aqui está reescreve uma linha da base: se a decisão mudar, muda código e catálogo, não histórico.
 
 ## Contexto
 
-Foi a primeira queixa do dogfooding ([treino 01](../dogfooding/2026-09-14-treino-01.md)), nas palavras do fundador: **"força para mim é peso puro; flexões e RDL não são força"**. A app tinha oito desportos e um deles, Força, era o saco onde caía tudo o que não fosse máquina de cardio. A sessão 26 ([ADR 0011](0011-rondas-e-valores-registados.md)) deu valores aos blocos, mas o exercício ficou um nome escrito à mão, e todo o bloco de Força mostrava repetições **e** carga — nas flexões também.
+Foi a primeira queixa do dogfooding ([treino 01](../dogfooding/2026-09-14-treino-01.md)), nas palavras do fundador: **"força para mim é peso puro; flexões e RDL não são força"**. A app tinha oito desportos e um deles, o que então se chamava Força (hoje **Ginásio**, §6), era o saco onde caía tudo o que não fosse máquina de cardio. A sessão 26 ([ADR 0011](0011-rondas-e-valores-registados.md)) deu valores aos blocos, mas o exercício ficou um nome escrito à mão, e todo o bloco de Força mostrava repetições **e** carga — nas flexões também.
 
 O que existe para desenhar isto são os treinos reais do fundador, e a taxonomia parte deles e de mais nada. O treino 01: **500 m de remo indoor, 10 flexões, 10 bicep com haltere, 500 m de corrida na passadeira, 5 push ups, 10 RDL**, quatro vezes. O treino 03: passadeira alternada com circuito. O treino 02: corrida na rua e circuito. O único nome alguma vez escrito na app do fundador foi **"bicep"**, na sessão de teste de 2026-09-18.
 
@@ -18,8 +18,8 @@ O que existe para desenhar isto são os treinos reais do fundador, e a taxonomia
 
 | Tipo | Campos | Exercícios reais do fundador |
 |---|---|---|
-| **Peso livre** (`free_weight`) | repetições, carga | bicep com haltere; RDL (ver pergunta 2) |
-| **Peso do corpo** (`bodyweight`) | repetições | flexões; push ups |
+| **Peso livre** (`free_weight`) | repetições, carga | bicep com haltere; RDL (com carga — confirmado pelo fundador) |
+| **Peso do corpo** (`bodyweight`) | repetições | flexões (= push ups) |
 
 E, pelo primeiro eixo, o que já existia:
 
@@ -34,20 +34,31 @@ E, pelo primeiro eixo, o que já existia:
 
 **Um tipo é código; um exercício é um dado.** Os campos são código (validação, ficha, agregados), por isso um tipo novo é trabalho de programador, e é raro. Um exercício novo não pode ser.
 
-### 2. O catálogo de partida são os exercícios reais, nas palavras do fundador
+### 2. O catálogo de partida: exercícios reais, cada um com a sua lista de grafias em pt e en
 
-`packages/engine/src/exercises.ts`, `SEED_EXERCISES`: quatro entradas, cada uma com um identificador estável, o nome, o tipo e as outras grafias que querem dizer o mesmo.
+`packages/engine/src/exercises.ts`, `SEED_EXERCISES`. **Uma entrada do catálogo é um exercício, não um nome**: tem um identificador estável, o nome mostrado, o tipo e uma **lista de grafias, em português e em inglês** (`spellings: { pt, en }`). O fundador escreve em português ou em inglês conforme lhe vem à cabeça a meio do treino — no treino 01 escreveu "flexões" e, na mesma ronda, "push ups" —, e essas duas palavras são **o mesmo movimento dito em duas línguas, não dois exercícios**. Por isso o catálogo traz os pares óbvios **já ligados**, em vez de esperar que o fundador os junte um a um:
 
-| id | Nome | Tipo | Outras grafias |
-|---|---|---|---|
-| `flexoes` | Flexões | peso do corpo | flexão, flexões de braços |
-| `push_ups` | Push ups | peso do corpo | push up, pushups, pushup |
-| `bicep_haltere` | Bicep com haltere | peso livre | **bicep** (o que o fundador escreveu), biceps, bicep haltere, … |
-| `rdl` | RDL | peso livre | romanian deadlift, peso morto romeno |
+| id | Nome | Tipo | Grafias em pt | Grafias em en |
+|---|---|---|---|---|
+| `flexoes` | Flexões | peso do corpo | flexão, flexões de braços | push up(s), pushup(s) |
+| `barras` | Barras | peso do corpo | barra, elevações | pull up(s), pullup(s) |
+| `abdominais` | Abdominais | peso do corpo | abdominal | sit up(s) |
+| `agachamento` | Agachamento | peso livre | agachamentos | squat(s) |
+| `levantamento_terra` | Levantamento-terra | peso livre | levantamento de terra, peso morto | deadlift(s) |
+| `rdl` | RDL | peso livre | peso morto romeno | romanian deadlift |
+| `bicep_haltere` | Bicep com haltere | peso livre | **bicep** (o que o fundador escreveu), biceps, bicep haltere, … | bicep curl, dumbbell curl |
+| `avancos` | Avanços | peso livre | avanço | lunge(s) |
+| `supino` | Supino | peso livre | supino plano | bench press |
+| `press_ombros` | Press de ombros | peso livre | press militar, desenvolvimento de ombros | shoulder press, overhead press |
+| `remada_haltere` | Remada com haltere | peso livre | remada, remada com halteres | dumbbell row |
 
-Os nomes comparam-se depois de **dobrados** (`foldExerciseName`): sem maiúsculas, **sem acentos** (o teclado do telemóvel a meio de um treino escreve "flexoes"), com hífenes, pontos e barras lidos como espaços. "Push-ups", "push ups" e "PUSH UPS" são um nome só.
+Do treino 01 vêm `flexoes`, `bicep_haltere` e `rdl` (o remo e a passadeira são desportos); as outras são **os pares que ele está prestes a escrever** — o critério de entrada é "um exercício que um treino de ginásio com peso do corpo e halteres tem, com o seu par em inglês", e não uma lista completa de ginásio. Onde um exercício podia ir para qualquer dos dois tipos (agachamento, avanços), ficou **peso livre**: uma carga que pode ficar vazia não perde nada, um campo que falta perde a carga.
 
-**Não é uma lista de ginásio.** Não tem agachamento, supino nem elevações, porque o fundador não os fez. Cresce como nasceu: do que se treinou.
+Os nomes e as grafias comparam-se depois de **dobrados** (`foldExerciseName`): sem maiúsculas, **sem acentos** (o teclado do telemóvel a meio de um treino escreve "flexoes"), com hífenes, pontos e barras lidos como espaços. "Push-ups", "push ups" e "PUSH UPS" são um nome só. **Nenhuma grafia pertence a duas entradas** (há um teste); acrescentar um par é acrescentar uma grafia, e nenhuma linha da base muda.
+
+**A consequência da junção.** No treino 01, "10 flexões" e "5 push ups" eram dois itens da mesma ronda. Agora são **dois blocos do mesmo exercício**: `exerciseAcrossRounds` devolve os dois, e `exerciseTotalsByRound` soma-os — **15 flexões na ronda 1**, 14 na ronda 2 —, com a carga a ser a mais pesada e nunca a soma, e a origem a herdar-se (declarado se algum dos blocos o foi). O texto guardado na base **não se reescreve**: os dois blocos continuam a dizer "Flexões" e "push ups", como foram escritos; quem os junta é a leitura.
+
+**Não é uma lista de ginásio.** Cresce como nasceu: do que se treinou.
 
 ### 3. Um exercício novo entra sem programador
 
@@ -74,6 +85,10 @@ O ADR 0011 §1b decidiu que os blocos se comparam entre rondas **pelo que eram, 
 - **Os nomes já escritos sobrevivem porque ninguém lhes toca**, e mapeiam onde dá porque a resolução é na leitura: "bicep" passa a ser `ex:bicep_haltere`, peso livre, com os 22,5 kg que tinha. O que não mapear fica como estava — nome próprio, identidade própria, os dois campos.
 - **Provado sobre a base real do telemóvel** (`apps/mobile/test/taxonomia-real.test.ts` e `leitura-real.test.ts`; números no [relatório da sessão 27](../reports/2026-09-19-sessao-27.md)). A base do fundador tem hoje **zero nomes escritos** — o único, "bicep", estava na sessão de teste que ele mandou apagar —, por isso a prova repõe essas oito linhas, **só na cópia temporária**, tal como o relatório da sessão 26 as registou.
 
+### 6. O desporto "Força" passa a "Ginásio"
+
+Decisão do fundador. É **só o rótulo**, nos dois dicionários (`Ginásio` / `Gym`): o identificador `strength` guardado na base não muda e nenhuma sessão antiga se reescreve — uma sessão de há um mês, aberta hoje, diz "Ginásio". A razão é a queixa do treino 01: "força para mim é peso puro". Um bloco de flexões e RDL num desporto chamado Força mentia; num chamado Ginásio, não.
+
 ## Alternativas consideradas
 
 - **Mais desportos em vez de um tipo** ("Peso do corpo" como nono desporto). Rejeitada: cada troca bicep → flexões passava a ser um `sport_changed`, um segmento novo e dois toques no Mudar, dentro de um circuito em que o fundador já não usa a Marca. O desporto decide como se grava; flexões e bicep gravam-se da mesma maneira.
@@ -86,11 +101,11 @@ O ADR 0011 §1b decidiu que os blocos se comparam entre rondas **pelo que eram, 
 
 - A ficha de um bloco de exercícios mostra o nome, as sugestões do catálogo, as duas pílulas de tipo e **só os campos desse tipo**; as flexões deixam de pedir carga. Um bloco que muda de bicep para flexões limpa a carga (um `recorded` com `loadKg: null`; os 12,5 kg continuam no registo).
 - `applyRecord` recusa uma carga num exercício de peso do corpo, como já recusava repetições num bloco de remo: é um engano, não um valor.
-- **O rótulo "Força" do desporto não mudou.** A queixa do fundador é também sobre esse rótulo, mas mudar o nome de um dos oito botões do ecrã inicial é uma decisão de produto que não é minha (pergunta 3).
+- **O desporto passa a chamar-se "Ginásio"** (§6). É só o rótulo; o identificador `strength` na base não muda.
 - Os planos de treino (4.5) referem exercícios por nome e tipo, resolvidos por `exerciseIdentity` — a mesma identidade que compara rondas compara o previsto com o feito.
 
-## Perguntas para o fundador
+## Perguntas ao fundador — respondidas (sessão 27)
 
-1. **Flexões e push ups são o mesmo exercício?** No treino 01 aparecem como dois itens da mesma ronda (10 flexões, depois 5 push ups), e ficaram duas entradas. Se forem o mesmo, junta-se com uma grafia no catálogo e nenhuma linha da base muda.
-2. **O RDL é com carga?** O fundador arruma-o em "não é força"; o texto do ADR 0011 dá-lhe 20 kg. Ficou como peso livre porque, entre um campo que pode ficar vazio e um campo que falta, o vazio não perde nada — e o fundador muda-o na ficha com um toque.
-3. **"Força" continua a ser o nome do desporto?** Com a taxonomia, o bloco chama-se pelo exercício; o segmento e o botão do ecrã inicial continuam "Força". Alternativas: "Exercícios", "Circuito", "Ginásio". O identificador `strength` na base não muda em nenhum dos casos.
+1. **Flexões e push ups são o mesmo exercício?** **Sim**: a mesma coisa em duas línguas. Uma entrada, com a outra como grafia — e o mesmo tratamento para todos os pares (§2).
+2. **O RDL é com carga?** **Sim**, peso livre. O "por confirmar" saiu.
+3. **"Força" continua a ser o nome do desporto?** **Não**: passa a "Ginásio" (§6).

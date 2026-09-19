@@ -37,7 +37,7 @@ export const en: Dictionary = {
     bike: { label: "Bike", live: "Riding" },
     walk: { label: "Walk", live: "Walking" },
     transition: { label: "Transition", live: "Transition" },
-    strength: { label: "Strength", live: "Strength" },
+    strength: { label: "Gym", live: "Gym" },
     rowing_indoor: { label: "Indoor rowing", live: "Rowing" },
     treadmill: { label: "Treadmill", live: "On the treadmill" },
     swimming_pool: { label: "Pool swimming", live: "Swimming" },
