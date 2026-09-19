@@ -86,6 +86,35 @@ pace_médio = tempo_total / distância_total
 
 **nunca** a média aritmética dos paces de cada ronda (`(pace_1 + pace_2 + … + pace_n) / n`). As duas divergem sempre que as rondas têm distâncias diferentes, e divergem na direção errada — a média aritmética pesa igual uma ronda de 200 m e uma de 500 m, escondendo exatamente a ronda mais lenta que o atleta quer ver. O motor já faz isto para o ritmo médio de um segmento (`recentMetrics`, ADR 0009); a mesma regra sobe para o agregado entre rondas.
 
+### 5. A Marca por toque simples, com "Anular" — proposta do CTO, aceite em 2026-09-19 (sessão 28); **por implementar, é trabalho de motor**
+
+**Decisão.** A Marca passa de premir e manter (500 ms, desde a sessão 14) a **toque simples**, e ganha um **"Anular" de 5 segundos** que escreve um evento compensatório, `mark_cancelled`, no mesmo padrão do `round_cancelled` que a sessão 27 apontou para o Nova ronda (relatório 27, §9.3: ainda não existe nenhum dos dois). **O Parar mantém o gesto longo**, porque é destrutivo. **Até esta proposta ser implementada, fica o premir.** Dois gestos para o mesmo botão (toque na rua, premir no interior) foi considerado e rejeitado: é pior do que qualquer um deles.
+
+**Porquê — o argumento que decide, e que não se perde.** A razão escrita na sessão 14 para o premir foi o custo do erro: "uma marca não se desfaz, e um toque acidental parte um bloco em dois sem ninguém dar por isso". Essa conta tinha **dois erros possíveis e só pesou um**. Um botão que se dispara ao premir tem os dois:
+
+| | Marca **falsa** (toque acidental) | Marca **perdida** (o premir não chegou ao fim) |
+|---|---|---|
+| O que acontece | um bloco partido em dois | dois blocos fundidos num só |
+| Vê-se no momento? | **sim**: o contador de marcas sobe e entra uma linha na lista | **só se se estiver a olhar para o anel**; quem larga o telemóvel a meio do gesto não vê nada |
+| O que se perde | **nada**: os dois pedaços somados são o bloco, e os valores registam-se num deles | **informação que não se recupera**: o segundo exercício não tem bloco onde registar valores, e os tempos dos dois ficam num número só |
+| Quem o provoca | telemóvel no bolso com o ecrã ligado; gotas de suor no vidro | mãos suadas, pressa, 500 ms a parecerem uma eternidade entre séries |
+
+A marca perdida é o erro **mais caro e mais provável** no uso do fundador (circuito no ginásio, telemóvel no banco, mãos molhadas), e é precisamente o que o premir favorece. Os registos 02 e 03 mostram "o circuito inteiro num bloco só" e "cinco rondas em dez blocos"; a base não diz se foi o gesto que falhou ou se o fundador não marcou, por isso **isto não conta como prova** — é o padrão que uma Marca difícil de disparar produziria, e a pergunta ao fundador continua aberta. **O que não mudou desde a sessão 14** é que a marca continua sem se desfazer; é por isso que a proposta não é o toque sozinho: com o telemóvel no bolso numa corrida, o suor no vidro gera toques fantasma e cada um ficava no registo para sempre. O Anular converte o erro raro e barato (marca falsa) em algo que se desfaz, e retira ao erro caro (marca perdida) a sua causa.
+
+**Riscos de cada lado.**
+- *Ficar no premir*: continuar a perder marcas sem dar por isso — perder o treino que se queria gravar.
+- *Toque simples sem Anular*: marcas fantasma permanentes nas sessões de rua.
+- *Toque simples com Anular*: mais um evento no motor e 5 s de uma linha nova no ecrã de gravação; a marca fantasma de quem não está a olhar continua a existir, mas deixa de ser o erro mais provável e passa a ser o mais barato.
+
+**O desenho, para a sessão que tocar no motor.**
+1. **Um toque marca.** A face do botão afunda, o contador sobe e o telemóvel vibra. O anel que hoje se desenha ao longo dos 500 ms deixa de existir na Marca (fica no Parar).
+2. **Durante 5 s**, por cima das ações, uma linha "Marca feita · **Anular**" com 56 px de alvo. Anular escreve `mark_cancelled`.
+3. **Uma guarda de escrita** contra o duplo toque, como a dos 2000 ms da ronda: guarda a *escrita*, nunca a leitura.
+4. **A derivação é de ordem, como a das rondas — sem limiar de duração.** Um `mark_cancelled` só conta se vier **imediatamente a seguir** ao `marked` a que responde, sem nenhum outro evento de sessão pelo meio; senão é ignorado. A interface só oferece o Anular enquanto isso for verdade: o Anular desaparece aos 5 s **ou** no momento em que qualquer outro evento se escreve (um valor, uma ronda, um Mudar, outra marca). Isto fecha o caso que o tempo sozinho deixaria aberto: registar valores no bloco novo e depois anular a marca deixaria o `recorded` a apontar para um bloco que já não existe. Cancelada a marca, os dois blocos voltam a ser um, com o tempo somado.
+5. **Nada se reescreve**: o `marked` e o `mark_cancelled` ficam ambos na base, e as sessões antigas — que não têm `mark_cancelled` — leem-se exatamente como hoje.
+
+**Por decidir (do fundador):** nos treinos 02 e 03, tentaste marcar e a Marca não pegou, ou não marcaste? A resposta diz se o problema é o gesto ou o hábito.
+
 ## O que faltava decidir na quarta (2026-09-17) — decidido na sessão 26, ver "Decisão" acima
 
 Revisto na sessão 20b: o ponto sobre a taxonomia de exercícios saiu de aqui — a carga não depende dela (ver "Correção" na secção 2 acima), e o índice de posição já não é uma dúvida em aberto, ficou resolvido como identidade de exercício (secção 1b). Na sessão 22b entrou o ponto 2a, das duas portas. Ficam quatro pontos, todos do fundador:

@@ -700,6 +700,7 @@ export function Chip(props: {
         flex: props.metade ? 1 : undefined,
         minWidth: 0,
         paddingHorizontal: props.metade ? E.e3 : E.e4,
+        paddingVertical: props.metade ? E.e1 : 0,
         borderRadius: R.pill,
         borderWidth: 1.5,
         borderColor: props.ativo ? props.tokens.tinta : props.tokens.linha,
@@ -708,9 +709,12 @@ export function Chip(props: {
         justifyContent: "center",
       })}
     >
+      {/* As metades dizem "Este · Kettlebell swing": duas linhas antes de cortar o nome. */}
       <Texto
-        numberOfLines={1}
-        style={texto(14.5, 700, props.ativo ? props.tokens.fundo : props.tokens.tinta)}
+        numberOfLines={props.metade ? 2 : 1}
+        style={texto(14.5, 700, props.ativo ? props.tokens.fundo : props.tokens.tinta, {
+          textAlign: "center",
+        })}
       >
         {props.rotulo}
       </Texto>

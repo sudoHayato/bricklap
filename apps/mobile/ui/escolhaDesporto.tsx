@@ -58,20 +58,22 @@ export function EscolhaDesporto(props: {
         })}
       >
         <Icone nome={s} cor={ativo ? tokens.acentoTinta : COR_DESPORTO[tema][s]} tamanho={18} />
-        <Texto
-          numberOfLines={1}
-          style={texto(15, 700, ativo ? tokens.acentoTinta : tokens.tinta, {
-            flexShrink: 1,
-            flex: 1,
-          })}
-        >
-          {t(`sport.${s}.label`)}
-        </Texto>
-        {ativo ? (
-          <Texto style={{ ...kicker(tokens.acentoTinta), fontSize: 10 }}>
-            {t("mobile.currentSportTag")}
+        {/* O nome tem a coluna toda e pode ir a duas linhas; o "Atual" fica por baixo.
+            Ao lado do nome, "Remo indoor" e "Natação (piscina)" ficavam cortados
+            ("Remo i…") — e o nome é o que se escolhe. */}
+        <View style={{ flex: 1, minWidth: 0, paddingVertical: E.e1 }}>
+          <Texto
+            numberOfLines={2}
+            style={texto(15, 700, ativo ? tokens.acentoTinta : tokens.tinta)}
+          >
+            {t(`sport.${s}.label`)}
           </Texto>
-        ) : null}
+          {ativo ? (
+            <Texto style={{ ...kicker(tokens.acentoTinta), fontSize: 10 }}>
+              {t("mobile.currentSportTag")}
+            </Texto>
+          ) : null}
+        </View>
       </Pressable>
     );
   };

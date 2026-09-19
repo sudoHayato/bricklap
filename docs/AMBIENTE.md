@@ -15,6 +15,14 @@
 - **Build LOCAL**, na WSL: JDK 17 e Android SDK (plataforma 36, build-tools 36) instalados em modo de utilizador. Ver [ADR 0005](adr/0005-build-local-android.md).
 - **Sem conta Expo e sem EAS.** O fundador não quer criar contas de terceiros para desenvolvimento.
 
+## Formatador — NÃO se corre sobre ficheiros que não se está a alterar
+
+O repositório tem um `.prettierrc` (`printWidth` 100), mas **o código existente não está formatado com ele**: foi escrito à mão, a cerca de 140 colunas. Correr `prettier --write` num ficheiro reflui-o inteiro e enterra a alteração real no ruído — na sessão 28 uma passagem do formatador transformou uma mudança de interface num diff de 1450 linhas, que teve de se repor à mão (uma fusão a três vias contra uma cópia do `HEAD` já formatada, `git merge-file --theirs`). É a segunda vez em dois dias que uma ferramenta automática polui um diff (a primeira foi a `sed` de uma substituição que partiu uma marca de negrito, sessão 27).
+
+- **Não correr o formatador** em ficheiros que não se está a alterar, e em geral não o correr com `--write` sobre ficheiros já existentes: escrever à mão, no estilo do que lá está.
+- Depois de qualquer ferramenta que reescreve ficheiros em bloco (formatador, `sed -i` em vários ficheiros, substituição por script), **ver `git diff --stat` antes de fazer commit**: um diff muito maior do que a alteração é o sinal.
+- Se o ruído já entrou, recupera-se com `git merge-file` a três vias (o `HEAD`, o `HEAD` formatado e o ficheiro atual).
+
 ## Telemóvel
 
 - **Samsung Galaxy S24 Ultra, Android 16 (One UI 8.5)** — o telemóvel de teste, e o do fundador.
@@ -25,6 +33,7 @@
   - **Nenhum agente inicia uma sessão com GPS sem perguntar primeiro ao fundador.** Uma Corrida gravada em movimento contamina o histórico do dogfooding e deixa o trajeto na base. O que se puder testar indoor testa-se indoor: Força, Remo indoor e Passadeira não ligam a localização (ADR 0008).
   - **Antes de cada toque por `adb`, confirmar que o Bricklap está à frente** (`dumpsys activity activities | grep topResumedActivity`). **Se outra aplicação estiver à frente, parar logo e avisar** — nunca continuar. Uma captura de ecrã que apanhe outra aplicação apaga-se de imediato e nada do seu conteúdo se regista em lado nenhum.
   - **Antes de instalar (o `pm install` mata a app), confirmar que não há uma gravação em curso — e a prova certa é `isForeground=true`, não a existência do serviço.** `adb shell dumpsys activity services com.bricklap.app` lista o `LocationTaskService` mesmo **depois** do Parar (a app usa `killServiceOnDestroy: false`); o que distingue uma gravação viva é `isForeground=true` nesse registo, ou a notificação do Bricklap visível. Na sessão 27 um registo antigo foi lido como um treino em curso e adiou a instalação mais de uma hora; o `logcat` mostrou a notificação a sair 26 ms depois do Parar.
+  - **`adb shell input keyevent 66` (Enter) NÃO é a tecla "Seguinte" do teclado**: numa `TextInput` com o foco a saltar para o campo seguinte, o `keyevent` deixa o campo certo com o foco mas **esconde o teclado**, e a tecla "Seguinte" verdadeira do teclado não (sessão 28: uma suspeita de defeito da app que era só o `keyevent`). Para provar um comportamento do teclado, tocar na tecla no ecrã. `input text` escreve para o campo com o foco mesmo sem o teclado visível, por isso não prova que o teclado está aberto: para isso, `dumpsys input_method | grep mInputShown`.
   - **Pedir ao fundador uma janela** — uns minutos com o ecrã desbloqueado e o telemóvel pousado — antes de conduzir a interface, e tratar tudo o que a app gravar como dados reais do dogfooding: uma sessão de teste apaga-se no histórico no fim, e diz-se no relatório.
 
 ## Relógio
