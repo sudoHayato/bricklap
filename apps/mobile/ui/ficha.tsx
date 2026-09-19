@@ -336,6 +336,8 @@ export function FichaValores(props: {
                 minWidth: 64,
                 minHeight: TOQUE,
                 textAlign: "center",
+                textAlignVertical: "center",
+                includeFontPadding: false,
                 paddingVertical: 0,
                 paddingHorizontal: 0,
               }}
