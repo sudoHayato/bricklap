@@ -1,0 +1,52 @@
+
+Ficha, teclado aberto: campo, − e +, e Guardar  (04-teclado-500.png)
+  y= 517 x= 242    604x 165 px =  214.9x 58.8 dp
+  y= 522 x=  61    156x 156 px =   55.6x 55.6 dp
+  y= 522 x= 871    156x 156 px =   55.6x 55.6 dp
+  y= 819 x= 241    606x 164 px =  215.6x 58.5 dp
+  y= 823 x=  61    156x 155 px =   55.6x 55.3 dp
+  y= 823 x= 871    156x 155 px =   55.6x 55.3 dp
+
+  (Guardar, vermelho)  (04-teclado-500.png)
+  y= 511 x= 236    608x 169 px =  216.2x 60.1 dp
+  y=1142 x= 439    585x 157 px =  208.0x 55.8 dp
+
+Ficha de Ginásio (fechada): campos, − e +, chips a meias  (07-ficha-ginasio.png)
+  y= 559 x= 556    471x 156 px =  167.6x 55.6 dp
+  y= 850 x=  61    966x 156 px =  343.6x 55.6 dp
+  y=1031 x=  61    252x 156 px =   89.8x 55.6 dp
+  y=1031 x= 337    228x 156 px =   81.2x 55.6 dp
+  y=1031 x= 589    337x 156 px =  120.0x 55.6 dp
+  y=1031 x= 950    135x 156 px =   48.2x 55.6 dp
+  y=1323 x=  61    471x 156 px =  167.6x 55.6 dp
+  y=1323 x= 556    471x 156 px =  167.6x 55.6 dp
+  y=1615 x= 241    606x 164 px =  215.6x 58.5 dp
+  y=1619 x=  61    156x 156 px =   55.6x 55.6 dp
+  y=1619 x= 871    156x 156 px =   55.6x 55.6 dp
+
+  (chip ativo, preto)  (20-flexoes.png)
+  y= 659 x=  56    473x 157 px =  168.2x 55.8 dp
+  y=1131 x= 498    254x 158 px =   90.3x 56.2 dp
+  y=1423 x= 551    473x 158 px =  168.2x 56.2 dp
+
+  (Guardar, vermelho)  (07-ficha-ginasio.png)
+  y=2015 x= 439    585x 157 px =  208.0x 55.8 dp
+
+Gravação: Nova ronda, Registar, Mudar, Parar (brancos)  (01-gravacao-remo.png)
+  y= 673 x=  59    970x 333 px =  345.0x118.6 dp
+  y=1603 x=  61    471x 155 px =  167.6x 55.3 dp
+  y=1603 x= 556    471x 155 px =  167.6x 55.3 dp
+  y=2030 x=  61    334x 156 px =  118.9x 55.6 dp
+  y=2030 x= 419    607x 156 px =  216.0x 55.6 dp
+
+  Marca (vermelho, com o leito)  (01-gravacao-remo.png)
+  y=1778 x=  56    968x 213 px =  344.2x 75.7 dp
+
+Mudar (folha): tiles e Cancelar  (06-mudar.png)
+  y=1136 x=  61    471x 156 px =  167.6x 55.6 dp
+  y=1136 x= 556    471x 156 px =  167.6x 55.6 dp
+  y=1316 x= 556    471x 156 px =  167.6x 55.6 dp
+  y=1590 x=  61    471x 156 px =  167.6x 55.6 dp
+  y=1590 x= 556    471x 156 px =  167.6x 55.6 dp
+  y=1770 x=  61    471x 156 px =  167.6x 55.6 dp
+  y=1770 x= 556    471x 156 px =  167.6x 55.6 dp

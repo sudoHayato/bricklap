@@ -14,6 +14,13 @@ import type { TextStyle } from "react-native";
  * Por isso o peso escolhe a FAMÍLIA aqui, e nunca se escreve `fontWeight`
  * ao lado de uma destas.
  */
+/**
+ * Até onde o texto acompanha a letra grande do sistema (DESIGN.md §3). Vive
+ * aqui, e não em `texto.tsx`, porque o teste de largura do cronómetro a lê e
+ * `texto.tsx` importa o React Native.
+ */
+export const ESCALA_MAX = 1.3;
+
 export type PesoTexto = 400 | 500 | 600 | 700 | 800;
 export type PesoNumero = 600 | 700 | 800;
 

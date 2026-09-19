@@ -45,6 +45,7 @@ import {
   Tabs,
 } from "./ui/estrutura";
 import { FichaValores, formatarCampo, resumoDosValores, valoresDeclarados } from "./ui/ficha";
+import { CRONOMETRO, MINIMO_DO_CRONOMETRO, estiloDoCronometro } from "./ui/cronometro";
 import { Fiada, type TrocoFiada } from "./ui/fiada";
 import { Icone } from "./ui/icones";
 import { useMargens } from "./ui/margens";
@@ -288,8 +289,8 @@ export function EcraGravacao(props: {
         <View style={{ paddingHorizontal: E.e5, paddingTop: E.e4 }}>
           <TextoJusto
             testID="chrono"
-            minimo={0.5}
-            style={numero(84, 800, tokens.tinta, { lineHeight: 84 * 0.92, letterSpacing: -2.94 })}
+            minimo={MINIMO_DO_CRONOMETRO}
+            style={estiloDoCronometro(CRONOMETRO.gravacao, tokens.tinta)}
           >
             {formatDuration(durationMs(session, now))}
           </TextoJusto>
@@ -536,8 +537,8 @@ export function EcraRetoma(props: {
         contentContainerStyle={{ paddingHorizontal: E.e5, paddingTop: E.e4, paddingBottom: E.e6 }}
       >
         <TextoJusto
-          minimo={0.5}
-          style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}
+          minimo={MINIMO_DO_CRONOMETRO}
+          style={estiloDoCronometro(CRONOMETRO.total, tokens.tinta)}
         >
           {formatDuration(durationMs(session, now))}
         </TextoJusto>
@@ -673,8 +674,8 @@ export function EcraResumo(props: {
           }}
         >
           <TextoJusto
-            minimo={0.5}
-            style={numero(72, 800, tokens.tinta, { lineHeight: 72 * 0.9, letterSpacing: -2.88 })}
+            minimo={MINIMO_DO_CRONOMETRO}
+            style={estiloDoCronometro(CRONOMETRO.total, tokens.tinta)}
           >
             {formatDuration(durationMs(session))}
           </TextoJusto>

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  applyMark,
+  blockMetrics,
+  blocksFromEvents,
+  createLiveSession,
+  durationMs,
   formatClock,
   formatDay,
   formatDistance,
@@ -20,6 +25,55 @@ describe("formatDuration", () => {
 
   it("clamps negatives to zero", () => {
     expect(formatDuration(-5_000)).toBe("00:00");
+  });
+});
+
+/**
+ * Long stopwatches from an INJECTED clock (sessão 28). The recording screen's
+ * 84 px stopwatch has to survive the durations of a real workout, and proving
+ * that by waiting an hour on a phone is a wait, not a check: every function
+ * here takes the time as a parameter, so a session that started at T0 is
+ * read at T0 + 3799 s without anything actually running. What the string
+ * looks like, character by character, is the input of the width test in
+ * `apps/mobile/test/cronometro.test.ts`.
+ */
+describe("the stopwatch of a long session, from an injected clock", () => {
+  const T0 = 1_789_000_000_000;
+  const live = createLiveSession("strength", T0, "long");
+  const relogio = (segundos: number) => formatDuration(durationMs(live, T0 + segundos * 1000));
+
+  it("59:59, 1:00:00, 1:03:19 and 9:59:59 read exactly as the screen will draw them", () => {
+    expect(relogio(59 * 60 + 59)).toBe("59:59");
+    expect(relogio(3600)).toBe("01:00:00");
+    expect(relogio(3600 + 3 * 60 + 19)).toBe("01:03:19");
+    expect(relogio(9 * 3600 + 59 * 60 + 59)).toBe("09:59:59");
+  });
+
+  it("the hour is two digits from the first hour, so 8 characters is the longest a workout gets", () => {
+    // 59:59 is 5 characters; 01:00:00 is 8. The jump is the case that matters
+    // for a fixed-width box, and it happens at the hour, not gradually.
+    expect(relogio(59 * 60 + 59)).toHaveLength(5);
+    expect(relogio(3600)).toHaveLength(8);
+    expect(relogio(99 * 3600 + 59 * 60 + 59)).toHaveLength(8);
+  });
+
+  it("one second either side of the hour", () => {
+    expect(relogio(3599)).toBe("59:59");
+    expect(relogio(3600)).toBe("01:00:00");
+    expect(relogio(3601)).toBe("01:00:01");
+  });
+
+  it("a session that started before the clock is read never goes negative", () => {
+    expect(formatDuration(durationMs(live, T0 - 5_000))).toBe("00:00");
+  });
+
+  it("the open block's time (the card under the stopwatch) counts from its own start, on the same clock", () => {
+    // A mark at 10 min: the open block is the second one, and reads the rest.
+    const marcada = applyMark(live, T0 + 600_000);
+    const aberto = blocksFromEvents(marcada.events).at(-1)!;
+    const em = T0 + (3600 + 3 * 60 + 19) * 1000;
+    expect(formatDuration(durationMs(marcada, em))).toBe("01:03:19");
+    expect(formatDuration(blockMetrics(marcada, aberto, em).durationMs)).toBe("53:19");
   });
 });
 

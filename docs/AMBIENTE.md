@@ -15,6 +15,14 @@
 - **Build LOCAL**, na WSL: JDK 17 e Android SDK (plataforma 36, build-tools 36) instalados em modo de utilizador. Ver [ADR 0005](adr/0005-build-local-android.md).
 - **Sem conta Expo e sem EAS.** O fundador não quer criar contas de terceiros para desenvolvimento.
 
+## Verificar sem esperar: tempo injetado, e pergunta-se antes de esperar mais do que uns minutos
+
+**Nada de esperas de relógio real para provar o que se prova com tempo injetado.** O motor é puro e recebe o tempo por parâmetro (`durationMs(session, at)`, `blockMetrics(session, block, at)`, `createLiveSession(sport, at, id)`): uma sessão que começou em T0 lê-se em T0 + 3799 s sem que nada corra. Foi a regra que faltou na sessão 28, em que uma sessão de teste ficou a correr uma hora num telemóvel para "ver" o cronómetro chegar a `01:03:19` — uma espera, não uma verificação, que gastou limite a ver um contador subir e ainda terminou com o telemóvel desligado do cabo. O que se fez em vez disso: um teste no motor com o relógio injetado e um teste de largura com a fonte real (`apps/mobile/test/cronometro.test.ts`).
+
+- **Uma verificação que precise de mais de uns minutos de espera: parar e perguntar ao CTO**, em vez de esperar.
+- Se o comportamento a provar é do telemóvel e não do motor (o que o React Native faz ao texto), a captura obtém-se pelo caminho mais curto — uma sessão de teste com o início recuado — ou diz-se que nenhum caminho é honesto e fica só o teste.
+- Uma sessão de teste deixada a correr num telemóvel que anda com o fundador é um risco: se o cabo cair, ela fica lá, viva, à espera de ser vista. Acabar e apagar as sessões de teste faz parte da janela, não do fim do dia.
+
 ## Formatador — NÃO se corre sobre ficheiros que não se está a alterar
 
 O repositório tem um `.prettierrc` (`printWidth` 100), mas **o código existente não está formatado com ele**: foi escrito à mão, a cerca de 140 colunas. Correr `prettier --write` num ficheiro reflui-o inteiro e enterra a alteração real no ruído — na sessão 28 uma passagem do formatador transformou uma mudança de interface num diff de 1450 linhas, que teve de se repor à mão (uma fusão a três vias contra uma cópia do `HEAD` já formatada, `git merge-file --theirs`). É a segunda vez em dois dias que uma ferramenta automática polui um diff (a primeira foi a `sed` de uma substituição que partiu uma marca de negrito, sessão 27).

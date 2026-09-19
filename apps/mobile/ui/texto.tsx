@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { Text, TextInput, type TextInputProps, type TextProps } from "react-native";
+import { ESCALA_MAX } from "./tipografia";
 
 /**
  * O texto da app, com a letra grande do sistema tratada (sessão 28).
@@ -14,7 +15,6 @@ import { Text, TextInput, type TextInputProps, type TextProps } from "react-nati
  *
  * Nenhum ecrã importa `Text` ou `TextInput` do react-native diretamente.
  */
-export const ESCALA_MAX = 1.3;
 
 export function Texto(props: TextProps) {
   return <Text maxFontSizeMultiplier={ESCALA_MAX} {...props} />;
