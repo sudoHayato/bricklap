@@ -49,6 +49,7 @@ import {
   stepSim,
   formatClock,
   type Block,
+  type CatalogExercise,
   type RecordInput,
   type Sample,
   type Session,
@@ -383,6 +384,17 @@ export default function App() {
   );
 
   /** A Ronda. Não muda o segmento, por isso não precisa de amostra de fronteira. */
+  /**
+   * O catálogo de exercícios (ADR 0012): a partida mais o que o registo do
+   * atleta já nomeou. É uma consulta à base, por isso vive em estado e só
+   * se relê quando pode ter mudado — ao trocar de ecrã e depois de cada
+   * registo —, nunca a cada segundo do cronómetro.
+   */
+  const [catalogo, setCatalogo] = useState<CatalogExercise[]>([]);
+  useEffect(() => {
+    setCatalogo(getStore().exerciseCatalog());
+  }, [screen.kind]);
+
   const novaRonda = useCallback(() => {
     const store = getStore();
     store.startRound(Date.now());
@@ -397,6 +409,7 @@ export default function App() {
   const registar = useCallback((sessionId: string, _block: Block, input: RecordInput) => {
     const store = getStore();
     store.record(sessionId, input, Date.now());
+    setCatalogo(store.exerciseCatalog());
     setScreen((atual) => {
       if (atual.kind !== "resumo" || atual.session.id !== sessionId) return atual;
       const relida = store.byId(sessionId);
@@ -568,6 +581,7 @@ export default function App() {
           avisos={avisosDe(feedWanted)}
           onMarca={marcar}
           onNovaRonda={novaRonda}
+          catalogo={catalogo}
           onRegistar={(block, input) => registar(session.id, block, input)}
           onMudarPara={mudarPara}
           onParar={parar}
@@ -580,6 +594,7 @@ export default function App() {
           voltar={screen.doHistorico ? abrirHistorico : undefined}
           onConcluir={screen.doHistorico ? undefined : irInicio}
           onRegistar={(block, input) => registar(screen.session.id, block, input)}
+          catalogo={catalogo}
         />
       ) : screen.kind === "historico" ? (
         <EcraHistorico

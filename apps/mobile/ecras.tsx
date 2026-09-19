@@ -22,6 +22,8 @@ import {
   sessionMetrics,
   sportHasGps,
   type Block,
+  type CatalogExercise,
+  type OriginAggregate,
   type RecordInput,
   type SegmentMetrics,
   type Session,
@@ -32,8 +34,8 @@ import { locale, t } from "./i18n";
 import type { SessionSummary } from "./persistence";
 import { Botao, Cartao, Kicker, Pilula, Seccao, Tijolo } from "./ui/componentes";
 import { EscolhaDesporto } from "./ui/escolhaDesporto";
-import { BotaoPremir, Cabeca, FUNDO, LinhaBloco, LinhaRonda, Redondo, TOPO, Tabs } from "./ui/estrutura";
-import { FichaValores, formatarCampo, resumoDosValores } from "./ui/ficha";
+import { BotaoPremir, Cabeca, FUNDO, LinhaBloco, LinhaRonda, Redondo, SeloDeclarado, TOPO, Tabs } from "./ui/estrutura";
+import { FichaValores, formatarCampo, resumoDosValores, valoresDeclarados } from "./ui/ficha";
 import { Fiada, type TrocoFiada } from "./ui/fiada";
 import { Icone } from "./ui/icones";
 import { BotaoMarca } from "./ui/marca";
@@ -94,6 +96,26 @@ function nomeDoBloco(session: Session, b: Block): string {
 /** Um bloco que aceita valores e ainda não tem nenhum. */
 function porPreencher(session: Session, b: Block, now: number): boolean {
   return VALUE_FIELDS_BY_SPORT[b.sport].length > 0 && valorDoBloco(session, b, now) === null;
+}
+
+/**
+ * A marca de declarado de uma linha de bloco (ADR 0011 §3a): presente
+ * quando o que a linha mostra foi escrito pelo atleta, ou calculado a
+ * partir disso. Um bloco com GPS nunca a leva.
+ */
+function marcaDeclarado(session: Session, b: Block, now: number): { rotulo: string; descricao: string } | undefined {
+  if (sportHasGps(b.sport) || !valoresDeclarados(session, b, now)) return undefined;
+  return { rotulo: t("mobile.declaredShort"), descricao: t("mobile.declaredTag") };
+}
+
+/**
+ * As rondas só se mostram quando organizam alguma coisa: duas ou mais, ou
+ * uma sessão antiga em que há blocos antes da primeira. Desde a sessão 27
+ * toda a sessão nasce na ronda 1, e uma corrida de um bloco só não precisa
+ * de um cabeçalho "Ronda 1" por cima.
+ */
+function mostraRondas(blocos: Block[], nRondas: number): boolean {
+  return nRondas > 1 || (nRondas === 1 && blocos.some((b) => b.round === null));
 }
 
 // ---------------------------------------------------------------------------
@@ -203,6 +225,8 @@ export function EcraGravacao(props: {
   avisos: React.ReactNode;
   onMarca: () => void;
   onNovaRonda: () => void;
+  /** O catálogo de exercícios para a ficha (ADR 0012). */
+  catalogo: readonly CatalogExercise[];
   onRegistar: (block: Block, input: RecordInput) => void;
   onMudarPara: (s: Sport) => void;
   onParar: () => void;
@@ -314,6 +338,7 @@ export function EcraGravacao(props: {
               corDoIcone={COR_DESPORTO[tema][b.sport]}
               nome={nomeDoBloco(session, b)}
               valor={valorDoBloco(session, b, now)}
+              declarado={marcaDeclarado(session, b, now)}
               tempo={formatDuration(blockMetrics(session, b, now).durationMs)}
             />
           ))}
@@ -325,7 +350,7 @@ export function EcraGravacao(props: {
           <Botao
             tokens={tokens}
             testID="btn-round"
-            rotulo={t("mobile.newRound")}
+            rotulo={t("mobile.newRoundN", { n: String(rondas.length + 1) })}
             estilo={{ flex: 1 }}
             onPress={props.onNovaRonda}
           />
@@ -379,6 +404,7 @@ export function EcraGravacao(props: {
           session={session}
           now={now}
           blocos={anterior ? [atual, anterior] : [atual]}
+          catalogo={props.catalogo}
           onGuardar={(block, input) => {
             setARegistar(false);
             props.onRegistar(block, input);
@@ -449,6 +475,8 @@ export function EcraResumo(props: {
   onConcluir?: () => void;
   /** A porta do fim (ADR 0011): escreve os valores de um bloco desta sessão. */
   onRegistar?: (block: Block, input: RecordInput) => void;
+  /** O catálogo de exercícios para a ficha (ADR 0012). */
+  catalogo: readonly CatalogExercise[];
 }) {
   const { tokens, tema, session } = props;
   const [blocoAEditar, setBlocoAEditar] = useState<Block | null>(null);
@@ -463,19 +491,25 @@ export function EcraResumo(props: {
   const aPreencher = blocos.filter((b) => porPreencher(session, b, fim)).length;
   const editavel = (b: Block) => props.onRegistar !== undefined && VALUE_FIELDS_BY_SPORT[b.sport].length > 0;
 
-  /** Uma linha por desporto: blocos, tempo, distância (medida ou declarada) e ritmo ou velocidade. */
-  const linhaDesporto = (a: (typeof porDesporto)[number]): string => {
-    const partes = [plural(a.blocks, t("mobile.blocksOne"), t("mobile.blocksOther")), formatDuration(a.durationMs)];
-    if (a.measuredM >= 1) partes.push(formatDistanceForUnit(a.measuredM));
-    if (a.declaredM >= 1) partes.push(`${formatDistanceForUnit(a.declaredM)} ${t("mobile.declaredDistance")}`);
-    if (a.secPerKm !== null) {
-      const metros = a.measuredM + a.declaredM;
-      if (SPORT_PACE_KIND[a.sport] === "speed" || a.sport === "treadmill") partes.push(formatarCampo("speedKmh", (metros / (a.pacedMs / 1000)) * 3.6));
-      else if (a.sport === "rowing_indoor") partes.push(`${formatDuration((a.pacedMs / 1000 / (metros / 500)) * 1000)}/500`);
-      else partes.push(formatPace(metros, a.pacedMs));
-    }
-    return partes.join(" · ");
+  /**
+   * Uma linha por desporto: blocos, tempo, e depois distância e ritmo POR
+   * ORIGEM. O medido e o declarado nunca entram no mesmo número (ADR 0011
+   * §3 e §3a): o ritmo que sai de metros declarados é declarado e diz que
+   * o é, com a mesma marca das linhas de bloco.
+   */
+  const ritmoDe = (sport: Sport, o: OriginAggregate): string => {
+    if (SPORT_PACE_KIND[sport] === "speed" || sport === "treadmill") return formatarCampo("speedKmh", (o.meters / (o.pacedMs / 1000)) * 3.6);
+    if (sport === "rowing_indoor") return `${formatDuration((o.pacedMs / 1000 / (o.meters / 500)) * 1000)}/500`;
+    return formatPace(o.meters, o.pacedMs);
   };
+  const linhaDesporto = (a: (typeof porDesporto)[number]): { base: string; medido: string | null; declarado: string | null } => ({
+    base: [plural(a.blocks, t("mobile.blocksOne"), t("mobile.blocksOther")), formatDuration(a.durationMs)].join(" · "),
+    medido: a.measured.meters >= 1 ? [formatDistanceForUnit(a.measured.meters), ritmoDe(a.sport, a.measured)].join(" · ") : null,
+    declarado: a.declared.meters >= 1 ? [formatDistanceForUnit(a.declared.meters), ritmoDe(a.sport, a.declared)].join(" · ") : null,
+  });
+  const comRondas = mostraRondas(blocos, rondas.length);
+  const haDeclarados = blocos.some((b) => valoresDeclarados(session, b, fim));
+  const misto = comGps && totais.declaredM >= 1;
   return (
     <View style={{ flex: 1, paddingTop: TOPO }}>
       <Cabeca
@@ -495,13 +529,13 @@ export function EcraResumo(props: {
         {comGps ? (
           <Text style={texto(13, 500, tokens.tinta2, { marginTop: 6 })}>
             <Text style={numero(16, 800, tokens.tinta)}>{formatDistanceForUnit(total.distanceM)}</Text>{" "}
-            {t("common.distance").toLowerCase()}
+            {misto ? t("mobile.measuredDistance") : t("common.distance").toLowerCase()}
           </Text>
         ) : null}
         {totais.declaredM >= 1 ? (
           <Text testID="declared-distance" style={texto(13, 500, tokens.tinta2, { marginTop: 4 })}>
             <Text style={numero(16, 800, tokens.tinta)}>{formatDistanceForUnit(totais.declaredM)}</Text>{" "}
-            {t("common.distance").toLowerCase()} · {t("mobile.declaredDistance")}
+            {t("mobile.declaredDistance")}
           </Text>
         ) : null}
         <Fiada blocos={trocos(session, blocos, fim)} tema={tema} alta estilo={{ marginTop: E.e3 }} />
@@ -509,7 +543,7 @@ export function EcraResumo(props: {
           tokens={tokens}
           titulo={t("mobile.blocksSection")}
           lado={`${plural(blocos.length, t("mobile.blocksOne"), t("mobile.blocksOther"))}${
-            rondas.length > 0 ? ` · ${rondas.length} ${t("mobile.round").toLowerCase()}${rondas.length === 1 ? "" : "s"}` : ""
+            comRondas ? ` · ${rondas.length} ${t("mobile.round").toLowerCase()}${rondas.length === 1 ? "" : "s"}` : ""
           }`}
         >
           {props.onRegistar && aPreencher > 0 ? (
@@ -517,7 +551,7 @@ export function EcraResumo(props: {
           ) : null}
           <View style={{ backgroundColor: tokens.sup, borderWidth: 1, borderColor: tokens.linha, borderRadius: R.m, overflow: "hidden" }}>
             {blocos.map((b, i) => {
-              const abreRonda = rondas.length > 0 && (i === 0 || b.round !== blocos[i - 1]!.round);
+              const abreRonda = comRondas && (i === 0 || b.round !== blocos[i - 1]!.round);
               return (
                 <View key={b.index}>
                   {abreRonda ? (
@@ -534,6 +568,7 @@ export function EcraResumo(props: {
                     corDoIcone={COR_DESPORTO[tema][b.sport]}
                     nome={nomeDoBloco(session, b)}
                     valor={valorDoBloco(session, b, fim)}
+                    declarado={marcaDeclarado(session, b, fim)}
                     porPreencher={editavel(b) && porPreencher(session, b, fim) ? t("mobile.record") : undefined}
                     tempo={formatDuration(blockMetrics(session, b, fim).durationMs)}
                     testID={`block-${b.index}`}
@@ -544,7 +579,7 @@ export function EcraResumo(props: {
             })}
           </View>
         </Seccao>
-        {porDesporto.length > 1 || porDesporto.some((a) => a.declaredM >= 1) ? (
+        {porDesporto.length > 1 || porDesporto.some((a) => a.declared.meters >= 1) ? (
           <Seccao tokens={tokens} titulo={t("mobile.perSport")}>
             <View style={{ backgroundColor: tokens.sup, borderWidth: 1, borderColor: tokens.linha, borderRadius: R.m }}>
               {porDesporto.map((a, i) => (
@@ -557,11 +592,27 @@ export function EcraResumo(props: {
                     <Icone nome={a.sport} cor={COR_DESPORTO[tema][a.sport]} tamanho={18} />
                     <Text style={texto(14, 600, tokens.tinta)}>{t(`sport.${a.sport}.label`)}</Text>
                   </View>
-                  <Text style={numero(12.5, 600, tokens.tinta2)}>{linhaDesporto(a)}</Text>
+                  <Text style={numero(12.5, 600, tokens.tinta2)}>{linhaDesporto(a).base}</Text>
+                  {linhaDesporto(a).medido ? (
+                    <Text testID={`per-sport-${a.sport}-measured`} style={numero(12.5, 600, tokens.tinta2)}>
+                      {linhaDesporto(a).medido}
+                    </Text>
+                  ) : null}
+                  {linhaDesporto(a).declarado ? (
+                    <View testID={`per-sport-${a.sport}-declared`} style={{ flexDirection: "row", alignItems: "baseline", gap: 5 }}>
+                      <Text style={numero(12.5, 600, tokens.tinta2)}>{linhaDesporto(a).declarado}</Text>
+                      <SeloDeclarado tokens={tokens} rotulo={t("mobile.declaredShort")} descricao={t("mobile.declaredTag")} />
+                    </View>
+                  ) : null}
                 </View>
               ))}
             </View>
           </Seccao>
+        ) : null}
+        {haDeclarados ? (
+          <Text testID="declared-legend" style={texto(12, 400, tokens.tinta3, { marginTop: E.e4 })}>
+            {t("mobile.declaredLegend")}
+          </Text>
         ) : null}
         {props.onConcluir ? (
           <View style={{ marginTop: E.e6 }}>
@@ -585,6 +636,7 @@ export function EcraResumo(props: {
           session={session}
           now={fim}
           blocos={[blocoAEditar]}
+          catalogo={props.catalogo}
           onGuardar={(block, input) => {
             setBlocoAEditar(null);
             props.onRegistar?.(block, input);

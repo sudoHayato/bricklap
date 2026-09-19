@@ -219,6 +219,17 @@ export type Dictionary = {
     tapToRecord: string;
     perSport: string;
     declaredDistance: string;
+    /** "Nova ronda · {n}": the button says which round it opens, because round 1 opens with the session. */
+    newRoundN: string;
+    /** The short mark next to any number that is declared or derived from a declared one (ADR 0011 §3a). */
+    declaredShort: string;
+    declaredLegend: string;
+    measuredDistance: string;
+    exerciseKind: string;
+    kindFreeWeight: string;
+    kindFreeWeightDetail: string;
+    kindBodyweight: string;
+    kindBodyweightDetail: string;
   };
   meta: {
     title: string;
